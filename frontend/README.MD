@@ -87,3 +87,4 @@ paths:
 ## หมายเหตุ
 - ส่วน frontend ควรเรียกใช้ API ของ backend ผ่านเส้นทาง `/api/water`, `/api/maintenance`, `/api/history`, และ `/api/alert`
 - หาก backend ยังไม่มี Swagger UI ให้ใช้ Swagger editor พร้อม OpenAPI ตัวอย่างด้านบนเพื่อบันทึกและทดสอบ API
+
