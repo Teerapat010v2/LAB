@@ -1,0 +1,156 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ระบบจัดการน้ำประปาหมู่บ้าน",
+    "version": "1.0.0",
+    "description": "API สำหรับติดตามความขุ่นของน้ำ การแจ้งเตือน การบำรุงรักษา และประวัติการล้างถัง"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000"
+    }
+  ],
+  "paths": {
+    "/api/water": {
+      "get": {
+        "summary": "ดึงข้อมูลน้ำปัจจุบัน",
+        "responses": {
+          "200": {
+            "description": "คืนค่าความขุ่นและสถานะปัจจุบัน",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "turbidity": { "type": "number" },
+                    "status": { "type": "string" },
+                    "timestamp": { "type": "string", "format": "date-time" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "บันทึกข้อมูลน้ำ",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "turbidity": { "type": "number" },
+                  "status": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "บันทึกข้อมูลน้ำเรียบร้อยแล้ว"
+          }
+        }
+      }
+    },
+    "/api/maintenance": {
+      "get": {
+        "summary": "ดึงบันทึกการบำรุงรักษา",
+        "responses": {
+          "200": {
+            "description": "รายการบันทึกการบำรุงรักษา",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "date": { "type": "string" },
+                      "reason": { "type": "string" },
+                      "note": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "เพิ่มบันทึกการล้างถัง",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "date": { "type": "string" },
+                  "reason": { "type": "string" },
+                  "note": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "เพิ่มบันทึกการล้างถังเรียบร้อยแล้ว"
+          }
+        }
+      }
+    },
+    "/api/history": {
+      "get": {
+        "summary": "ดึงประวัติการล้างถัง",
+        "responses": {
+          "200": {
+            "description": "รายการประวัติการล้างถัง",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "date": { "type": "string" },
+                      "note": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/alert": {
+      "get": {
+        "summary": "ดึงการแจ้งเตือนปัจจุบัน",
+        "responses": {
+          "200": {
+            "description": "รายการการแจ้งเตือน",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": { "type": "string" },
+                      "message": { "type": "string" },
+                      "active": { "type": "boolean" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

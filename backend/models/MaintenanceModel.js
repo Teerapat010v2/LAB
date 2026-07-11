@@ -1,0 +1,1 @@
+module.exports={table:'maintenance_records'};
