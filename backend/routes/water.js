@@ -1,22 +1,16 @@
 const router = require('express').Router();
+const state = require('../data/state');
 
 router.get('/', (req, res) => {
-  res.json({
-    turbidity: 2.5,
-    status: 'Normal',
-    timestamp: new Date().toISOString(),
-  });
+  res.json(state.getWaterData());
 });
 
 router.post('/', (req, res) => {
-  const { turbidity, status } = req.body;
+  const { turbidity } = req.body;
+  const updated = state.updateWaterReading(Number(turbidity));
   res.json({
     message: 'บันทึกข้อมูลน้ำเรียบร้อยแล้ว',
-    data: {
-      turbidity: turbidity ?? 2.5,
-      status: status ?? 'Normal',
-      timestamp: new Date().toISOString(),
-    },
+    data: updated,
   });
 });
 

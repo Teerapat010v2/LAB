@@ -2,8 +2,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import styles from '../styles/Home.module.css';
 
-const apiBase = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5000';
-
 export default function Home() {
   return (
     <div className={styles.container}>
@@ -14,30 +12,52 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>ระบบจัดการน้ำประปาหมู่บ้าน</h1>
-        <p className={styles.description}>
-          หน้าเว็บสำหรับดูข้อมูลความขุ่น แจ้งเตือน และบันทึกการล้างถังน้ำ
-        </p>
+        <div className={styles.pageHeader}>
+          <div>
+            <h1 className={styles.title}>ระบบจัดการน้ำประปาหมู่บ้าน</h1>
+            <p className={styles.description}>
+              หน้าเว็บสำหรับดูข้อมูลความขุ่น แจ้งเตือน และบันทึกการล้างถังน้ำ
+            </p>
+          </div>
+          <div className={styles.buttonRow}>
+            <Link href="/water" className={styles.actionButton}>
+              ดูสถานะน้ำ
+            </Link>
+            <Link href="/user" className={styles.secondaryButton}>
+              เข้าใช้งานประชาชน
+            </Link>
+          </div>
+        </div>
 
         <div className={styles.grid}>
-          <Link href="/water" className={styles.card}>
-            <h2>ข้อมูลน้ำ &rarr;</h2>
-            <p>ดูค่าความขุ่นน้ำและสถานะปัจจุบัน</p>
+          <Link href="/user" className={styles.card}>
+            <h2>หน้าประชาชน &rarr;</h2>
+            <p>เข้าสู่หน้าชาวบ้านสำหรับดูสถานะน้ำ แจ้งปัญหา และติดตามการบำรุงรักษา</p>
+          </Link>
+
+          <Link href="/admin" className={styles.card}>
+            <h2>หน้าผู้ดูแล &rarr;</h2>
+            <p>หน้าจัดการสำหรับบันทึกการล้างถัง วางแผน และจัดการเรื่องร้องเรียน</p>
           </Link>
 
           <Link href="/maintenance" className={styles.card}>
-            <h2>บำรุงรักษา &rarr;</h2>
-            <p>บันทึกการล้างถังและจัดการประวัติ</p>
+            <h2>บันทึกบำรุงรักษา &rarr;</h2>
+            <p>ดูรายการบำรุงรักษาและสถานะการล้างถังล่าสุด</p>
           </Link>
 
           <Link href="/history" className={styles.card}>
             <h2>ประวัติการล้าง &rarr;</h2>
-            <p>ดูประวัติการล้างถังทั้งหมด</p>
+            <p>ค้นหาประวัติการล้างถังย้อนหลังทั้งหมด</p>
+          </Link>
+
+          <Link href="/contact" className={styles.card}>
+            <h2>ข้อมูลผู้ดูแล &rarr;</h2>
+            <p>ดูรายชื่อผู้ดูแลระบบและช่องทางติดต่อฉุกเฉิน</p>
           </Link>
 
           <Link href="/swagger" className={styles.card}>
-            <h2>ดูเอกสาร API &rarr;</h2>
-            <p>เปิด Swagger UI เพื่อดู API เรียลไทม์</p>
+            <h2>เอกสาร API &rarr;</h2>
+            <p>ดูคู่มือ API และทดสอบ endpoint ได้ทันที</p>
           </Link>
         </div>
       </main>

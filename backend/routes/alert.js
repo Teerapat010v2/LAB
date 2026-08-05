@@ -1,10 +1,8 @@
 const router = require('express').Router();
+const state = require('../data/state');
 
 router.get('/', (req, res) => {
-  res.json([
-    { type: 'เวลา', message: 'ถึงเวลาล้างถังแล้ว', active: true },
-    { type: 'ความขุ่น', message: 'ค่าความขุ่นสูงเกินเกณฑ์', active: false },
-  ]);
+  res.json({ alerts: state.getAlerts(), contact: state.getContact() });
 });
 
 module.exports = router;

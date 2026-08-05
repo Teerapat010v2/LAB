@@ -1,12 +1,8 @@
 const router = require('express').Router();
-
-const history = [
-  { date: '2026-04-01', note: 'ล้างถังน้ำตามกำหนด' },
-  { date: '2026-01-01', note: 'ล้างถังเพราะค่าความขุ่นสูง' },
-];
+const state = require('../data/state');
 
 router.get('/', (req, res) => {
-  res.json(history);
+  res.json(state.getHistoryRecords());
 });
 
 module.exports = router;

@@ -95,10 +95,10 @@ export default function SwaggerPage() {
   return (
     <div className={styles.pageContainer}>
       <Head>
-        <title>Swagger API</title>
+        <title>เอกสาร API</title>
       </Head>
-      <h1>Swagger UI สำหรับ API</h1>
-      <p>ดูเอกสารและทดสอบ API ของ backend ได้จากหน้านี้</p>
+      <h1>คู่มือ API ระบบน้ำประปาหมู่บ้าน</h1>
+      <p>ดูเอกสาร API และทดสอบ endpoint ของ backend ได้จากหน้านี้</p>
       <div className={styles.swaggerContainer}>
         <SwaggerUI spec={spec} />
       </div>

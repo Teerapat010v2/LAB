@@ -1,11 +1,8 @@
 const router = require('express').Router();
-
-const records = [
-  { date: '2026-04-01', reason: 'การล้างตามกำหนด', note: 'ล้างถังราย 3 เดือน' },
-];
+const state = require('../data/state');
 
 router.get('/', (req, res) => {
-  res.json(records);
+  res.json(state.getMaintenanceRecords());
 });
 
 router.post('/', (req, res) => {
@@ -15,7 +12,7 @@ router.post('/', (req, res) => {
     reason: reason || 'ไม่ระบุเหตุผล',
     note: note || '',
   };
-  records.push(record);
+  state.addMaintenanceRecord(record);
   res.json({ message: 'เพิ่มบันทึกการล้างถังเรียบร้อยแล้ว', record });
 });
 

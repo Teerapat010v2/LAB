@@ -1,0 +1,12 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^node -c backend/app\\.js backend/routes/complaints\\.js backend/routes/plans\\.js backend/data/state\\.js frontend/pages/user\\.js frontend/pages/admin\\.js frontend/pages/index\\.js$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^cd 'c:\\\\Users\\\\User\\\\Documents\\\\GitHub\\\\LAB\\\\backend'; Start-Job -Name BackendServer -ScriptBlock \\{ cmd /c \"cd /d c:\\\\Users\\\\User\\\\Documents\\\\GitHub\\\\LAB\\\\backend && npm run dev\" \\} \\| Out-Null; Start-Job -Name FrontendServer -ScriptBlock \\{ cmd /c \"cd /d c:\\\\Users\\\\User\\\\Documents\\\\GitHub\\\\LAB\\\\frontend && npm run dev\" \\} \\| Out-Null; Get-Job \\| Format-Table -AutoSize$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
