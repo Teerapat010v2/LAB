@@ -1,0 +1,6 @@
+﻿# Ignore build artifacts and installed packages
+node_modules/
+.next/
+*.log
+*.env
+.DS_Store
