@@ -24,19 +24,19 @@ export default function Home() {
               ดูสถานะน้ำ
             </Link>
             <Link href="/user" className={styles.secondaryButton}>
-              เข้าใช้งานประชาชน
+              ระบบสำหรับประชาชน
             </Link>
           </div>
         </div>
 
         <div className={styles.grid}>
           <Link href="/user" className={styles.card}>
-            <h2>หน้าประชาชน &rarr;</h2>
-            <p>เข้าสู่หน้าชาวบ้านสำหรับดูสถานะน้ำ แจ้งปัญหา และติดตามการบำรุงรักษา</p>
+            <h2>ระบบบริการประชาชน &rarr;</h2>
+            <p>เข้าสู่ระบบสำหรับประชาชน เพื่อติดตามสถานะน้ำ แจ้งปัญหา และดูประวัติการบำรุงรักษา</p>
           </Link>
 
           <Link href="/admin" className={styles.card}>
-            <h2>หน้าผู้ดูแล &rarr;</h2>
+            <h2>ผู้ดูแลระบบ (Admin) &rarr;</h2>
             <p>หน้าจัดการสำหรับบันทึกการล้างถัง วางแผน และจัดการเรื่องร้องเรียน</p>
           </Link>
 
@@ -51,7 +51,7 @@ export default function Home() {
           </Link>
 
           <Link href="/contact" className={styles.card}>
-            <h2>ข้อมูลผู้ดูแล &rarr;</h2>
+            <h2>ติดต่อผู้ดูแลระบบ &rarr;</h2>
             <p>ดูรายชื่อผู้ดูแลระบบและช่องทางติดต่อฉุกเฉิน</p>
           </Link>
 

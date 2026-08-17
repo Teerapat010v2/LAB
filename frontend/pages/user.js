@@ -70,8 +70,8 @@ export default function UserPage() {
     <div className={styles.pageContainer}>
       <div className={styles.pageHeader}>
         <div>
-          <h1>หน้าชาวบ้าน</h1>
-          <p className={styles.pageIntro}>ติดตามคุณภาพน้ำ แจ้งปัญหา และดูบันทึกการซักล้างจากหน้าเดียว</p>
+          <h1>ระบบบริการประชาชน</h1>
+          <p className={styles.pageIntro}>ตรวจสอบคุณภาพน้ำ แจ้งเรื่องร้องเรียน และติดตามประวัติการบำรุงรักษา</p>
         </div>
         <div className={styles.buttonRow}>
           <button className={styles.actionButton} onClick={loadData} disabled={refreshing}>
@@ -134,12 +134,12 @@ export default function UserPage() {
                 </div>
               ))
             )}
-            <p className={styles.smallNote}>ข้อมูลการล้างถังล่าสุดช่วยให้ผู้ใช้งานรู้ว่ามีการดูแลระบบหรือไม่</p>
+            <p className={styles.smallNote}>ข้อมูลประวัติการล้างถังเพื่อให้ประชาชนสามารถติดตามการบำรุงรักษาระบบประปาได้</p>
           </div>
 
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
-              <h2>แจ้งปัญหาคุณภาพน้ำ / ร้องเรียน</h2>
+              <h2>แจ้งปัญหาการใช้งาน / ร้องเรียน</h2>
               <button className={styles.secondaryButton} type="button" onClick={() => setShowComplaintForm((prev) => !prev)}>
                 {showComplaintForm ? 'ซ่อนแบบฟอร์ม' : 'กรอกแบบฟอร์มร้องเรียน'}
               </button>

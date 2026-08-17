@@ -1,11 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary: #0369a1; /* Trustworthy Blue */
+  --primary-hover: #0284c7;
+  --secondary: #0ea5e9;
+  
+  --bg-main: #f8fafc; /* Very light slate */
+  
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  
+  /* Status Colors */
+  --status-success-bg: #dcfce7;
+  --status-success-text: #166534;
+  --status-warning-bg: #fef9c3;
+  --status-warning-text: #854d0e;
+  --status-danger-bg: #fee2e2;
+  --status-danger-text: #991b1b;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  min-height: 100%;
+  min-height: 100vh;
   font-family: 'Inter', system-ui, sans-serif;
-  background: radial-gradient(circle at top, #eef6ff 0%, #f8fbff 30%, #e9eff7 100%);
-  color: #111827;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', system-ui, sans-serif;
+  color: var(--primary);
 }
 
 * {
@@ -23,7 +54,7 @@ button:disabled,
 input:disabled,
 textarea:disabled,
 select:disabled {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -42,4 +73,3 @@ a {
 #__next {
   min-height: 100vh;
 }
-

@@ -138,7 +138,7 @@ export default function AdminPage() {
     <div className={styles.pageContainer}>
       <div className={styles.pageHeader}>
         <div>
-          <h1>แดชบอร์ดผู้ดูแล</h1>
+          <h1>ระบบจัดการสำหรับผู้ดูแลระบบ (Admin Dashboard)</h1>
           <p className={styles.pageIntro}>จัดการข้อมูลน้ำ ประวัติการล้างถัง แผนงาน และเรื่องร้องเรียนทั้งหมดในที่เดียว</p>
         </div>
         <div className={styles.buttonRow}>
@@ -146,7 +146,7 @@ export default function AdminPage() {
             รีเฟรชข้อมูล
           </button>
           <Link href="/user" className={styles.secondaryButton}>
-            หน้าใช้งานประชาชน
+            หน้าเว็บสำหรับประชาชน
           </Link>
         </div>
       </div>

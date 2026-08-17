@@ -1,7 +1,7 @@
 .container {
   min-height: 100vh;
-  padding: 2rem;
-  background: radial-gradient(circle at top, #eef6ff 0%, #f8fbff 35%, #e2e8f0 100%);
+  padding: 1.5rem;
+  background: transparent;
 }
 
 .main {
@@ -10,97 +10,120 @@
 }
 
 .title {
-  font-size: clamp(2.75rem, 5vw, 4.5rem);
-  margin: 0 0 1rem;
-  line-height: 1.05;
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+  margin: 0 0 0.5rem;
+  line-height: 1.1;
+  color: var(--primary);
+  font-weight: 700;
 }
 
 .description {
-  font-size: 1.15rem;
-  color: #475569;
-  margin-bottom: 1.5rem;
-  line-height: 1.75;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  line-height: 1.6;
 }
 
 .grid {
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
   margin-top: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
 .card {
   padding: 1.75rem;
-  border-radius: 28px;
-  background: #ffffff;
-  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  border-radius: 16px;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--card-border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 30px 90px rgba(15, 23, 42, 0.1);
-  border-color: rgba(37, 99, 235, 0.24);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  border-color: var(--primary-hover);
 }
 
 .card h2 {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.5rem;
   font-size: 1.35rem;
+  color: var(--text-main);
+}
+
+.card p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.5;
+  font-size: 1rem;
 }
 
 .alertCard {
   margin-bottom: 1rem;
-  padding: 1rem;
-  border-radius: 18px;
-  background: #f8fafc;
-  border: 1px solid #dbeafe;
-  box-shadow: inset 0 0 0 1px rgba(191, 219, 254, 0.7);
+  padding: 1.25rem;
+  border-radius: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
 }
 
 .statusActive {
-  color: #b91c1c;
-  font-weight: 700;
+  color: var(--status-danger-text);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .statusNormal {
-  color: #047857;
-  font-weight: 700;
+  color: var(--status-success-text);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .formField {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .formField label {
-  font-weight: 700;
-  color: #0f172a;
+  font-weight: 500;
+  color: var(--text-main);
+  font-size: 0.95rem;
 }
 
 .formField input,
 .formField textarea,
 .formField select {
-  padding: 0.95rem 1rem;
-  border-radius: 14px;
-  border: 1px solid #cbd5e1;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: #ffffff;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease;
+  font-size: 1rem;
 }
 
 .formField input:focus,
 .formField textarea:focus,
 .formField select:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
 }
 
 .formColumn {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
 .submitButton,
@@ -110,140 +133,143 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.65rem;
-  border-radius: 18px;
+  gap: 0.5rem;
+  border-radius: 8px;
   border: none;
-  padding: 1rem 1.35rem;
-  font-weight: 700;
-  font-size: 0.98rem;
-  min-height: 50px;
+  padding: 0.85rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  min-height: 48px;
   cursor: pointer;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease;
+  transition: background-color 0.2s ease;
   text-decoration: none;
 }
 
 .submitButton,
 .actionButton {
-  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  background-color: var(--primary);
   color: white;
-  box-shadow: 0 18px 30px rgba(59, 130, 246, 0.18);
-}
-
-.secondaryButton {
-  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
-  color: white;
-  box-shadow: 0 16px 28px rgba(16, 185, 129, 0.18);
-}
-
-.linkButton {
-  background: rgba(59, 130, 246, 0.08);
-  color: #1d4ed8;
-  border: 1px solid rgba(59, 130, 246, 0.22);
 }
 
 .submitButton:hover,
-.actionButton:hover,
-.secondaryButton:hover,
+.actionButton:hover {
+  background-color: var(--primary-hover);
+}
+
+.secondaryButton {
+  background-color: #f1f5f9;
+  color: var(--text-main);
+  border: 1px solid #cbd5e1;
+}
+
+.secondaryButton:hover {
+  background-color: #e2e8f0;
+}
+
+.linkButton {
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
 .linkButton:hover {
-  transform: translateY(-1px);
+  background-color: #f0f9ff;
 }
 
 .submitButton:disabled,
 .actionButton:disabled,
 .secondaryButton:disabled,
 .linkButton:disabled {
-  opacity: 0.72;
+  opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
 }
 
 .smallNote {
   margin-top: 1rem;
-  font-size: 0.95rem;
-  color: #475569;
+  font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
 .smallButton {
-  background: #f97316;
+  background-color: var(--primary);
   color: white;
   border: none;
-  padding: 0.85rem 1rem;
-  margin-top: 0.75rem;
-  border-radius: 14px;
+  padding: 0.65rem 1rem;
+  margin-top: 0.5rem;
+  border-radius: 6px;
   cursor: pointer;
-  box-shadow: 0 14px 28px rgba(249, 115, 22, 0.18);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.smallButton:hover {
+  background-color: var(--primary-hover);
 }
 
 .gridTwo {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.25rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .successMessage {
   margin-top: 1rem;
   padding: 1rem;
-  border-radius: 18px;
-  background: #d1fae5;
-  color: #065f46;
-  box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.18);
-}
-
-.card p {
-  margin: 0;
-  color: #334155;
+  border-radius: 8px;
+  background-color: var(--status-success-bg);
+  color: var(--status-success-text);
+  border: 1px solid #bbf7d0;
+  font-size: 0.95rem;
 }
 
 .waterCard {
-  padding: 1.5rem;
-  border-radius: 28px;
-  background: linear-gradient(180deg, #eef4ff 0%, #ffffff 100%);
-  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  border-radius: 16px;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--card-border);
+  margin-bottom: 2rem;
 }
 
 .pageContainer {
-  max-width: 980px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.5rem;
   min-height: 100vh;
-  background: radial-gradient(circle at top, #eef6ff 0%, #f8fbff 40%, #f8fafc 100%);
-  border-radius: 32px;
 }
 
 .pageHeader {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1.25rem;
-  margin-bottom: 1.5rem;
-  padding: 1.6rem;
-  border-radius: 30px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 24px 65px rgba(15, 23, 42, 0.09);
-  border: 1px solid rgba(148, 163, 184, 0.18);
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--card-border);
 }
 
 .pageHeader h1 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  margin: 0 0 0.5rem 0;
+  color: var(--text-main);
 }
 
 .pageIntro {
-  color: #475569;
-  line-height: 1.7;
-  max-width: 760px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 1.05rem;
+  margin: 0;
 }
 
 .buttonRow {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  align-items: center;
+  margin-top: 1rem;
 }
 
 .sectionTitle {
@@ -251,11 +277,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .sectionTitle h2 {
   margin: 0;
+  font-size: 1.5rem;
+  color: var(--text-main);
 }
 
 .statusBadge {
@@ -263,40 +291,98 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  padding: 0.55rem 0.95rem;
+  padding: 0.5rem 1rem;
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .statusLow {
-  background: #ecfdf5;
-  color: #166534;
-  border: 1px solid #a7f3d0;
+  background-color: var(--status-success-bg);
+  color: var(--status-success-text);
 }
 
 .statusMedium {
-  background: #fef3c7;
-  color: #92400e;
-  border: 1px solid #facc15;
+  background-color: var(--status-warning-bg);
+  color: var(--status-warning-text);
 }
 
 .statusHigh {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fca5a5;
+  background-color: var(--status-danger-bg);
+  color: var(--status-danger-text);
 }
 
 .statusCritical {
-  background: #fce7f3;
-  color: #831843;
-  border: 1px solid #f472b6;
+  background-color: #ef4444;
+  color: white;
+}
+
+.waterRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: var(--bg-main);
+  border: 1px solid var(--card-border);
+}
+
+.metric span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.metric strong {
+  color: var(--text-main);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.turbidityMeter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.turbidityBar {
+  width: 100%;
+  height: 28px;
+  border-radius: 14px;
+  background-color: #e2e8f0;
+  overflow: hidden;
+}
+
+.turbidityFill {
+  height: 100%;
+  border-radius: 14px;
+  transition: width 0.5s ease-out, background-color 0.5s ease;
+}
+
+.turbidityLabel {
+  font-weight: 600;
+  color: var(--text-main);
+  font-size: 1rem;
+}
+
+.swaggerContainer {
+  margin-top: 1.5rem;
+  min-height: 70vh;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--card-border);
 }
 
 @media (max-width: 768px) {
-  .pageHeader {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 1.25rem;
+  .pageContainer, .container {
+    padding: 1rem;
   }
 
   .buttonRow {
@@ -309,105 +395,9 @@
     width: 100%;
   }
 
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .gridTwo {
-    grid-template-columns: 1fr;
-  }
-
-  .pageContainer {
-    padding: 1.25rem;
-    border-radius: 24px;
-  }
-
   .card,
   .waterCard,
   .alertCard {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
 }
-
-.waterCard {
-  display: grid;
-  gap: 1.25rem;
-  padding: 2rem;
-  border-radius: 28px;
-  background: linear-gradient(135deg, #ffffff 0%, #e7f1ff 100%);
-  border: 1px solid rgba(37, 99, 235, 0.18);
-}
-
-.waterRow {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 1rem;
-  align-items: center;
-}
-
-.metric {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-}
-
-.turbidityMeter {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.turbidityBar {
-  position: relative;
-  height: 14px;
-  border-radius: 999px;
-  background: rgba(59, 130, 246, 0.14);
-  overflow: hidden;
-}
-
-.turbidityFill {
-  height: 100%;
-  width: 0;
-  border-radius: 999px;
-  transition: width 0.3s ease, background 0.3s ease;
-}
-
-.metric strong {
-  color: #0f172a;
-}
-
-.turbidityMeter {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.turbidityBar {
-  width: 100%;
-  height: 14px;
-  border-radius: 999px;
-  background: #e2e8f0;
-  overflow: hidden;
-}
-
-.turbidityFill {
-  height: 100%;
-  border-radius: 999px;
-  transition: width 0.35s ease;
-}
-
-.turbidityLabel {
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.swaggerContainer {
-  margin-top: 1.5rem;
-  min-height: 70vh;
-}
-
