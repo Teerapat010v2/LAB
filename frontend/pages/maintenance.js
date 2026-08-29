@@ -226,7 +226,6 @@ export default function MaintenancePage() {
                 <button className={styles.secondaryButton} onClick={() => setShowMaintenanceForm((p) => !p)}>
                   {showMaintenanceForm ? 'ซ่อนฟอร์ม' : '+ เพิ่มบันทึก'}
                 </button>
-                <Link href="/maintenance-logs" className={styles.linkButton}>ดูแบบตารางทั้งหมด</Link>
               </div>
             </div>
             {showMaintenanceForm && (
@@ -252,7 +251,7 @@ export default function MaintenancePage() {
               {records.length === 0 ? (
                 <p>ยังไม่มีบันทึกการล้างถัง</p>
               ) : (
-                records.slice(0, 3).map((r, i) => (
+                records.slice(0, 4).map((r, i) => (
                   <div key={i} className={styles.alertCard}>
                     <p>วันที่: <strong>{r.date ? new Date(r.date).toLocaleDateString('th-TH') : '-'}</strong></p>
                     <p>เหตุผล: {r.reason}</p>
@@ -261,6 +260,13 @@ export default function MaintenancePage() {
                 ))
               )}
             </div>
+            {records.length > 4 && (
+              <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                <Link href="/maintenance-logs" className={styles.secondaryButton} style={{ width: '100%' }}>
+                  ดูทั้งหมด (มีอีก {records.length - 4} รายการ)
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* 4. แผนการล้างถัง */}
@@ -294,16 +300,23 @@ export default function MaintenancePage() {
               {plans.length === 0 ? (
                 <p>ยังไม่มีแผนการบำรุงรักษา</p>
               ) : (
-                plans.map((p, i) => (
+                plans.slice(0, 4).map((p, i) => (
                   <div key={i} className={styles.alertCard}>
                     <p>📅 วันที่: <strong>{p.scheduleDate}</strong></p>
                     <p>งาน: {p.description}</p>
                     <p>ผู้รับผิดชอบ: {p.assignedTo}</p>
-                    <p>สถานะ: <span style={{ color: p.status === 'Done' ? '#27ae60' : '#f39c12', fontWeight: 'bold' }}>{p.status}</span></p>
+                    <p>สถานะ: <span style={{ color: p.status === 'Done' || p.status === 'Completed' ? '#16a34a' : '#d97706', fontWeight: 'bold' }}>{p.status}</span></p>
                   </div>
                 ))
               )}
             </div>
+            {plans.length > 4 && (
+              <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                <Link href="/plans" className={styles.secondaryButton} style={{ width: '100%' }}>
+                  ดูทั้งหมด (มีอีก {plans.length - 4} รายการ)
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* 5. เรื่องร้องเรียนจากชาวบ้าน */}
@@ -315,13 +328,12 @@ export default function MaintenancePage() {
                   ค้างดำเนินการ: {complaints.filter(c => c.status !== 'เสร็จงาน').length}
                 </span>
               </div>
-              <Link href="/complaints" className={styles.linkButton}>ดูแบบตารางทั้งหมด / รับงาน</Link>
             </div>
             {complaints.length === 0 ? (
               <p>ยังไม่มีเรื่องร้องเรียน</p>
             ) : (
               <div className={styles.gridTwo}>
-                {complaints.slice(0, 3).map((item) => (
+                {complaints.slice(0, 4).map((item) => (
                   <div key={item._id || item.id} className={styles.alertCard} style={{ borderLeft: `4px solid ${item.status === 'เสร็จงาน' ? '#16a34a' : '#dc2626'}` }}>
                     <p><strong>{item.topic}</strong></p>
                     <p>ชื่อ: {item.name} | โทร: {item.phone}</p>
@@ -334,24 +346,37 @@ export default function MaintenancePage() {
                 ))}
               </div>
             )}
+            {complaints.length > 4 && (
+              <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                <Link href="/complaints" className={styles.secondaryButton} style={{ width: '100%' }}>
+                  ดูทั้งหมด (มีอีก {complaints.length - 4} รายการ)
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* 6. ประวัติการบำรุงรักษา */}
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
               <h2>ประวัติการบำรุงรักษา (ล่าสุด)</h2>
-              <Link href="/history" className={styles.linkButton}>ดูแบบตารางทั้งหมด</Link>
             </div>
             {history.length === 0 ? (
               <p>ยังไม่มีประวัติ</p>
             ) : (
               <div className={styles.gridTwo}>
-                {history.slice(0, 3).map((item, i) => (
+                {history.slice(0, 4).map((item, i) => (
                   <div key={i} className={styles.alertCard}>
                     <p>วันที่: <strong>{item.date ? new Date(item.date).toLocaleDateString('th-TH') : '-'}</strong></p>
                     <p>{item.note}</p>
                   </div>
                 ))}
+              </div>
+            )}
+            {history.length > 4 && (
+              <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                <Link href="/history" className={styles.secondaryButton} style={{ width: '100%' }}>
+                  ดูทั้งหมด (มีอีก {history.length - 4} รายการ)
+                </Link>
               </div>
             )}
           </div>

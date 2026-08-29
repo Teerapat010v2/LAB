@@ -5,13 +5,19 @@ import styles from '../styles/Home.module.css';
 
 const apiBase = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5000';
 
-const Section = ({ title, linkTo, linkText, children, noBorder }) => (
+const Section = ({ title, linkTo, totalItems, children, noBorder }) => (
   <div className={styles.card} style={noBorder ? { borderTop: '3px solid var(--primary)' } : {}}>
     <div className={styles.sectionTitle}>
       <h2>{title}</h2>
-      {linkTo && <Link href={linkTo} className={styles.linkButton}>{linkText}</Link>}
     </div>
     {children}
+    {linkTo && totalItems > 4 && (
+      <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+        <Link href={linkTo} className={styles.secondaryButton} style={{ width: '100%' }}>
+          ดูทั้งหมด (มีอีก {totalItems - 4} รายการ)
+        </Link>
+      </div>
+    )}
   </div>
 );
 
@@ -116,7 +122,7 @@ export default function AdminPage() {
             </div>
           </Section>
 
-          <Section title="เรื่องร้องเรียนจากชาวบ้าน (ล่าสุด)" linkTo="/complaints" linkText="จัดการทั้งหมด">
+          <Section title="เรื่องร้องเรียนจากชาวบ้าน (ล่าสุด)" linkTo="/complaints" totalItems={data.complaints.length}>
             <div className={styles.gridTwo}>
               {data.complaints.length === 0 ? <p>ไม่มีเรื่องร้องเรียน</p> : data.complaints.slice(0,4).map(c => (
                 <div key={c._id} className={styles.alertCard}>
@@ -130,12 +136,25 @@ export default function AdminPage() {
             </div>
           </Section>
 
-          <Section title="บันทึกการล้างถัง (ล่าสุด)" linkTo="/maintenance-logs" linkText="ดูตารางทั้งหมด">
+          <Section title="บันทึกการล้างถัง (ล่าสุด)" linkTo="/maintenance-logs" totalItems={data.maintenance.length}>
             <div className={styles.gridTwo}>
               {data.maintenance.length === 0 ? <p>ไม่มีบันทึก</p> : data.maintenance.slice(0,4).map((m,i) => (
                 <div key={i} className={styles.alertCard}>
                   <p>วันที่: {m.date ? new Date(m.date).toLocaleDateString('th-TH') : '-'}</p>
                   <p>เหตุผล: <strong>{m.reason}</strong></p>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section title="แผนการบำรุงรักษา (ล่าสุด)" linkTo="/plans" totalItems={data.plans.length}>
+            <div className={styles.gridTwo}>
+              {data.plans.length === 0 ? <p>ไม่มีแผนงาน</p> : data.plans.slice(0,4).map((p,i) => (
+                <div key={i} className={styles.alertCard}>
+                  <p>📅 <strong>{p.scheduleDate}</strong></p>
+                  <p>{p.description}</p>
+                  <p>👤 {p.assignedTo}</p>
+                  <p style={{ color: p.status === 'Done' || p.status === 'Completed' ? 'var(--status-success-text)' : 'var(--status-warning-text)', fontWeight: 'bold' }}>{p.status}</p>
                 </div>
               ))}
             </div>
@@ -171,7 +190,7 @@ export default function AdminPage() {
             )}
           </Section>
 
-          <Section title="ประวัติการบำรุงรักษา (ล่าสุด)" linkTo="/history" linkText="ดูตารางทั้งหมด">
+          <Section title="ประวัติการบำรุงรักษา (ล่าสุด)" linkTo="/history" totalItems={data.history.length}>
             <div className={styles.gridTwo}>
               {data.history.length === 0 ? <p>ไม่มีประวัติ</p> : data.history.slice(0,4).map((h,i) => (
                 <div key={i} className={styles.alertCard}>

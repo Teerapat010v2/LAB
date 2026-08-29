@@ -28,7 +28,7 @@ export default function UserPage() {
       setWater(w);
       setAlerts(al.alerts || []);
       setAdmins(adm || []);
-      setMaintenance((mnt || []).slice(0, 3));
+      setMaintenance(mnt || []);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
@@ -103,16 +103,26 @@ export default function UserPage() {
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
               <h2>ประวัติการบำรุงรักษาล่าสุด</h2>
-              <Link href="/maintenance-logs" className={styles.linkButton}>ดูแบบตารางทั้งหมด</Link>
             </div>
             {maintenance.length === 0 ? (
               <p>ยังไม่มีบันทึกการบำรุงรักษา</p>
-            ) : maintenance.map((r, i) => (
-              <div key={i} className={styles.alertCard}>
-                <p><strong>วันที่ {r.date}</strong> — {r.reason}</p>
-                {r.note && <p>{r.note}</p>}
-              </div>
-            ))}
+            ) : (
+              <>
+                {maintenance.slice(0, 4).map((r, i) => (
+                  <div key={i} className={styles.alertCard}>
+                    <p><strong>วันที่ {r.date ? new Date(r.date).toLocaleDateString('th-TH') : '-'}</strong> — {r.reason}</p>
+                    {r.note && <p>{r.note}</p>}
+                  </div>
+                ))}
+                {maintenance.length > 4 && (
+                  <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                    <Link href="/maintenance-logs" className={styles.secondaryButton} style={{ width: '100%' }}>
+                      ดูทั้งหมด (มีอีก {maintenance.length - 4} รายการ)
+                    </Link>
+                  </div>
+                )}
+              </>
+            )}
           </div>
 
           {/* Complaint */}
