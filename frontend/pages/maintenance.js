@@ -253,10 +253,13 @@ export default function MaintenancePage() {
           {/* 3. บันทึกการล้างถัง */}
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
-              <h2>🪣 บันทึกการล้างถัง</h2>
-              <button className={styles.secondaryButton} onClick={() => setShowMaintenanceForm((p) => !p)}>
-                {showMaintenanceForm ? 'ซ่อนฟอร์ม' : '+ เพิ่มบันทึก'}
-              </button>
+              <h2>บันทึกการล้างถัง (ล่าสุด)</h2>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button className={styles.secondaryButton} onClick={() => setShowMaintenanceForm((p) => !p)}>
+                  {showMaintenanceForm ? 'ซ่อนฟอร์ม' : '+ เพิ่มบันทึก'}
+                </button>
+                <Link href="/maintenance-logs" className={styles.linkButton}>ดูแบบตารางทั้งหมด</Link>
+              </div>
             </div>
             {showMaintenanceForm && (
               <form onSubmit={handleAddMaintenance} className={styles.formColumn} style={{ marginBottom: '1rem' }}>
@@ -281,9 +284,9 @@ export default function MaintenancePage() {
               {records.length === 0 ? (
                 <p>ยังไม่มีบันทึกการล้างถัง</p>
               ) : (
-                records.map((r, i) => (
+                records.slice(0, 3).map((r, i) => (
                   <div key={i} className={styles.alertCard}>
-                    <p>📅 วันที่: <strong>{r.date}</strong></p>
+                    <p>วันที่: <strong>{r.date ? new Date(r.date).toLocaleDateString('th-TH') : '-'}</strong></p>
                     <p>เหตุผล: {r.reason}</p>
                     <p>หมายเหตุ: {r.note || '-'}</p>
                   </div>
@@ -338,32 +341,27 @@ export default function MaintenancePage() {
           {/* 5. เรื่องร้องเรียนจากชาวบ้าน */}
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
-              <h2>📣 เรื่องร้องเรียนจากชาวบ้าน</h2>
-              <span style={{ background: complaints.filter(c => c.status === 'Open').length > 0 ? '#e74c3c' : '#27ae60', color: 'white', padding: '4px 10px', borderRadius: '12px', fontSize: '0.85rem' }}>
-                รอดำเนินการ: {complaints.filter(c => c.status === 'Open').length} รายการ
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <h2>เรื่องร้องเรียนจากชาวบ้าน (ล่าสุด)</h2>
+                <span className={styles.statusBadge} style={{ background: complaints.filter(c => c.status !== 'เสร็จงาน').length > 0 ? 'var(--status-danger-bg)' : 'var(--status-success-bg)', color: complaints.filter(c => c.status !== 'เสร็จงาน').length > 0 ? 'var(--status-danger-text)' : 'var(--status-success-text)' }}>
+                  ค้างดำเนินการ: {complaints.filter(c => c.status !== 'เสร็จงาน').length}
+                </span>
+              </div>
+              <Link href="/complaints" className={styles.linkButton}>ดูแบบตารางทั้งหมด / รับงาน</Link>
             </div>
             {complaints.length === 0 ? (
               <p>ยังไม่มีเรื่องร้องเรียน</p>
             ) : (
               <div className={styles.gridTwo}>
-                {complaints.map((item) => (
-                  <div key={item._id || item.id} className={styles.alertCard} style={{ borderLeft: `4px solid ${item.status === 'Open' ? '#e74c3c' : '#27ae60'}` }}>
+                {complaints.slice(0, 3).map((item) => (
+                  <div key={item._id || item.id} className={styles.alertCard} style={{ borderLeft: `4px solid ${item.status === 'เสร็จงาน' ? '#16a34a' : '#dc2626'}` }}>
                     <p><strong>{item.topic}</strong></p>
                     <p>ชื่อ: {item.name} | โทร: {item.phone}</p>
                     <p>{item.message}</p>
-                    <p>วันที่: {new Date(item.submittedAt).toLocaleString('th-TH')}</p>
-                    <p style={{ color: item.status === 'Open' ? '#e74c3c' : '#27ae60', fontWeight: 'bold' }}>
-                      สถานะ: {item.status === 'Open' ? '🔴 รอดำเนินการ' : '🟢 ดำเนินการแล้ว'}
+                    <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>วันที่: {new Date(item.submittedAt).toLocaleString('th-TH')}</p>
+                    <p style={{ color: item.status === 'เสร็จงาน' ? '#16a34a' : '#dc2626', fontWeight: 'bold' }}>
+                      สถานะ: {item.status}
                     </p>
-                    {item.status === 'Open' && (
-                      <button
-                        className={styles.smallButton}
-                        onClick={() => handleUpdateComplaintStatus(item._id || item.id, 'Resolved')}
-                      >
-                        ✓ ดำเนินการแล้ว
-                      </button>
-                    )}
                   </div>
                 ))}
               </div>
@@ -373,15 +371,16 @@ export default function MaintenancePage() {
           {/* 6. ประวัติการบำรุงรักษา */}
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
-              <h2>📜 ประวัติการบำรุงรักษา</h2>
+              <h2>ประวัติการบำรุงรักษา (ล่าสุด)</h2>
+              <Link href="/history" className={styles.linkButton}>ดูแบบตารางทั้งหมด</Link>
             </div>
             {history.length === 0 ? (
               <p>ยังไม่มีประวัติ</p>
             ) : (
               <div className={styles.gridTwo}>
-                {history.map((item, i) => (
+                {history.slice(0, 3).map((item, i) => (
                   <div key={i} className={styles.alertCard}>
-                    <p>📅 วันที่: <strong>{item.date}</strong></p>
+                    <p>วันที่: <strong>{item.date ? new Date(item.date).toLocaleDateString('th-TH') : '-'}</strong></p>
                     <p>{item.note}</p>
                   </div>
                 ))}

@@ -25,23 +25,23 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <main style={{ maxWidth: '960px', margin: '0 auto', padding: '3rem 1.5rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <div style={{ width: '72px', height: '72px', background: 'var(--primary-light)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <main style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(1.5rem, 5vw, 3rem) 1rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: 'clamp(1.5rem, 5vw, 3rem)' }}>
+          <div style={{ width: 'clamp(52px, 12vw, 72px)', height: 'clamp(52px, 12vw, 72px)', background: 'var(--primary-light)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2C6 2 2 8 2 14a10 10 0 0020 0c0-6-4-12-10-12z"/>
             </svg>
           </div>
-          <h1 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.75rem' }}>
+          <h1 style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.5rem' }}>
             ระบบจัดการน้ำประปาหมู่บ้าน
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', maxWidth: '480px', margin: '0 auto' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', maxWidth: '420px', margin: '0 auto' }}>
             กรุณาเลือกประเภทผู้ใช้งานเพื่อเข้าสู่ระบบ
           </p>
         </div>
 
         {/* Role Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem', maxWidth: '780px', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', maxWidth: '720px', margin: '0 auto' }}>
 
           {/* Villager */}
           <Link href="/user" style={{ textDecoration: 'none' }}>
@@ -49,9 +49,9 @@ export default function Home() {
               onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(3,105,161,0.12)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.boxShadow = 'var(--card-shadow)'; }}
             >
-              <img src="/icon_villager.png" alt="ชาวบ้าน" style={{ width: '96px', height: '96px', objectFit: 'contain', margin: '0 auto 1.25rem' }} />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 0.4rem' }}>ชาวบ้าน</h2>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>ตรวจสอบคุณภาพน้ำและแจ้งปัญหา</p>
+              <img src="/icon_villager.png" alt="ชาวบ้าน" style={{ width: 'clamp(64px, 18vw, 96px)', height: 'clamp(64px, 18vw, 96px)', objectFit: 'contain', margin: '0 auto 1rem' }} />
+              <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 0.3rem' }}>ชาวบ้าน</h2>
+              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', margin: 0 }}>ตรวจสอบคุณภาพน้ำและแจ้งปัญหา</p>
             </div>
           </Link>
 
@@ -61,9 +61,9 @@ export default function Home() {
               onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(3,105,161,0.12)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.boxShadow = 'var(--card-shadow)'; }}
             >
-              <img src="/icon_Operations.png" alt="ผู้ดูแล" style={{ width: '96px', height: '96px', objectFit: 'contain', margin: '0 auto 1.25rem' }} />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 0.4rem' }}>ผู้ดูแลระบบประปา</h2>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>บันทึกการล้างถัง วางแผน และจัดการระบบ</p>
+              <img src="/icon_Operations.png" alt="ผู้ดูแล" style={{ width: 'clamp(64px, 18vw, 96px)', height: 'clamp(64px, 18vw, 96px)', objectFit: 'contain', margin: '0 auto 1rem' }} />
+              <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 0.3rem' }}>ผู้ดูแลระบบประปา</h2>
+              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', margin: 0 }}>บันทึกการล้างถัง วางแผน และจัดการระบบ</p>
             </div>
           </Link>
 
@@ -73,9 +73,9 @@ export default function Home() {
               onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(3,105,161,0.12)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.boxShadow = 'var(--card-shadow)'; }}
             >
-              <img src="/admin_icon.png" alt="แอดมิน" style={{ width: '96px', height: '96px', objectFit: 'contain', margin: '0 auto 1.25rem' }} />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 0.4rem' }}>แอดมิน</h2>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>แผงควบคุมระบบหลังบ้านทั้งหมด</p>
+              <img src="/admin_icon.png" alt="แอดมิน" style={{ width: 'clamp(64px, 18vw, 96px)', height: 'clamp(64px, 18vw, 96px)', objectFit: 'contain', margin: '0 auto 1rem' }} />
+              <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 0.3rem' }}>แอดมิน</h2>
+              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', margin: 0 }}>แผงควบคุมระบบหลังบ้านทั้งหมด</p>
             </div>
           </Link>
         </div>

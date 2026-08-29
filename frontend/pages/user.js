@@ -110,7 +110,7 @@ export default function UserPage() {
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
               <h2>ประวัติการบำรุงรักษาล่าสุด</h2>
-              <Link href="/history" className={styles.linkButton}>ดูทั้งหมด</Link>
+              <Link href="/maintenance-logs" className={styles.linkButton}>ดูแบบตารางทั้งหมด</Link>
             </div>
             {maintenance.length === 0 ? (
               <p>ยังไม่มีบันทึกการบำรุงรักษา</p>
