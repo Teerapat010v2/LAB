@@ -28,7 +28,10 @@ export default function Layout({ children, title, subtitle }) {
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2C6 2 2 8 2 14a10 10 0 0020 0c0-6-4-12-10-12z"/>
             </svg>
-            <span>ระบบน้ำประปาหมู่บ้าน</span>
+            <span style={{ lineHeight: 1.2 }}>
+              <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 400, opacity: 0.85 }}>ระบบจัดการ</span>
+              <span style={{ display: 'block' }}>น้ำประปาหมู่บ้าน</span>
+            </span>
           </Link>
           <div className={styles.navActions}>
             <Link href="/" className={styles.navBtn}>หน้าหลัก</Link>

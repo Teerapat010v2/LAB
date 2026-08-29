@@ -63,6 +63,13 @@ export default function UserPage() {
       <div className={styles.buttonRow}>
         <button className={styles.actionButton} onClick={loadData}>รีเฟรชข้อมูล</button>
         <Link href="/history" className={styles.secondaryButton}>ประวัติการบำรุงรักษา</Link>
+        <button className={styles.dangerButton} onClick={() => {
+          setShowForm(true);
+          setComplaint(p => ({ ...p, topic: 'รายงานระบบทำงานผิดพลาด' }));
+          setTimeout(() => document.getElementById('complaint-section')?.scrollIntoView({ behavior: 'smooth' }), 100);
+        }}>
+          รายงานปัญหาระบบให้แอดมิน
+        </button>
       </div>
 
       {loading ? <p style={{ color: 'var(--text-muted)' }}>กำลังโหลดข้อมูล...</p> : (
@@ -116,7 +123,7 @@ export default function UserPage() {
           </div>
 
           {/* Complaint */}
-          <div className={styles.card}>
+          <div className={styles.card} id="complaint-section">
             <div className={styles.sectionTitle}><h2>แจ้งปัญหาการใช้น้ำ / ร้องเรียน</h2></div>
             <div className={styles.buttonRow}>
               <button className={styles.secondaryButton} onClick={() => { setShowForm(true); setComplaint(p => ({ ...p, topic: '' })); }}>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Layout from '../components/Layout';
 import styles from '../styles/Home.module.css';
 
 const apiBase = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5000';
@@ -19,6 +20,9 @@ export default function MaintenancePage() {
   const [showMaintenanceForm, setShowMaintenanceForm] = useState(false);
   const [showPlanForm, setShowPlanForm] = useState(false);
   const [newTurbidity, setNewTurbidity] = useState('');
+  const [showReportForm, setShowReportForm] = useState(false);
+  const [report, setReport] = useState({ name: 'ผู้ดูแลระบบ', phone: '-', topic: 'รายงานปัญหาระบบ', message: '' });
+  const [reportMsg, setReportMsg] = useState('');
 
   const loadData = async () => {
     setLoading(true);
@@ -126,24 +130,64 @@ export default function MaintenancePage() {
     }
   };
 
-  const statusColor = water?.status === 'Critical' ? '#e74c3c' : water?.status === 'Alert' ? '#f39c12' : '#27ae60';
+  const handleReport = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    const res = await fetch(`${apiBase}/api/complaints`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(report),
+    });
+    if (res.ok) {
+      setReportMsg('ส่งรายงานให้แอดมินเรียบร้อยแล้ว');
+      setReport({ name: 'ผู้ดูแลระบบ', phone: '-', topic: 'รายงานปัญหาระบบ', message: '' });
+      setShowReportForm(false);
+    } else {
+      setReportMsg('ส่งรายงานไม่สำเร็จ');
+    }
+    setSaving(false);
+  };
+
+  const statusColor = water?.status === 'Critical' ? '#dc2626' : water?.status === 'Alert' ? '#d97706' : '#16a34a';
 
   return (
-    <div className={styles.pageContainer}>
-      <div className={styles.pageHeader}>
-        <div>
-          <h1>🔧 ระบบจัดการผู้ดูแลระบบประปา</h1>
-          <p className={styles.pageIntro}>ตรวจสอบคุณภาพน้ำ บันทึกการล้างถัง วางแผนงาน และจัดการเรื่องร้องเรียน</p>
-        </div>
-        <div className={styles.buttonRow}>
-          <button className={styles.actionButton} onClick={loadData}>รีเฟรชข้อมูล</button>
-          <Link href="/" className={styles.secondaryButton}>กลับหน้าหลัก</Link>
-        </div>
+    <Layout title="ผู้ดูแลระบบประปา" subtitle="ตรวจสอบคุณภาพน้ำ บันทึกการล้างถัง วางแผนงาน และจัดการเรื่องร้องเรียน">
+      <div className={styles.buttonRow}>
+        <button className={styles.actionButton} onClick={loadData}>รีเฟรชข้อมูล</button>
+        <Link href="/" className={styles.secondaryButton}>กลับหน้าหลัก</Link>
+        <button className={styles.dangerButton} onClick={() => {
+          setShowReportForm(true);
+          setTimeout(() => document.getElementById('report-section')?.scrollIntoView({ behavior: 'smooth' }), 100);
+        }}>
+          รายงานปัญหาระบบให้แอดมิน
+        </button>
       </div>
 
-      {message && (
-        <div className={styles.successMessage} style={{ marginBottom: '1rem' }}>
-          {message}
+      {message && <div className={styles.successMessage}>{message}</div>}
+      {reportMsg && <div className={styles.successMessage}>{reportMsg}</div>}
+
+      {/* Report to Admin Form */}
+      {showReportForm && (
+        <div className={styles.card} id="report-section" style={{ borderTop: '3px solid #dc2626' }}>
+          <div className={styles.sectionTitle}>
+            <h2>รายงานปัญหาระบบให้แอดมิน</h2>
+            <button className={styles.secondaryButton} onClick={() => setShowReportForm(false)}>ปิด</button>
+          </div>
+          <form onSubmit={handleReport} className={styles.formColumn}>
+            <div className={styles.formField}>
+              <label>หัวข้อปัญหา</label>
+              <input value={report.topic} onChange={e => setReport(p => ({ ...p, topic: e.target.value }))} required />
+            </div>
+            <div className={styles.formField}>
+              <label>รายละเอียดปัญหาที่พบ</label>
+              <textarea value={report.message} onChange={e => setReport(p => ({ ...p, message: e.target.value }))} rows={4} placeholder="อธิบายปัญหาที่พบ เช่น เซ็นเซอร์ค่าผิดพลาด ปั๊มไม่ทำงาน..." required />
+            </div>
+            <div className={styles.buttonRow}>
+              <button type="submit" className={styles.actionButton} disabled={saving}>
+                {saving ? 'กำลังส่ง...' : 'ส่งรายงาน'}
+              </button>
+            </div>
+          </form>
         </div>
       )}
 
@@ -346,6 +390,6 @@ export default function MaintenancePage() {
           </div>
         </>
       )}
-    </div>
+    </Layout>
   );
 }
