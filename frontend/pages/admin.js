@@ -100,7 +100,7 @@ export default function AdminPage() {
           <Section title="ภาพรวมระบบ (System Overview)" noBorder>
             <div className={styles.statGrid}>
               <div className={styles.statTile}>
-                <div className={styles.val} style={{ color: data.water?.level==='Low'?'var(--status-danger-text)':'var(--text-main)' }}>
+                <div className={styles.val}>
                   {data.water?.level || '-'}
                 </div>
                 <div className={styles.lbl}>ระดับน้ำ</div>
@@ -110,7 +110,7 @@ export default function AdminPage() {
                 <div className={styles.lbl}>ความขุ่น (NTU)</div>
               </div>
               <div className={styles.statTile}>
-                <div className={styles.val} style={{ color: data.complaints.filter(c=>c.status!=='เสร็จงาน').length > 0 ? 'var(--status-danger-text)' : 'inherit' }}>
+                <div className={styles.val}>
                   {data.complaints.filter(c=>c.status!=='เสร็จงาน').length}
                 </div>
                 <div className={styles.lbl}>ร้องเรียนค้าง</div>
@@ -128,7 +128,7 @@ export default function AdminPage() {
                 <div key={c._id} className={styles.alertCard}>
                   <p><strong>{c.topic}</strong></p>
                   <p>{c.message}</p>
-                  <p style={{ fontSize: 'var(--text-xs)', marginTop: '0.4rem', color: c.status==='เสร็จงาน'?'var(--status-success-text)':'var(--status-danger-text)' }}>
+                  <p style={{ fontSize: 'var(--text-xs)', marginTop: '0.4rem', color: 'var(--primary)', fontWeight: 'bold' }}>
                     สถานะ: {c.status}
                   </p>
                 </div>
@@ -154,7 +154,7 @@ export default function AdminPage() {
                   <p>วันที่: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
                   <p>{p.description}</p>
                   <p>ผู้รับผิดชอบ: {p.assignedTo}</p>
-                  <p style={{ color: p.status === 'Done' || p.status === 'Completed' ? 'var(--status-success-text)' : 'var(--status-warning-text)', fontWeight: 'bold' }}>สถานะ: {p.status}</p>
+                  <p style={{ color: 'var(--primary)', fontWeight: 'bold' }}>สถานะ: {p.status}</p>
                 </div>
               ))}
             </div>

@@ -48,19 +48,8 @@ export default function ComplaintsPage() {
     }
   };
 
-  const getStatusColor = (status) => {
-    if (status === 'เสร็จงาน') return 'var(--status-success-text)';
-    if (status === 'รับงาน') return 'var(--primary)';
-    if (status === 'กำลังดำเนินการ') return 'var(--status-warning-text)';
-    return 'var(--status-danger-text)';
-  };
-
-  const getStatusBg = (status) => {
-    if (status === 'เสร็จงาน') return 'var(--status-success-bg)';
-    if (status === 'รับงาน') return 'var(--primary-light)';
-    if (status === 'กำลังดำเนินการ') return 'var(--status-warning-bg)';
-    return 'var(--status-danger-bg)';
-  };
+  const getStatusColor = (status) => 'var(--primary)';
+  const getStatusBg = (status) => 'var(--primary-light)';
 
   return (
     <Layout title="เรื่องร้องเรียนทั้งหมด" subtitle="ติดตามและจัดการเรื่องร้องเรียนจากชาวบ้าน">
@@ -120,12 +109,12 @@ export default function ComplaintsPage() {
                           </button>
                         )}
                         {c.status === 'รับงาน' && (
-                          <button className={styles.smallButton} style={{ margin: 0, background: 'var(--status-warning-text)' }} onClick={() => handleUpdateStatus(c._id, 'กำลังดำเนินการ')}>
+                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdateStatus(c._id, 'กำลังดำเนินการ')}>
                             กำลังดำเนินการ
                           </button>
                         )}
                         {c.status === 'กำลังดำเนินการ' && (
-                          <button className={styles.smallButton} style={{ margin: 0, background: 'var(--status-success-text)' }} onClick={() => handleUpdateStatus(c._id, 'เสร็จงาน')}>
+                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdateStatus(c._id, 'เสร็จงาน')}>
                             เสร็จงาน
                           </button>
                         )}

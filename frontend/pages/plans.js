@@ -66,8 +66,8 @@ export default function PlansPage() {
                   <td>{p.assignedTo}</td>
                   <td>
                     <span className={styles.statusBadge} style={{ 
-                      background: p.status === 'Completed' || p.status === 'Done' ? 'var(--status-success-bg)' : 'var(--status-warning-bg)', 
-                      color: p.status === 'Completed' || p.status === 'Done' ? 'var(--status-success-text)' : 'var(--status-warning-text)' 
+                      background: 'var(--primary-light)', 
+                      color: 'var(--primary)' 
                     }}>
                       {p.status}
                     </span>

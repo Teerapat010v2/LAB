@@ -305,7 +305,7 @@ export default function MaintenancePage() {
                     <p>วันที่: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
                     <p>งาน: {p.description}</p>
                     <p>ผู้รับผิดชอบ: {p.assignedTo}</p>
-                    <p>สถานะ: <span style={{ color: p.status === 'Done' || p.status === 'Completed' ? '#16a34a' : '#d97706', fontWeight: 'bold' }}>{p.status}</span></p>
+                    <p>สถานะ: <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{p.status}</span></p>
                   </div>
                 ))
               )}
@@ -324,7 +324,7 @@ export default function MaintenancePage() {
             <div className={styles.sectionTitle}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <h2>เรื่องร้องเรียนจากชาวบ้าน (ล่าสุด)</h2>
-                <span className={styles.statusBadge} style={{ background: complaints.filter(c => c.status !== 'เสร็จงาน').length > 0 ? 'var(--status-danger-bg)' : 'var(--status-success-bg)', color: complaints.filter(c => c.status !== 'เสร็จงาน').length > 0 ? 'var(--status-danger-text)' : 'var(--status-success-text)' }}>
+                <span className={styles.statusBadge} style={{ background: 'var(--primary-light)', color: 'var(--primary)' }}>
                   ค้างดำเนินการ: {complaints.filter(c => c.status !== 'เสร็จงาน').length}
                 </span>
               </div>
@@ -334,12 +334,12 @@ export default function MaintenancePage() {
             ) : (
               <div className={styles.gridTwo}>
                 {complaints.slice(0, 4).map((item) => (
-                  <div key={item._id || item.id} className={styles.alertCard} style={{ borderLeft: `4px solid ${item.status === 'เสร็จงาน' ? '#16a34a' : '#dc2626'}` }}>
+                  <div key={item._id || item.id} className={styles.alertCard}>
                     <p><strong>{item.topic}</strong></p>
                     <p>ชื่อ: {item.name} | โทร: {item.phone}</p>
                     <p>{item.message}</p>
                     <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>วันที่: {new Date(item.submittedAt).toLocaleString('th-TH')}</p>
-                    <p style={{ color: item.status === 'เสร็จงาน' ? '#16a34a' : '#dc2626', fontWeight: 'bold' }}>
+                    <p style={{ color: 'var(--primary)', fontWeight: 'bold' }}>
                       สถานะ: {item.status}
                     </p>
                   </div>
