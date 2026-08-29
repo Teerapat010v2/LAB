@@ -41,6 +41,12 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
+    // ตรวจสอบสิทธิ์การเข้าใช้งาน
+    const isAuth = localStorage.getItem('auth_admin');
+    if (!isAuth) {
+      window.location.href = '/login?role=admin';
+      return;
+    }
     loadData();
   }, []);
 

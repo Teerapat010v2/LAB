@@ -2,39 +2,26 @@ const { TURBIDITY_THRESHOLD, CLEANING_INTERVAL_DAYS } = require('../config/setti
 const { getStatus } = require('../services/WaterService');
 const { daysBetween } = require('../utils/helper');
 
-const waterReading = {
-  turbidity: 2.5,
-  timestamp: new Date().toISOString(),
-};
+const Water = require('../models/WaterModel');
+const Maintenance = require('../models/MaintenanceModel');
+const Admin = require('../models/AdminModel');
+const Complaint = require('../models/ComplaintModel');
+const Plan = require('../models/PlanModel');
+const History = require('../models/HistoryModel');
 
-const admins = [
-  { id: 'admin-1', name: 'ผู้ดูแลระบบประปา', phone: '080-123-4567', note: 'ผู้ดูแลหลักของหมู่บ้าน' },
-];
-
-const contact = {
+// Some static state that doesn't need DB or can be migrated later if needed
+let contact = {
   name: 'ผู้ดูแลระบบประปา',
   phone: '080-123-4567',
   note: 'ติดต่อเมื่อมีเหตุฉุกเฉิน',
 };
 
-const maintenanceRecords = [
-  { id: 'maintenance-1', date: '2026-04-01', reason: 'ล้างถังตามกำหนด', note: 'ล้างถังราย 3 เดือน', createdAt: '2026-04-01T08:00:00.000Z' },
-];
+async function getWaterData() {
+  let waterReading = await Water.findOne().sort({ timestamp: -1 });
+  if (!waterReading) {
+    waterReading = await Water.create({ turbidity: 2.5 });
+  }
 
-const historyRecords = [
-  { id: 'history-1', date: '2026-04-01', note: 'ล้างถังน้ำตามกำหนด' },
-  { id: 'history-2', date: '2026-01-01', note: 'ล้างถังเพราะค่าความขุ่นสูง' },
-];
-
-const complaints = [
-  { id: 'complaint-1', name: 'ชาวบ้าน', phone: '081-234-5678', topic: 'น้ำขุ่น', message: 'น้ำที่บ้านขุ่นมากในตอนเช้า', status: 'Open', submittedAt: '2026-07-28T09:15:00.000Z' },
-];
-
-const cleaningPlans = [
-  { id: 'plan-1', scheduleDate: '2026-08-15', description: 'ตรวจสอบและล้างถังน้ำหลัก', assignedTo: 'ทีมช่างประปา', status: 'Planned' },
-];
-
-function getWaterData() {
   const status = getStatus(waterReading.turbidity);
   let message = 'คุณภาพน้ำปกติ';
   if (status === 'Alert') {
@@ -53,20 +40,20 @@ function getWaterData() {
   };
 }
 
-function getLastCleaningDate() {
-  if (maintenanceRecords.length === 0) {
+async function getLastCleaningDate() {
+  const latestMaintenance = await Maintenance.findOne().sort({ date: -1 });
+  if (!latestMaintenance) {
     return null;
   }
-  const sorted = [...maintenanceRecords].sort((a, b) => new Date(b.date) - new Date(a.date));
-  return new Date(sorted[0].date);
+  return new Date(latestMaintenance.date);
 }
 
-function getAlerts() {
+async function getAlerts() {
   const alerts = [];
   const currentDate = new Date();
-  const lastCleaning = getLastCleaningDate();
+  const lastCleaning = await getLastCleaningDate();
   const daysSinceCleaning = lastCleaning ? daysBetween(lastCleaning, currentDate) : null;
-  const waterData = getWaterData();
+  const waterData = await getWaterData();
 
   if (lastCleaning) {
     alerts.push({
@@ -92,7 +79,8 @@ function getAlerts() {
     active: waterData.status !== 'Normal',
   });
 
-  if (complaints.some((item) => item.status === 'Open')) {
+  const openComplaintsCount = await Complaint.countDocuments({ status: 'Open' });
+  if (openComplaintsCount > 0) {
     alerts.push({
       type: 'ร้องเรียน',
       message: 'มีการร้องเรียนที่ยังไม่ได้ดำเนินการกรุณาตรวจสอบ',
@@ -103,44 +91,48 @@ function getAlerts() {
   return alerts;
 }
 
-function updateWaterReading(turbidity) {
+async function updateWaterReading(turbidity) {
   if (typeof turbidity === 'number' && !Number.isNaN(turbidity)) {
-    waterReading.turbidity = turbidity;
-    waterReading.timestamp = new Date().toISOString();
+    await Water.create({ turbidity });
   }
-  return getWaterData();
+  return await getWaterData();
 }
 
-function addMaintenanceRecord(record) {
-  const newRecord = {
-    id: `maintenance-${Date.now()}`,
-    date: record.date || new Date().toISOString().split('T')[0],
+async function addMaintenanceRecord(record) {
+  const dateStr = record.date || new Date().toISOString().split('T')[0];
+  const newRecord = await Maintenance.create({
+    date: dateStr,
     reason: record.reason || 'ล้างถังทั่วไป',
     note: record.note || '',
-    createdAt: new Date().toISOString(),
-  };
-  maintenanceRecords.push(newRecord);
-  historyRecords.unshift({
-    id: `history-${Date.now()}`,
-    date: newRecord.date,
+  });
+
+  await History.create({
+    date: dateStr,
     note: `${newRecord.reason} - ${newRecord.note}`,
   });
+
   return newRecord;
 }
 
-function addAdmin(admin) {
-  const newAdmin = {
-    id: `admin-${Date.now()}`,
+async function getMaintenanceRecords() {
+  return await Maintenance.find().sort({ date: -1 });
+}
+
+async function getHistoryRecords() {
+  return await History.find().sort({ date: -1 });
+}
+
+async function addAdmin(admin) {
+  await Admin.create({
     name: admin.name || 'ไม่ระบุชื่อ',
     phone: admin.phone || '-',
     note: admin.note || '',
-  };
-  admins.push(newAdmin);
-  return [...admins];
+  });
+  return await getAdmins();
 }
 
-function getAdmins() {
-  return admins.map((admin) => ({ ...admin }));
+async function getAdmins() {
+  return await Admin.find();
 }
 
 function getContact() {
@@ -156,45 +148,35 @@ function updateContact(updated) {
   return getContact();
 }
 
-function getComplaints() {
-  return complaints.map((item) => ({ ...item }));
+async function getComplaints() {
+  return await Complaint.find().sort({ submittedAt: -1 });
 }
 
-function addComplaint(entry) {
-  const newComplaint = {
-    id: `complaint-${Date.now()}`,
+async function addComplaint(entry) {
+  const newComplaint = await Complaint.create({
     name: entry.name || 'ไม่ระบุชื่อ',
     phone: entry.phone || '-',
     topic: entry.topic || 'ร้องเรียนทั่วไป',
     message: entry.message || '',
-    status: 'Open',
-    submittedAt: new Date().toISOString(),
-  };
-  complaints.unshift(newComplaint);
+  });
   return newComplaint;
 }
 
-function updateComplaintStatus(id, status) {
-  const complaint = complaints.find((item) => item.id === id);
-  if (complaint) {
-    complaint.status = status;
-  }
+async function updateComplaintStatus(id, status) {
+  const complaint = await Complaint.findByIdAndUpdate(id, { status }, { new: true });
   return complaint;
 }
 
-function getCleaningPlans() {
-  return cleaningPlans.map((plan) => ({ ...plan }));
+async function getCleaningPlans() {
+  return await Plan.find().sort({ scheduleDate: -1 });
 }
 
-function addCleaningPlan(plan) {
-  const newPlan = {
-    id: `plan-${Date.now()}`,
+async function addCleaningPlan(plan) {
+  const newPlan = await Plan.create({
     scheduleDate: plan.scheduleDate || new Date().toISOString().split('T')[0],
     description: plan.description || 'แผนการล้างถัง',
     assignedTo: plan.assignedTo || 'ทีมช่าง',
-    status: 'Planned',
-  };
-  cleaningPlans.unshift(newPlan);
+  });
   return newPlan;
 }
 
@@ -206,9 +188,9 @@ module.exports = {
   addAdmin,
   getContact,
   updateContact,
-  getMaintenanceRecords: () => [...maintenanceRecords],
+  getMaintenanceRecords,
   addMaintenanceRecord,
-  getHistoryRecords: () => [...historyRecords],
+  getHistoryRecords,
   getComplaints,
   addComplaint,
   updateComplaintStatus,

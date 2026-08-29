@@ -34,13 +34,13 @@ export default function Home() {
           </Link>
 
           {/* 2. ผู้ดูแล */}
-          <Link href="/maintenance" className={styles.card} style={{ textAlign: 'center', padding: '2rem', flex: '1', minWidth: '250px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Link href="/login?role=maintenance" className={styles.card} style={{ textAlign: 'center', padding: '2rem', flex: '1', minWidth: '250px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <img src="/icon_Operations.png" alt="ผู้ดูแล" style={{ width: '120px', height: '120px', objectFit: 'contain', marginBottom: '1.5rem' }} />
             <h2 style={{ margin: 0, fontSize: '1.5rem' }}>ผู้ดูแล</h2>
           </Link>
 
           {/* 3. แอดมิน */}
-          <Link href="/admin" className={styles.card} style={{ textAlign: 'center', padding: '2rem', flex: '1', minWidth: '250px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Link href="/login?role=admin" className={styles.card} style={{ textAlign: 'center', padding: '2rem', flex: '1', minWidth: '250px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <img src="/admin_icon.png" alt="แอดมิน" style={{ width: '120px', height: '120px', objectFit: 'contain', marginBottom: '1.5rem' }} />
             <h2 style={{ margin: 0, fontSize: '1.5rem' }}>แอดมิน</h2>
           </Link>

@@ -25,6 +25,12 @@ export default function MaintenancePage() {
   };
 
   useEffect(() => {
+    // ตรวจสอบสิทธิ์การเข้าใช้งาน
+    const isAuth = localStorage.getItem('auth_maintenance') || localStorage.getItem('auth_admin');
+    if (!isAuth) {
+      window.location.href = '/login?role=maintenance';
+      return;
+    }
     loadRecords();
   }, []);
 
