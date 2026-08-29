@@ -140,9 +140,39 @@ export default function UserPage() {
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
               <h2>แจ้งปัญหาการใช้งาน / ร้องเรียน</h2>
-              <button className={styles.secondaryButton} type="button" onClick={() => setShowComplaintForm((prev) => !prev)}>
-                {showComplaintForm ? 'ซ่อนแบบฟอร์ม' : 'กรอกแบบฟอร์มร้องเรียน'}
-              </button>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <button className={styles.secondaryButton} type="button" onClick={() => {
+                  setComplaint({ ...complaint, topic: '' });
+                  setShowComplaintForm(true);
+                  document.getElementById('complaint-form')?.scrollIntoView({ behavior: 'smooth' });
+                }}>
+                  กรอกแบบฟอร์มร้องเรียน
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    setComplaint({ ...complaint, topic: '⚠️ รายงานระบบทำงานผิดพลาด (System Error)' });
+                    setShowComplaintForm(true);
+                    document.getElementById('complaint-form')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  style={{
+                    backgroundColor: '#e74c3c',
+                    color: 'white',
+                    border: 'none',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  🚨 แจ้งระบบขัดข้อง
+                </button>
+                {showComplaintForm && (
+                  <button className={styles.secondaryButton} type="button" onClick={() => setShowComplaintForm(false)}>
+                    ซ่อนแบบฟอร์ม
+                  </button>
+                )}
+              </div>
             </div>
             {showComplaintForm && (
               <form id="complaint-form" onSubmit={handleSubmit} className={styles.formColumn}>
