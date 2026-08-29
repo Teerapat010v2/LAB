@@ -63,13 +63,6 @@ export default function UserPage() {
       <div className={styles.buttonRow}>
         <button className={styles.actionButton} onClick={loadData}>รีเฟรชข้อมูล</button>
         <Link href="/history" className={styles.secondaryButton}>ประวัติการบำรุงรักษา</Link>
-        <button className={styles.dangerButton} onClick={() => {
-          setShowForm(true);
-          setComplaint(p => ({ ...p, topic: 'รายงานระบบทำงานผิดพลาด' }));
-          setTimeout(() => document.getElementById('complaint-section')?.scrollIntoView({ behavior: 'smooth' }), 100);
-        }}>
-          รายงานปัญหาระบบให้แอดมิน
-        </button>
       </div>
 
       {loading ? <p style={{ color: 'var(--text-muted)' }}>กำลังโหลดข้อมูล...</p> : (

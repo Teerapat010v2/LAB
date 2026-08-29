@@ -155,41 +155,9 @@ export default function MaintenancePage() {
       <div className={styles.buttonRow}>
         <button className={styles.actionButton} onClick={loadData}>รีเฟรชข้อมูล</button>
         <Link href="/" className={styles.secondaryButton}>กลับหน้าหลัก</Link>
-        <button className={styles.dangerButton} onClick={() => {
-          setShowReportForm(true);
-          setTimeout(() => document.getElementById('report-section')?.scrollIntoView({ behavior: 'smooth' }), 100);
-        }}>
-          รายงานปัญหาระบบให้แอดมิน
-        </button>
       </div>
 
       {message && <div className={styles.successMessage}>{message}</div>}
-      {reportMsg && <div className={styles.successMessage}>{reportMsg}</div>}
-
-      {/* Report to Admin Form */}
-      {showReportForm && (
-        <div className={styles.card} id="report-section" style={{ borderTop: '3px solid #dc2626' }}>
-          <div className={styles.sectionTitle}>
-            <h2>รายงานปัญหาระบบให้แอดมิน</h2>
-            <button className={styles.secondaryButton} onClick={() => setShowReportForm(false)}>ปิด</button>
-          </div>
-          <form onSubmit={handleReport} className={styles.formColumn}>
-            <div className={styles.formField}>
-              <label>หัวข้อปัญหา</label>
-              <input value={report.topic} onChange={e => setReport(p => ({ ...p, topic: e.target.value }))} required />
-            </div>
-            <div className={styles.formField}>
-              <label>รายละเอียดปัญหาที่พบ</label>
-              <textarea value={report.message} onChange={e => setReport(p => ({ ...p, message: e.target.value }))} rows={4} placeholder="อธิบายปัญหาที่พบ เช่น เซ็นเซอร์ค่าผิดพลาด ปั๊มไม่ทำงาน..." required />
-            </div>
-            <div className={styles.buttonRow}>
-              <button type="submit" className={styles.actionButton} disabled={saving}>
-                {saving ? 'กำลังส่ง...' : 'ส่งรายงาน'}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
 
       {loading ? (
         <p>กำลังโหลดข้อมูล...</p>
