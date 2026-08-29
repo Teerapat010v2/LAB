@@ -20,6 +20,7 @@ app.use('/api/admins', require('./routes/admins'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/complaints', require('./routes/complaints'));
 app.use('/api/plans', require('./routes/plans'));
+app.use('/api/device', require('./routes/device'));
 app.use('/api/docs',swaggerUi.serve,swaggerUi.setup(swaggerDocument));
 
 const port=process.env.PORT||5000;

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Link from 'next/link';
+import navStyles from '../styles/Layout.module.css';
 import styles from '../styles/Home.module.css';
 
 export default function Login() {
@@ -8,72 +10,85 @@ export default function Login() {
   const { role } = router.query;
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const roleName = role === 'admin' ? 'แอดมิน' : role === 'maintenance' ? 'ผู้ดูแลระบบประปา' : 'เจ้าหน้าที่';
+  const roleLabel = role === 'admin' ? 'แอดมิน' : 'ผู้ดูแลระบบประปา';
   const targetPath = role === 'admin' ? '/admin' : '/maintenance';
+  const validPassword = role === 'admin' ? 'admin123' : 'staff123';
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // รหัสผ่านสำหรับการสาธิต (สามารถแก้เป็นระบบฐานข้อมูลภายหลังได้)
-    const validPassword = role === 'admin' ? 'admin123' : 'staff123';
-
-    if (password === validPassword) {
-      // บันทึกสถานะการล็อกอินลง localStorage
-      localStorage.setItem(`auth_${role}`, 'true');
-      router.push(targetPath);
-    } else {
-      setError('รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่');
-    }
+    setLoading(true);
+    setError('');
+    setTimeout(() => {
+      if (password === validPassword) {
+        localStorage.setItem(`auth_${role}`, 'true');
+        router.push(targetPath);
+      } else {
+        setError('รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
+        setLoading(false);
+      }
+    }, 400);
   };
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>เข้าสู่ระบบ - {roleName}</title>
-      </Head>
+    <>
+      <Head><title>เข้าสู่ระบบ — {roleLabel}</title></Head>
+      <nav className={navStyles.navbar}>
+        <div className={navStyles.navInner}>
+          <Link href="/" className={navStyles.brand}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2C6 2 2 8 2 14a10 10 0 0020 0c0-6-4-12-10-12z"/>
+            </svg>
+            <span>ระบบน้ำประปาหมู่บ้าน</span>
+          </Link>
+          <Link href="/" className={navStyles.navBtn}>กลับหน้าหลัก</Link>
+        </div>
+      </nav>
 
-      <main className={styles.main} style={{ justifyContent: 'center', minHeight: '80vh' }}>
-        <div className={styles.card} style={{ maxWidth: '400px', width: '100%', margin: '0 auto', textAlign: 'center' }}>
-          <h1 style={{ marginBottom: '1rem' }}>เข้าสู่ระบบ</h1>
-          <h3 style={{ color: '#666', marginBottom: '2rem' }}>สำหรับ: {roleName}</h3>
-          
-          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div>
-              <input
-                type="password"
-                placeholder="กรอกรหัสผ่าน"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.8rem',
-                  fontSize: '1rem',
-                  borderRadius: '8px',
-                  border: '1px solid #ccc'
-                }}
-              />
+      <main style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 60px)', padding: '2rem' }}>
+        <div style={{ width: '100%', maxWidth: '380px' }}>
+          <div className={styles.card} style={{ padding: '2rem' }}>
+            {/* Icon */}
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+              <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+                </svg>
+              </div>
+              <h1 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--primary)', margin: '0 0 0.25rem' }}>เข้าสู่ระบบ</h1>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: 0 }}>สำหรับ: {roleLabel}</p>
             </div>
-            {error && <p style={{ color: 'red', margin: '0' }}>{error}</p>}
-            <button type="submit" className={styles.actionButton} style={{ width: '100%' }}>
-              เข้าสู่ระบบ
-            </button>
-            <button 
-              type="button" 
-              className={styles.secondaryButton} 
-              style={{ width: '100%' }}
-              onClick={() => router.push('/')}
-            >
+
+            <form onSubmit={handleLogin}>
+              <div className={styles.formField}>
+                <label>รหัสผ่าน</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="กรอกรหัสผ่าน"
+                  autoFocus
+                />
+              </div>
+              {error && <p style={{ color: '#dc2626', fontSize: '0.88rem', margin: '-0.5rem 0 0.75rem' }}>{error}</p>}
+              <button type="submit" className={styles.actionButton} disabled={loading} style={{ width: '100%' }}>
+                {loading ? 'กำลังตรวจสอบ...' : 'เข้าสู่ระบบ'}
+              </button>
+            </form>
+
+            <Link href="/" className={styles.secondaryButton} style={{ width: '100%', marginTop: '0.75rem', display: 'flex' }}>
               กลับหน้าหลัก
-            </button>
-          </form>
-          
-          <div style={{ marginTop: '2rem', fontSize: '0.9rem', color: '#888' }}>
-            <p>💡 ข้อมูลสาธิต:</p>
-            <p>รหัสผ่านแอดมิน: <strong>admin123</strong></p>
-            <p>รหัสผ่านผู้ดูแล: <strong>staff123</strong></p>
+            </Link>
+
+            <div style={{ marginTop: '1.5rem', padding: '0.85rem', background: 'var(--bg-main)', borderRadius: '8px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+              <p style={{ margin: '0 0 0.25rem', fontWeight: 600, color: 'var(--text-main)' }}>รหัสผ่านสำหรับการสาธิต</p>
+              <p style={{ margin: '0 0 0.15rem' }}>แอดมิน: <code style={{ background: '#e2e8f0', padding: '1px 5px', borderRadius: '4px' }}>admin123</code></p>
+              <p style={{ margin: 0 }}>ผู้ดูแล: <code style={{ background: '#e2e8f0', padding: '1px 5px', borderRadius: '4px' }}>staff123</code></p>
+            </div>
           </div>
         </div>
       </main>
-    </div>
+    </>
   );
 }
