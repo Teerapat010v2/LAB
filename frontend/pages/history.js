@@ -39,8 +39,8 @@ export default function HistoryPage() {
           <button className={styles.actionButton} onClick={loadHistory} disabled={refreshing}>
             {refreshing ? 'กำลังรีเฟรช...' : 'รีเฟรชประวัติ'}
           </button>
-          <Link href="/admin" className={styles.secondaryButton}>
-            ไปหน้าผู้ดูแล
+          <Link href="/user" className={styles.secondaryButton}>
+            กลับหน้าบริการประชาชน
           </Link>
         </div>
       </div>

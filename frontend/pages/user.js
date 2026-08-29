@@ -119,8 +119,8 @@ export default function UserPage() {
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
               <h2>สรุปการบำรุงรักษา</h2>
-              <Link href="/maintenance" className={styles.secondaryButton}>
-                ดูรายการบำรุงรักษา
+              <Link href="/history" className={styles.secondaryButton}>
+                ดูประวัติย้อนหลัง
               </Link>
             </div>
             {maintenance.length === 0 ? (
