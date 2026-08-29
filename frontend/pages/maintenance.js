@@ -272,7 +272,7 @@ export default function MaintenancePage() {
           {/* 4. แผนการล้างถัง */}
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
-              <h2>📋 แผนการบำรุงรักษา</h2>
+              <h2>แผนการบำรุงรักษา (ล่าสุด)</h2>
               <button className={styles.secondaryButton} onClick={() => setShowPlanForm((p) => !p)}>
                 {showPlanForm ? 'ซ่อนฟอร์ม' : '+ วางแผนใหม่'}
               </button>
@@ -302,7 +302,7 @@ export default function MaintenancePage() {
               ) : (
                 plans.slice(0, 4).map((p, i) => (
                   <div key={i} className={styles.alertCard}>
-                    <p>📅 วันที่: <strong>{p.scheduleDate}</strong></p>
+                    <p>วันที่: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
                     <p>งาน: {p.description}</p>
                     <p>ผู้รับผิดชอบ: {p.assignedTo}</p>
                     <p>สถานะ: <span style={{ color: p.status === 'Done' || p.status === 'Completed' ? '#16a34a' : '#d97706', fontWeight: 'bold' }}>{p.status}</span></p>

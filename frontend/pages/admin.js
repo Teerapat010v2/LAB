@@ -151,10 +151,10 @@ export default function AdminPage() {
             <div className={styles.gridTwo}>
               {data.plans.length === 0 ? <p>ไม่มีแผนงาน</p> : data.plans.slice(0,4).map((p,i) => (
                 <div key={i} className={styles.alertCard}>
-                  <p>📅 <strong>{p.scheduleDate}</strong></p>
+                  <p>วันที่: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
                   <p>{p.description}</p>
-                  <p>👤 {p.assignedTo}</p>
-                  <p style={{ color: p.status === 'Done' || p.status === 'Completed' ? 'var(--status-success-text)' : 'var(--status-warning-text)', fontWeight: 'bold' }}>{p.status}</p>
+                  <p>ผู้รับผิดชอบ: {p.assignedTo}</p>
+                  <p style={{ color: p.status === 'Done' || p.status === 'Completed' ? 'var(--status-success-text)' : 'var(--status-warning-text)', fontWeight: 'bold' }}>สถานะ: {p.status}</p>
                 </div>
               ))}
             </div>
