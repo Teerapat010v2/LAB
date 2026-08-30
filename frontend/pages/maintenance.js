@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Layout from '../components/Layout';
 import styles from '../styles/Home.module.css';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import th from 'date-fns/locale/th';
+
+registerLocale('th', th);
 
 const apiBase = process.env.NEXT_PUBLIC_API_BASE || '';
 
@@ -263,7 +268,15 @@ export default function MaintenancePage() {
               <form onSubmit={handleAddMaintenance} className={styles.formColumn} style={{ marginBottom: '1rem' }}>
                 <div className={styles.formField}>
                   <label>วันที่ทำงาน</label>
-                  <input type="date" lang="th-TH" value={newMaintenance.date} onChange={handleMaintenanceChange('date')} required />
+                  <DatePicker 
+                    selected={newMaintenance.date ? new Date(newMaintenance.date) : null}
+                    onChange={(date) => setNewMaintenance(p => ({ ...p, date: date ? date.toISOString().split('T')[0] : '' }))}
+                    locale="th"
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText="วว/ดด/ปปปป"
+                    className={styles.datePickerInput}
+                    required
+                  />
                 </div>
                 <div className={styles.formField}>
                   <label>ผู้ดำเนินการ</label>
@@ -323,7 +336,15 @@ export default function MaintenancePage() {
               <form onSubmit={handleAddPlan} className={styles.formColumn} style={{ marginBottom: '1rem' }}>
                 <div className={styles.formField}>
                   <label>วันที่เริ่มกำหนด</label>
-                  <input type="date" lang="th-TH" value={newPlan.scheduleDate} onChange={handlePlanChange('scheduleDate')} required />
+                  <DatePicker 
+                    selected={newPlan.scheduleDate ? new Date(newPlan.scheduleDate) : null}
+                    onChange={(date) => setNewPlan(p => ({ ...p, scheduleDate: date ? date.toISOString().split('T')[0] : '' }))}
+                    locale="th"
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText="วว/ดด/ปปปป"
+                    className={styles.datePickerInput}
+                    required
+                  />
                 </div>
                 <div className={styles.formField}>
                   <label>รายละเอียดงาน</label>
