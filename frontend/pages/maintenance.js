@@ -221,7 +221,7 @@ export default function MaintenancePage() {
           {/* 3. บันทึกการล้างถัง */}
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
-              <h2>บันทึกการล้างถัง (ล่าสุด)</h2>
+              <h2>บันทึกการล้างถัง</h2>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <button className={styles.secondaryButton} onClick={() => setShowMaintenanceForm((p) => !p)}>
                   {showMaintenanceForm ? 'ซ่อนฟอร์ม' : '+ เพิ่มบันทึก'}
@@ -272,7 +272,7 @@ export default function MaintenancePage() {
           {/* 4. แผนการล้างถัง */}
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
-              <h2>แผนการบำรุงรักษา (ล่าสุด)</h2>
+              <h2>แผนการบำรุงรักษา</h2>
               <button className={styles.secondaryButton} onClick={() => setShowPlanForm((p) => !p)}>
                 {showPlanForm ? 'ซ่อนฟอร์ม' : '+ วางแผนใหม่'}
               </button>
@@ -323,7 +323,7 @@ export default function MaintenancePage() {
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <h2>เรื่องร้องเรียนจากชาวบ้าน (ล่าสุด)</h2>
+                <h2>เรื่องร้องเรียนจากชาวบ้าน</h2>
                 <span className={styles.statusBadge} style={{ background: 'var(--primary-light)', color: 'var(--primary)' }}>
                   ค้างดำเนินการ: {complaints.filter(c => c.status !== 'เสร็จงาน').length}
                 </span>
@@ -358,7 +358,7 @@ export default function MaintenancePage() {
           {/* 6. ประวัติการบำรุงรักษา */}
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
-              <h2>ประวัติการบำรุงรักษา (ล่าสุด)</h2>
+              <h2>ประวัติการบำรุงรักษา</h2>
             </div>
             {history.length === 0 ? (
               <p>ยังไม่มีประวัติ</p>

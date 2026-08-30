@@ -122,7 +122,7 @@ export default function AdminPage() {
             </div>
           </Section>
 
-          <Section title="รายงานบั๊กของระบบ (ล่าสุด)" totalItems={data.bugs.length}>
+          <Section title="รายงานบั๊กของระบบ" totalItems={data.bugs.length}>
             <div className={styles.gridTwo}>
               {data.bugs.length === 0 ? <p>ไม่มีรายงานบั๊ก</p> : data.bugs.slice(0,4).map(c => (
                 <div key={c._id} className={styles.alertCard}>
@@ -136,7 +136,7 @@ export default function AdminPage() {
             </div>
           </Section>
 
-          <Section title="บันทึกการล้างถัง (ล่าสุด)" linkTo="/maintenance-logs" totalItems={data.maintenance.length}>
+          <Section title="บันทึกการล้างถัง" linkTo="/maintenance-logs" totalItems={data.maintenance.length}>
             <div className={styles.gridTwo}>
               {data.maintenance.length === 0 ? <p>ไม่มีบันทึก</p> : data.maintenance.slice(0,4).map((m,i) => (
                 <div key={i} className={styles.alertCard}>
@@ -147,7 +147,7 @@ export default function AdminPage() {
             </div>
           </Section>
 
-          <Section title="แผนการบำรุงรักษา (ล่าสุด)" linkTo="/plans" totalItems={data.plans.length}>
+          <Section title="แผนการบำรุงรักษา" linkTo="/plans" totalItems={data.plans.length}>
             <div className={styles.gridTwo}>
               {data.plans.length === 0 ? <p>ไม่มีแผนงาน</p> : data.plans.slice(0,4).map((p,i) => (
                 <div key={i} className={styles.alertCard}>
@@ -190,7 +190,7 @@ export default function AdminPage() {
             )}
           </Section>
 
-          <Section title="ประวัติการบำรุงรักษา (ล่าสุด)" linkTo="/history" totalItems={data.history.length}>
+          <Section title="ประวัติการบำรุงรักษา" linkTo="/history" totalItems={data.history.length}>
             <div className={styles.gridTwo}>
               {data.history.length === 0 ? <p>ไม่มีประวัติ</p> : data.history.slice(0,4).map((h,i) => (
                 <div key={i} className={styles.alertCard}>
