@@ -103,6 +103,7 @@ export default function AdminPage() {
         <button className={styles.actionButton} onClick={loadData}>รีเฟรชข้อมูล</button>
         <Link href="/maintenance" className={styles.secondaryButton}>ไปหน้าผู้ดูแลประปา</Link>
         <Link href="/device" className={styles.secondaryButton}>ตั้งค่าอุปกรณ์ (IoT)</Link>
+        <Link href="/personnel" className={styles.secondaryButton} style={{ background: '#4f46e5', color: 'white' }}>จัดการบุคลากร</Link>
       </div>
 
       {msg && <div className={styles.successMessage}>{msg}</div>}
@@ -182,57 +183,7 @@ export default function AdminPage() {
             </div>
           </Section>
 
-          <Section title="รายชื่อเจ้าหน้าที่ / ผู้ดูแลระบบ">
-            <div style={{ marginBottom: '1rem' }}>
-              <button className={styles.smallButton} onClick={() => toggle('addAdmin')}>
-                {panels.addAdmin ? 'ยกเลิก' : '+ เพิ่มเจ้าหน้าที่'}
-              </button>
-            </div>
-            
-            {panels.addAdmin && (
-              <form onSubmit={async (e) => {
-                e.preventDefault(); setSaving(true);
-                const r = await fetch(`${apiBase}/api/admins`, {
-                  method: 'POST', headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(newAdmin),
-                });
-                if (r.ok) { notify('เพิ่มเจ้าหน้าที่เรียบร้อยแล้ว'); toggle('addAdmin'); setNewAdmin({name:'', phone:'', note:'', role:'maintenance'}); await loadData(); }
-                setSaving(false);
-              }} className={styles.formColumn} style={{ marginBottom: '1.5rem', background: 'var(--bg-main)', padding: '1rem', borderRadius: '8px' }}>
-                <Field label="ชื่อ - นามสกุล"><input required value={newAdmin.name} onChange={(e) => setNewAdmin(p => ({ ...p, name: e.target.value }))} /></Field>
-                <Field label="เบอร์โทร"><input required value={newAdmin.phone} onChange={(e) => setNewAdmin(p => ({ ...p, phone: e.target.value }))} /></Field>
-                <Field label="ตำแหน่ง (Role)">
-                  <select value={newAdmin.role || 'maintenance'} onChange={(e) => setNewAdmin(p => ({ ...p, role: e.target.value }))}>
-                    <option value="admin">ผู้ดูแลระบบ (Admin)</option>
-                    <option value="maintenance">ช่างประปา (Maintenance)</option>
-                  </select>
-                </Field>
-                <Field label="หมายเหตุ / หน้าที่"><textarea value={newAdmin.note} onChange={(e) => setNewAdmin(p => ({ ...p, note: e.target.value }))} rows={2} /></Field>
-                <button type="submit" className={styles.submitButton} disabled={saving}>บันทึกข้อมูลเจ้าหน้าที่</button>
-              </form>
-            )}
 
-            <div className={styles.gridTwo}>
-              {data.admins.length === 0 ? <p>ไม่มีรายชื่อ</p> : data.admins.map((a,i) => (
-                <div key={i} className={styles.alertCard} style={{ position: 'relative' }}>
-                  <p><strong>{a.name}</strong> ({a.role})</p>
-                  <p>โทร: {a.phone}</p>
-                  {a.note && <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>{a.note}</p>}
-                  <button 
-                    onClick={async () => {
-                      if(confirm('ต้องการลบเจ้าหน้าที่คนนี้หรือไม่?')) {
-                        const r = await fetch(`${apiBase}/api/admins/${a._id}`, { method: 'DELETE' });
-                        if(r.ok) { notify('ลบสำเร็จ'); await loadData(); }
-                      }
-                    }} 
-                    style={{ position: 'absolute', top: '10px', right: '10px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '4px', padding: '2px 6px', cursor: 'pointer', fontSize: '0.75rem' }}
-                  >
-                    ลบ
-                  </button>
-                </div>
-              ))}
-            </div>
-          </Section>
 
           <Section title="ตั้งค่าข้อมูลติดต่อส่วนกลาง">
             <div className={styles.alertCard}>
