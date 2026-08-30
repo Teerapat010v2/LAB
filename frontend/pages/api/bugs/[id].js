@@ -8,6 +8,13 @@ export default async function handler(req, res) {
   if (req.method === 'PUT' || req.method === 'PATCH') {
     try {
       const updated = await Bug.findByIdAndUpdate(id, { status: req.body.status }, { new: true });
+      if (req.body.status === 'เสร็จงาน') {
+        const History = require('../../../models/HistoryModel');
+        await History.create({
+          date: new Date().toISOString().split('T')[0],
+          note: `แก้ไขปัญหาระบบเรียบร้อย: ${updated.topic}`,
+        });
+      }
       res.status(200).json(updated);
     } catch (error) {
       res.status(500).json({ error: error.message });
