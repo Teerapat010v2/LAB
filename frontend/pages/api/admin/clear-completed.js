@@ -10,18 +10,26 @@ export default async function handler(req, res) {
 
   await dbConnect();
 
+  const { type } = req.query;
+
   try {
-    const bugs = await Bug.deleteMany({ status: 'เสร็จงาน' });
-    const complaints = await Complaint.deleteMany({ status: 'เสร็จงาน' });
-    const plans = await Plan.deleteMany({ status: 'ล้างแล้ว' });
+    let deletedCount = 0;
+    if (type === 'bugs') {
+      const result = await Bug.deleteMany({ status: 'เสร็จงาน' });
+      deletedCount = result.deletedCount;
+    } else if (type === 'complaints') {
+      const result = await Complaint.deleteMany({ status: 'เสร็จงาน' });
+      deletedCount = result.deletedCount;
+    } else if (type === 'plans') {
+      const result = await Plan.deleteMany({ status: 'ล้างแล้ว' });
+      deletedCount = result.deletedCount;
+    } else {
+      return res.status(400).json({ error: 'Invalid type' });
+    }
 
     res.status(200).json({
       message: 'ลบประวัติที่เสร็จสิ้นเรียบร้อยแล้ว',
-      deletedCounts: {
-        bugs: bugs.deletedCount,
-        complaints: complaints.deletedCount,
-        plans: plans.deletedCount,
-      }
+      deletedCount,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

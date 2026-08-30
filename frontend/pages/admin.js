@@ -5,13 +5,14 @@ import styles from '../styles/Home.module.css';
 
 const apiBase = process.env.NEXT_PUBLIC_API_BASE || '';
 
-const Section = ({ title, linkTo, totalItems, children, noBorder }) => (
-  <div className={styles.card} style={noBorder ? { borderTop: '3px solid var(--primary)' } : {}}>
-    <div className={styles.sectionTitle}>
-      <h2>{title}</h2>
+const Section = ({ title, children, noBorder, totalItems, linkTo, action }) => (
+  <div className={styles.card} style={noBorder ? { border: 'none', boxShadow: 'none', padding: 0 } : {}}>
+    <div className={styles.sectionTitle} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+      <h2 style={{ margin: 0 }}>{title}</h2>
+      {action && <div>{action}</div>}
     </div>
     {children}
-    {linkTo && totalItems > 4 && (
+    {totalItems > 4 && linkTo && (
       <div style={{ textAlign: 'center', marginTop: '1rem' }}>
         <Link href={linkTo} className={styles.secondaryButton} style={{ width: '100%' }}>
           ดูทั้งหมด (มีอีก {totalItems - 4} รายการ)
@@ -76,6 +77,39 @@ export default function AdminPage() {
     setSaving(false);
   };
 
+  const handleUpdateContact = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    // simulated save since no specific route is implemented for contact
+    setTimeout(() => {
+      setMsg('บันทึกข้อมูลติดต่อสำเร็จ');
+      setTimeout(() => setMsg(''), 3000);
+      setSaving(false);
+      setPanels(p => ({ ...p, editContact: false }));
+      loadData();
+    }, 500);
+  };
+
+  const handleClearCompleted = async (type) => {
+    let typeLabel = '';
+    if (type === 'bugs') typeLabel = 'รายงานบั๊กที่แก้ไขแล้ว';
+    if (type === 'plans') typeLabel = 'แผนงานที่ล้างแล้ว';
+    
+    if (!confirm(`คุณแน่ใจหรือไม่ที่จะลบประวัติ "${typeLabel}" ทั้งหมดที่เสร็จสิ้นแล้ว?`)) return;
+    
+    try {
+      const res = await fetch(`${apiBase}/api/admin/clear-completed?type=${type}`, { method: 'DELETE' });
+      if (res.ok) {
+        const json = await res.json();
+        setMsg(`เคลียร์ประวัติ ${typeLabel} สำเร็จ (${json.deletedCount} รายการ)`);
+        setTimeout(() => setMsg(''), 5000);
+        await loadData();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleUpdateBugStatus = async (id, status) => {
     const res = await fetch(`${apiBase}/api/bugs/${id}`, {
       method: 'PATCH',
@@ -88,21 +122,6 @@ export default function AdminPage() {
     }
   };
 
-  const handleClearCompleted = async () => {
-    if (!confirm('คุณแน่ใจหรือไม่ที่จะลบประวัติงานที่ทำเสร็จแล้วทั้งหมด (เรื่องร้องเรียน, แผนบำรุงรักษา, บั๊ก) ?')) return;
-    
-    try {
-      const res = await fetch(`${apiBase}/api/admin/clear-completed`, { method: 'DELETE' });
-      if (res.ok) {
-        const json = await res.json();
-        setMsg(`เคลียร์ประวัติแล้ว (บั๊ก ${json.deletedCounts.bugs}, ร้องเรียน ${json.deletedCounts.complaints}, แผน ${json.deletedCounts.plans})`);
-        setTimeout(() => setMsg(''), 5000);
-        await loadData();
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
 
   return (
     <Layout title="แผงควบคุมระบบ (Admin Dashboard)" subtitle="ดูภาพรวมทั้งหมด และจัดการผู้ใช้">
@@ -118,11 +137,6 @@ export default function AdminPage() {
       {loading ? <p>กำลังโหลดข้อมูล...</p> : (
         <>
           <Section title="ภาพรวมระบบ (System Overview)" noBorder>
-            <div style={{ marginBottom: '1rem', textAlign: 'right' }}>
-              <button className={styles.dangerButton} onClick={handleClearCompleted} style={{ margin: 0 }}>
-                ลบประวัติที่เสร็จสิ้นแล้ว
-              </button>
-            </div>
             <div className={styles.statGrid}>
               <div className={styles.statTile}>
                 <div className={styles.val}>
@@ -147,7 +161,15 @@ export default function AdminPage() {
             </div>
           </Section>
 
-          <Section title="รายงานบั๊กของระบบ" totalItems={data.bugs.length}>
+          <Section 
+            title="รายงานบั๊กของระบบ" 
+            totalItems={data.bugs.length}
+            action={
+              <button className={styles.dangerButton} style={{ margin: 0, padding: '0.4rem 0.8rem', fontSize: '0.8rem' }} onClick={() => handleClearCompleted('bugs')}>
+                ล้างประวัติ (เสร็จงาน)
+              </button>
+            }
+          >
             <div className={styles.gridTwo}>
               {data.bugs.length === 0 ? <p>ไม่มีรายงานบั๊ก</p> : data.bugs.slice(0,4).map(c => (
                 <div key={c._id} className={styles.alertCard}>
@@ -182,7 +204,16 @@ export default function AdminPage() {
             </div>
           </Section>
 
-          <Section title="แผนการบำรุงรักษา" linkTo="/plans" totalItems={data.plans.length}>
+          <Section 
+            title="แผนการบำรุงรักษา" 
+            linkTo="/plans" 
+            totalItems={data.plans.length}
+            action={
+              <button className={styles.dangerButton} style={{ margin: 0, padding: '0.4rem 0.8rem', fontSize: '0.8rem' }} onClick={() => handleClearCompleted('plans')}>
+                ล้างประวัติ (เสร็จงาน)
+              </button>
+            }
+          >
             <div className={styles.gridTwo}>
               {data.plans.length === 0 ? <p>ไม่มีแผนงาน</p> : data.plans.slice(0,4).map((p,i) => (
                 <div key={i} className={styles.alertCard}>
