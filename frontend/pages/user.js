@@ -83,17 +83,24 @@ export default function UserPage() {
 
             <div className={styles.card}>
               <div className={styles.sectionTitle}><h2>การแจ้งเตือน</h2></div>
-              {alerts.length === 0 ? (
+              {alerts.filter(a => a.type !== 'ร้องเรียน').length === 0 ? (
                 <p>ไม่มีการแจ้งเตือนในขณะนี้</p>
-              ) : alerts.map((al, i) => (
-                <div key={i} className={styles.alertCard} style={{ borderLeft: `3px solid ${al.active ? '#dc2626' : '#16a34a'}` }}>
+              ) : alerts.filter(a => a.type !== 'ร้องเรียน').map((al, i) => {
+                let borderColor = al.active ? '#dc2626' : '#16a34a'; // default active=red, normal=green
+                if (al.type === 'งานที่กำลังดำเนินการ' && al.active) borderColor = '#0ea5e9'; // blue for in-progress
+                
+                return (
+                <div key={i} className={styles.alertCard} style={{ borderLeft: `3px solid ${borderColor}` }}>
                   <p><strong>{al.type}</strong></p>
                   <p>{al.message}</p>
                   <p className={al.active ? styles.statusActive : styles.statusNormal}>
-                    {al.active ? 'ต้องตรวจสอบ' : 'ปกติ'}
+                    {al.type === 'งานที่กำลังดำเนินการ' 
+                      ? (al.active ? 'กำลังดำเนินการ' : 'ปกติ') 
+                      : (al.active ? 'ต้องตรวจสอบ' : 'ปกติ')}
                   </p>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

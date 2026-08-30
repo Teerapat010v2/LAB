@@ -14,7 +14,24 @@ export default function PlansPage() {
     setLoading(true);
     try {
       const response = await fetch(`${apiBase}/api/plans`);
-      const json = await response.json();
+      let json = await response.json();
+      
+      const statusWeight = {
+        'กำลังล้าง': 1,
+        'ตามแผน': 2,
+        'ล้างแล้ว': 3
+      };
+      
+      json.sort((a, b) => {
+        const wA = statusWeight[a.status] || 99;
+        const wB = statusWeight[b.status] || 99;
+        if (wA !== wB) return wA - wB;
+        if (a.status === 'ล้างแล้ว') {
+          return new Date(b.scheduleDate).getTime() - new Date(a.scheduleDate).getTime(); // Newest completed first
+        }
+        return new Date(a.scheduleDate).getTime() - new Date(b.scheduleDate).getTime(); // Earliest upcoming first
+      });
+
       setPlans(json);
     } catch (error) {
       console.error('Failed to load plans', error);

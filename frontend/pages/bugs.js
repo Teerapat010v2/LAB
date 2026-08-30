@@ -15,7 +15,22 @@ export default function BugsPage() {
     setLoading(true);
     try {
       const response = await fetch(`${apiBase}/api/bugs`);
-      const json = await response.json();
+      let json = await response.json();
+      
+      const statusWeight = {
+        'กำลังดำเนินการ': 1,
+        'รับงาน': 1,
+        'รอดำเนินการ': 2,
+        'เสร็จงาน': 3
+      };
+      
+      json.sort((a, b) => {
+        const wA = statusWeight[a.status] || 99;
+        const wB = statusWeight[b.status] || 99;
+        if (wA !== wB) return wA - wB;
+        return new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime();
+      });
+
       setBugs(json);
     } catch (error) {
       console.error('Failed to load bugs', error);

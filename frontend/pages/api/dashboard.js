@@ -14,14 +14,39 @@ export default async function handler(req, res) {
   try {
     let [water, bugs, maintenance, plans, admins, history, complaints, settings] = await Promise.all([
       Water.findOne().sort({ timestamp: -1 }).lean(),
-      Bug.find().sort({ submittedAt: -1 }).lean(),
+      Bug.find().lean(),
       Maintenance.find().sort({ date: -1 }).lean(),
-      Plan.find().sort({ scheduleDate: 1 }).lean(),
+      Plan.find().lean(),
       Admin.find().lean(),
       History.find().sort({ date: -1 }).lean(),
-      Complaint.find().sort({ submittedAt: -1 }).lean(),
+      Complaint.find().lean(),
       Settings.findOne().lean()
     ]);
+
+    const statusWeightBugs = { 'กำลังดำเนินการ': 1, 'รับงาน': 1, 'รอดำเนินการ': 2, 'เสร็จงาน': 3 };
+    bugs.sort((a, b) => {
+      const wA = statusWeightBugs[a.status] || 99;
+      const wB = statusWeightBugs[b.status] || 99;
+      if (wA !== wB) return wA - wB;
+      return new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime();
+    });
+
+    const statusWeightComplaints = { 'กำลังดำเนินการ': 1, 'รับงาน': 1, 'รอดำเนินการ': 2, 'เสร็จงาน': 3 };
+    complaints.sort((a, b) => {
+      const wA = statusWeightComplaints[a.status] || 99;
+      const wB = statusWeightComplaints[b.status] || 99;
+      if (wA !== wB) return wA - wB;
+      return new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime();
+    });
+
+    const statusWeightPlans = { 'กำลังล้าง': 1, 'ตามแผน': 2, 'ล้างแล้ว': 3 };
+    plans.sort((a, b) => {
+      const wA = statusWeightPlans[a.status] || 99;
+      const wB = statusWeightPlans[b.status] || 99;
+      if (wA !== wB) return wA - wB;
+      if (a.status === 'ล้างแล้ว') return new Date(b.scheduleDate).getTime() - new Date(a.scheduleDate).getTime();
+      return new Date(a.scheduleDate).getTime() - new Date(b.scheduleDate).getTime();
+    });
     
     if (!settings) {
       settings = { maintenanceIntervalDays: 90, contactName: 'ผู้ดูแลระบบประปา', contactPhone: '080-123-4567', contactNote: 'ติดต่อเมื่อมีเหตุฉุกเฉิน' };
@@ -70,22 +95,25 @@ export default async function handler(req, res) {
       });
     }
 
-    // 2. Alert for Turbidity (ความขุ่น)
-    if (water) {
-      const waterStatus = water.turbidity >= 10 ? 'Critical' : water.turbidity >= 5 ? 'Alert' : 'Normal';
-      let message = 'ค่าความขุ่นอยู่ในเกณฑ์ปกติ';
-      if (waterStatus === 'Critical') {
-        message = 'น้ำขุ่นมาก ควรดำเนินการล้างถังโดยด่วน';
-      } else if (waterStatus === 'Alert') {
-        message = 'ค่าความขุ่นสูงกว่าปกติ โปรดตรวจสอบ';
-      }
+    // 2. Alert for Work In Progress (งานที่สตาฟกำลังทำ)
+    const inProgressTasks = [
+      ...bugs.filter(b => b.status === 'กำลังดำเนินการ').map(b => b.topic),
+      ...complaints.filter(c => c.status === 'กำลังดำเนินการ' || c.status === 'รับงาน').map(c => c.topic),
+      ...plans.filter(p => p.status === 'กำลังล้าง').map(p => p.description)
+    ];
+
+    if (inProgressTasks.length > 0) {
       alerts.push({
-        type: 'ความขุ่น',
-        message: message,
-        active: waterStatus !== 'Normal',
+        type: 'งานที่กำลังดำเนินการ',
+        message: inProgressTasks.join(', '),
+        active: true,
       });
     } else {
-      alerts.push({ type: 'ความขุ่น', message: 'ไม่มีข้อมูลน้ำ', active: false });
+      alerts.push({
+        type: 'งานที่กำลังดำเนินการ',
+        message: 'ขณะนี้สตาฟไม่มีงานที่กำลังดำเนินการ',
+        active: false,
+      });
     }
 
     // 3. Alert for Complaints (ร้องเรียน)
