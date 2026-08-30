@@ -25,11 +25,7 @@ export default function Home() {
       {/* Hero */}
       <main style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(1.5rem, 5vw, 3rem) 1rem' }}>
         <div style={{ textAlign: 'center', marginBottom: 'clamp(1.5rem, 5vw, 3rem)' }}>
-          <div style={{ width: 'clamp(52px, 12vw, 72px)', height: 'clamp(52px, 12vw, 72px)', background: 'var(--primary-light)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2C6 2 2 8 2 14a10 10 0 0020 0c0-6-4-12-10-12z"/>
-            </svg>
-          </div>
+          <img src="/Logo.png" alt="โลโก้หลัก" style={{ width: '80px', height: '80px', objectFit: 'contain', margin: '0 auto 1rem', borderRadius: '12px' }} />
           <h1 style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.5rem' }}>
             ระบบจัดการน้ำประปาหมู่บ้าน
           </h1>
@@ -52,11 +48,11 @@ export default function Home() {
               onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(3,105,161,0.4)'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 10px 25px rgba(3,105,161,0.3)'; }}
             >
-              <div style={{ background: 'white', padding: '10px', borderRadius: '50%', width: '100px', height: '100px', margin: '0 auto 1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="/icon_villager.png" alt="ชาวบ้าน" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+              <div style={{ background: 'white', borderRadius: '50%', width: '90px', height: '90px', margin: '0 auto 1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                <img src="/icon_villager.png" alt="ชาวบ้าน" style={{ width: '60px', height: '60px', objectFit: 'contain' }} />
               </div>
               <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 800, margin: '0 0 0.5rem', color: 'white' }}>ชาวบ้าน</h2>
-              <p style={{ fontSize: 'var(--text-sm)', opacity: 0.9, margin: 0 }}>ตรวจสอบคุณภาพน้ำและแจ้งปัญหา</p>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.9)', margin: 0 }}>ตรวจสอบคุณภาพน้ำและแจ้งปัญหา</p>
             </div>
           </Link>
 
