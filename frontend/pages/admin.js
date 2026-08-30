@@ -85,6 +85,18 @@ export default function AdminPage() {
     setSaving(false);
   };
 
+  const handleUpdateBugStatus = async (id, status) => {
+    const res = await fetch(`${apiBase}/api/bugs/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    if (res.ok) {
+      notify('อัปเดตสถานะบั๊กแล้ว');
+      await loadData();
+    }
+  };
+
   return (
     <Layout title="แผงควบคุม Admin" subtitle="ระบบควบคุมหลังบ้าน จัดการตั้งค่า และดูแลข้อมูลทั้งหมด">
       <div className={styles.buttonRow}>
@@ -131,6 +143,16 @@ export default function AdminPage() {
                   <p style={{ fontSize: 'var(--text-xs)', marginTop: '0.4rem', color: 'var(--primary)', fontWeight: 'bold' }}>
                     สถานะ: {c.status}
                   </p>
+                  {c.status !== 'เสร็จงาน' && (
+                    <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+                      <button className={styles.smallButton} onClick={() => handleUpdateBugStatus(c._id, 'กำลังดำเนินการ')}>
+                        รับเรื่อง/กำลังแก้
+                      </button>
+                      <button className={styles.smallButton} style={{ background: '#10b981', color: 'white' }} onClick={() => handleUpdateBugStatus(c._id, 'เสร็จงาน')}>
+                        แก้ไขเสร็จสิ้น
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
