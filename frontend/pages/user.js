@@ -166,9 +166,6 @@ export default function UserPage() {
               <button className={styles.secondaryButton} onClick={() => { setShowForm(true); setComplaint(p => ({ ...p, topic: '' })); }}>
                 กรอกแบบฟอร์มร้องเรียน
               </button>
-              <button className={styles.dangerButton} onClick={() => { setShowForm(true); setComplaint(p => ({ ...p, topic: 'รายงานระบบทำงานผิดพลาด' })); }}>
-                แจ้งระบบขัดข้อง
-              </button>
             </div>
 
             {complaintMsg && <div className={styles.successMessage}>{complaintMsg}</div>}
