@@ -26,7 +26,7 @@ export default function UserPage() {
         fetch(`${apiBase}/api/maintenance`).then(r => r.json()).catch(() => []),
       ]);
       setWater(w);
-      setAlerts(al.alerts || []);
+      setAlerts((al.alerts || []).filter(a => a.type !== 'ร้องเรียน'));
       setAdmins(adm || []);
       setMaintenance(mnt || []);
     } catch (e) { console.error(e); }
