@@ -7,8 +7,11 @@ export default async function handler(req, res) {
 
   if (req.method === 'PUT' || req.method === 'PATCH') {
     try {
-      const updated = await Plan.findByIdAndUpdate(id, { status: req.body.status }, { new: true });
-      if (req.body.status === 'เสร็จสิ้น') {
+      const isStatusUpdate = Object.keys(req.body).length === 1 && req.body.status;
+      const updateData = isStatusUpdate ? { status: req.body.status } : req.body;
+      const updated = await Plan.findByIdAndUpdate(id, updateData, { new: true });
+      
+      if (req.body.status === 'เสร็จสิ้น' && isStatusUpdate) {
         const Maintenance = require('../../../models/MaintenanceModel');
         const History = require('../../../models/HistoryModel');
         
@@ -36,6 +39,13 @@ export default async function handler(req, res) {
         }
       }
       res.status(200).json(updated);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  } else if (req.method === 'DELETE') {
+    try {
+      await Plan.findByIdAndDelete(id);
+      res.status(200).json({ message: 'Deleted successfully' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

@@ -22,6 +22,7 @@ export default function MaintenancePage() {
   const [message, setMessage] = useState('');
   const [newMaintenance, setNewMaintenance] = useState({ date: '', reason: '', note: '', worker: '' });
   const [newPlan, setNewPlan] = useState({ scheduleDate: '', description: '', assignedTo: '', routineInterval: '' });
+  const [editingPlanId, setEditingPlanId] = useState(null);
   const [showMaintenanceForm, setShowMaintenanceForm] = useState(false);
   const [showPlanForm, setShowPlanForm] = useState(false);
   const [newTurbidity, setNewTurbidity] = useState('');
@@ -84,20 +85,51 @@ export default function MaintenancePage() {
     e.preventDefault();
     setSaving(true);
     setMessage('');
-    const res = await fetch(`${apiBase}/api/plans`, {
-      method: 'POST',
+    
+    const url = editingPlanId ? `${apiBase}/api/plans/${editingPlanId}` : `${apiBase}/api/plans`;
+    const method = editingPlanId ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newPlan),
     });
     if (res.ok) {
       setNewPlan({ scheduleDate: '', description: '', assignedTo: '', routineInterval: '' });
-      setMessage(' เพิ่มแผนงานเรียบร้อยแล้ว');
+      setEditingPlanId(null);
+      setMessage(editingPlanId ? ' แก้ไขแผนงานเรียบร้อยแล้ว' : ' เพิ่มแผนงานเรียบร้อยแล้ว');
       setShowPlanForm(false);
       await loadData();
     } else {
-      setMessage(' ไม่สามารถเพิ่มแผนงานได้');
+      setMessage(' ไม่สามารถบันทึกแผนงานได้');
     }
     setSaving(false);
+  };
+
+  const handleEditPlanClick = (plan) => {
+    setNewPlan({ 
+      scheduleDate: plan.scheduleDate || '', 
+      description: plan.description || '', 
+      assignedTo: plan.assignedTo || '', 
+      routineInterval: plan.routineInterval || '' 
+    });
+    setEditingPlanId(plan._id);
+    setShowPlanForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleDeletePlan = async (id) => {
+    if (!confirm('คุณแน่ใจหรือไม่ที่จะลบแผนงานนี้?')) return;
+    try {
+      const res = await fetch(`${apiBase}/api/plans/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        await loadData();
+      } else {
+        alert('เกิดข้อผิดพลาดในการลบแผนงาน');
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleUpdateWater = async (e) => {
@@ -370,7 +402,13 @@ export default function MaintenancePage() {
               ) : (
                 plans.slice(0, 4).map((p, i) => (
                   <div key={p._id || i} className={styles.alertCard}>
-                    <p>วันที่: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <p>วันที่: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
+                      <div style={{ display: 'flex', gap: '0.25rem' }}>
+                        <button className={styles.smallButton} style={{ background: '#f59e0b', margin: 0 }} onClick={() => handleEditPlanClick(p)}>แก้ไข</button>
+                        <button className={styles.smallButton} style={{ background: 'var(--danger)', margin: 0 }} onClick={() => handleDeletePlan(p._id)}>ลบ</button>
+                      </div>
+                    </div>
                     <p>งาน: {p.description}</p>
                     <p>ผู้รับผิดชอบ: {p.assignedTo}</p>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>

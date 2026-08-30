@@ -75,6 +75,20 @@ export default function PlansPage() {
     }
   };
 
+  const handleDeletePlan = async (id) => {
+    if (!confirm('คุณแน่ใจหรือไม่ที่จะลบแผนงานนี้?')) return;
+    try {
+      const res = await fetch(`${apiBase}/api/plans/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        await loadData();
+      } else {
+        alert('เกิดข้อผิดพลาดในการลบแผนงาน');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const isAdmin = typeof window !== 'undefined' && localStorage.getItem('auth_admin');
 
   return (
@@ -140,6 +154,9 @@ export default function PlansPage() {
                             เสร็จสิ้น
                           </button>
                         )}
+                        <button className={styles.smallButton} style={{ margin: 0, background: 'var(--danger)' }} onClick={() => handleDeletePlan(p._id)}>
+                          ลบ
+                        </button>
                         {p.status === 'เสร็จสิ้น' && (
                           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>-</span>
                         )}
