@@ -26,8 +26,26 @@ export default function HistoryPage() {
     loadHistory();
   }, []);
 
+  const handleClear = async () => {
+    if (!localStorage.getItem('auth_admin')) {
+      alert('เฉพาะผู้ดูแลระบบ (Admin) เท่านั้นที่สามารถลบประวัติได้');
+      return;
+    }
+    if (!confirm('คุณแน่ใจหรือไม่ที่จะลบประวัติทั่วไปทั้งหมด?')) return;
+    try {
+      const res = await fetch(`${apiBase}/api/admin/clear-completed?type=history`, { method: 'DELETE' });
+      if (res.ok) {
+        await loadHistory();
+      } else {
+        alert('เกิดข้อผิดพลาดในการลบข้อมูล');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
-    <Layout title="ประวัติการบำรุงรักษาทั้งหมด" subtitle="ดูรายการบำรุงรักษาและประวัติการดำเนินงานย้อนหลัง">
+    <Layout title="ประวัติการทำงานทั้งหมด" subtitle="ดูรายการบำรุงรักษาและประวัติการดำเนินงานย้อนหลัง">
       <div className={styles.buttonRow}>
         <button className={styles.actionButton} onClick={loadHistory}>
           รีเฟรชประวัติ
@@ -35,6 +53,11 @@ export default function HistoryPage() {
         <button className={styles.secondaryButton} onClick={() => window.history.back()}>
           ย้อนกลับ
         </button>
+        {typeof window !== 'undefined' && localStorage.getItem('auth_admin') && (
+          <button className={styles.dangerButton} style={{ marginLeft: 'auto' }} onClick={handleClear}>
+            ลบประวัติทั้งหมด
+          </button>
+        )}
       </div>
 
       {loading ? (

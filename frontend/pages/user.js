@@ -139,26 +139,6 @@ export default function UserPage() {
             )}
           </div>
 
-          {/* Plans summary */}
-          <div className={styles.card}>
-            <div className={styles.sectionTitle}>
-              <h2>แผนการบำรุงรักษาและล้างถัง (เร็วๆ นี้)</h2>
-            </div>
-            {plans.length === 0 ? (
-              <p>ยังไม่มีแผนการบำรุงรักษา</p>
-            ) : (
-              <div className={styles.gridTwo}>
-                {plans.slice(0, 4).map((p, i) => (
-                  <div key={i} className={styles.alertCard}>
-                    <p>วันที่กำหนด: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
-                    <p>งาน: {p.description}</p>
-                    <p>สถานะ: <span style={{ color: p.status === 'เสร็จสิ้น' ? 'var(--success)' : 'var(--primary)', fontWeight: 'bold' }}>{p.status}</span></p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
           {/* Complaint */}
           <div className={styles.card} id="complaint-section">
             <div className={styles.sectionTitle}><h2>แจ้งปัญหาการใช้น้ำ / ร้องเรียน</h2></div>

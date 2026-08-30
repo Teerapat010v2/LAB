@@ -23,6 +23,12 @@ export default async function handler(req, res) {
     } else if (type === 'plans') {
       const result = await Plan.deleteMany({ status: 'เสร็จสิ้น' });
       deletedCount = result.deletedCount;
+    } else if (type === 'maintenance') {
+      const result = await require('../../../models/MaintenanceModel').deleteMany({});
+      deletedCount = result.deletedCount;
+    } else if (type === 'history') {
+      const result = await require('../../../models/HistoryModel').deleteMany({});
+      deletedCount = result.deletedCount;
     } else {
       return res.status(400).json({ error: 'Invalid type' });
     }
