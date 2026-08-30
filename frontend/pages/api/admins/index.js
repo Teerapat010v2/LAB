@@ -1,5 +1,5 @@
-import dbConnect from '../../utils/dbConnect';
-import Admin from '../../models/AdminModel';
+import dbConnect from '../../../utils/dbConnect';
+import Admin from '../../../models/AdminModel';
 
 export default async function handler(req, res) {
   await dbConnect();
