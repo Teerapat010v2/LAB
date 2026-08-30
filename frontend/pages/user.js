@@ -19,16 +19,12 @@ export default function UserPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [w, al, adm, mnt] = await Promise.all([
-        fetch(`${apiBase}/api/water`).then(r => r.json()).catch(() => null),
-        fetch(`${apiBase}/api/alert`).then(r => r.json()).catch(() => ({ alerts: [] })),
-        fetch(`${apiBase}/api/admins`).then(r => r.json()).catch(() => []),
-        fetch(`${apiBase}/api/maintenance`).then(r => r.json()).catch(() => []),
-      ]);
-      setWater(w);
-      setAlerts((al.alerts || []).filter(a => a.type !== 'ร้องเรียน'));
-      setAdmins(adm || []);
-      setMaintenance(mnt || []);
+      const r = await fetch(`${apiBase}/api/dashboard`);
+      const data = await r.json();
+      setWater(data.water || null);
+      setAlerts((data.alerts || []).filter(a => a.type !== 'ร้องเรียน'));
+      setAdmins(data.admins || []);
+      setMaintenance(data.maintenance || []);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };

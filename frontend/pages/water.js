@@ -32,13 +32,10 @@ export default function WaterPage() {
     setRefreshing(true);
     setLoading(true);
     try {
-      const [waterJson, alertJson] = await Promise.all([
-        fetch(`${apiBase}/api/water`).then((res) => res.json()),
-        fetch(`${apiBase}/api/alert`).then((res) => res.json()),
-      ]);
-      setWater(waterJson);
-      setAlerts(alertJson.alerts ?? []);
-      setContact(alertJson.contact ?? null);
+      const dashboardJson = await fetch(`${apiBase}/api/dashboard`).then(res => res.json());
+      setWater(dashboardJson.water);
+      setAlerts((dashboardJson.alerts || []).filter(a => a.type !== 'ร้องเรียน'));
+      setContact(dashboardJson.contact ?? null);
     } catch (error) {
       console.error('Failed to load water data', error);
     } finally {
