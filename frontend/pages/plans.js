@@ -106,6 +106,7 @@ export default function PlansPage() {
               <tr>
                 <th style={{ width: '120px' }}>วันที่กำหนด</th>
                 <th>รายละเอียดงาน</th>
+                <th>ทำซ้ำทุกๆ</th>
                 <th>ผู้รับผิดชอบ</th>
                 <th style={{ width: '120px' }}>สถานะ</th>
                 {isStaff && <th style={{ width: '150px' }}>อัปเดตสถานะ</th>}
@@ -116,6 +117,7 @@ export default function PlansPage() {
                 <tr key={p._id || idx}>
                   <td>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</td>
                   <td><strong>{p.description}</strong></td>
+                  <td>{p.routineInterval ? `${p.routineInterval} วัน` : '-'}</td>
                   <td>{p.assignedTo}</td>
                   <td>
                     <span className={styles.statusBadge} style={{ 

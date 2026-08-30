@@ -17,6 +17,7 @@ export default async function handler(req, res) {
         scheduleDate: req.body.scheduleDate || new Date().toISOString().split('T')[0],
         description: req.body.description || 'แผนการล้างถัง',
         assignedTo: req.body.assignedTo || 'ทีมช่าง',
+        routineInterval: req.body.routineInterval ? parseInt(req.body.routineInterval, 10) : null,
       });
       res.status(201).json(newPlan);
     } catch (error) {

@@ -20,9 +20,8 @@ export default async function handler(req, res) {
       if (!settings) {
         settings = new Settings();
       }
-      const { maintenanceIntervalDays, contactName, contactPhone, contactNote } = req.body;
+      const { contactName, contactPhone, contactNote } = req.body;
       
-      if (maintenanceIntervalDays !== undefined) settings.maintenanceIntervalDays = Number(maintenanceIntervalDays);
       if (contactName !== undefined) settings.contactName = contactName;
       if (contactPhone !== undefined) settings.contactPhone = contactPhone;
       if (contactNote !== undefined) settings.contactNote = contactNote;

@@ -61,65 +61,36 @@ export default async function handler(req, res) {
     const alerts = [];
     const currentDate = new Date();
     
-    // 1. Alert for Time (เวลา)
-    const latestMaintenance = maintenance[0];
-    let daysSinceCleaning = 0;
+    // 1. Alert for Upcoming Plans (กำหนดการถัดไป)
     let daysUntilNextCleaning = null;
-    if (latestMaintenance) {
-      const diff = Math.abs(currentDate.getTime() - new Date(latestMaintenance.date).getTime());
-      daysSinceCleaning = Math.ceil(diff / (1000 * 60 * 60 * 24));
-      
-      let active = false;
-      
-      const threshold = settings.maintenanceIntervalDays;
-      daysUntilNextCleaning = threshold - daysSinceCleaning;
-      const warningThreshold = Math.max(1, threshold - 15);
-      
-      // Auto create plan if not exists
-      const existingAutoPlan = plans.find(p => p.isAuto && p.status !== 'เสร็จสิ้น');
-      if (!existingAutoPlan) {
-        const nextDate = new Date(new Date(latestMaintenance.date).getTime() + (threshold * 24 * 60 * 60 * 1000));
-        const newPlan = await Plan.create({
-          scheduleDate: nextDate.toISOString().split('T')[0],
-          description: 'ล้างถังตามรอบ (กำหนดอัตโนมัติ)',
-          assignedTo: 'ทีมงานบำรุงรักษา',
-          status: 'ตามแผน',
-          isAuto: true
-        });
-        plans.push(newPlan.toObject());
-        
-        // Re-sort plans since we just added one
-        plans.sort((a, b) => {
-          const wA = statusWeightPlans[a.status] || 99;
-          const wB = statusWeightPlans[b.status] || 99;
-          if (wA !== wB) return wA - wB;
-          if (a.status === 'เสร็จสิ้น') return new Date(b.scheduleDate).getTime() - new Date(a.scheduleDate).getTime();
-          return new Date(a.scheduleDate).getTime() - new Date(b.scheduleDate).getTime();
-        });
-      }
+    let message = 'ยังไม่มีแผนงานที่กำหนดเวลาไว้';
+    let active = false;
 
-      let message = `ล้างถังครั้งล่าสุดเมื่อ ${new Date(latestMaintenance.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })} (${daysSinceCleaning} วันที่ผ่านมา) — เหลืออีก ${daysUntilNextCleaning} วัน`;
+    const upcomingPlans = plans.filter(p => p.status !== 'เสร็จสิ้น' && p.scheduleDate);
+    if (upcomingPlans.length > 0) {
+      // Sort to get the earliest upcoming date
+      upcomingPlans.sort((a, b) => new Date(a.scheduleDate).getTime() - new Date(b.scheduleDate).getTime());
+      const nextPlan = upcomingPlans[0];
+      const diff = new Date(nextPlan.scheduleDate).getTime() - currentDate.getTime();
+      daysUntilNextCleaning = Math.ceil(diff / (1000 * 60 * 60 * 24));
       
-      if (daysSinceCleaning >= threshold) {
+      if (daysUntilNextCleaning < 0) {
+        message = `เลยกำหนดงาน: ${nextPlan.description} มาแล้ว ${Math.abs(daysUntilNextCleaning)} วัน`;
         active = true;
-        message = `เลยกำหนดเวลาล้างถังแล้ว ${Math.abs(daysUntilNextCleaning)} วัน ควรดำเนินการทันที`;
-      } else if (daysSinceCleaning >= warningThreshold) {
+      } else if (daysUntilNextCleaning === 0) {
+        message = `ถึงกำหนดงาน: ${nextPlan.description} (วันนี้)`;
         active = true;
-        message = `ใกล้ถึงเวลาล้างถังตามรอบ (เหลืออีก ${daysUntilNextCleaning} วัน)`;
+      } else {
+        message = `งานถัดไป: ${nextPlan.description} (อีก ${daysUntilNextCleaning} วัน)`;
+        active = daysUntilNextCleaning <= 7; // Warning if within 7 days
       }
-      
-      alerts.push({
-        type: 'รอบการล้างถัง',
-        message: message,
-        active: active,
-      });
-    } else {
-      alerts.push({
-        type: 'รอบการล้างถัง',
-        message: 'ยังไม่พบประวัติการล้างถัง',
-        active: true,
-      });
     }
+
+    alerts.push({
+      type: 'กำหนดการถัดไป',
+      message: message,
+      active: active,
+    });
 
     // 2. Alert for Work In Progress (งานที่สตาฟกำลังทำ)
     const inProgressTasks = [

@@ -81,8 +81,8 @@ export default function UserPage() {
               {daysUntilNextCleaning !== null && (
                 <div style={{ marginTop: '0.8rem', padding: '0.5rem', background: '#f8fafc', borderRadius: '4px', fontSize: '0.9rem' }}>
                   ⏳ {daysUntilNextCleaning >= 0 
-                      ? <span style={{ color: 'var(--primary)' }}>เหลืออีก <strong>{daysUntilNextCleaning}</strong> วันจะถึงกำหนดล้างถัง</span>
-                      : <span style={{ color: 'var(--danger)' }}>เลยกำหนดล้างถังมาแล้ว <strong>{Math.abs(daysUntilNextCleaning)}</strong> วัน</span>}
+                      ? <span style={{ color: 'var(--primary)' }}>เหลืออีก <strong>{daysUntilNextCleaning}</strong> วันจะถึงกำหนดการบำรุงรักษาถัดไป</span>
+                      : <span style={{ color: 'var(--danger)' }}>เลยกำหนดการบำรุงรักษาถัดไปมาแล้ว <strong>{Math.abs(daysUntilNextCleaning)}</strong> วัน</span>}
                 </div>
               )}
               <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.8rem' }}>

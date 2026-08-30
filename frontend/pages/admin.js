@@ -43,10 +43,9 @@ export default function AdminPage() {
 
   const [newAdmin, setNewAdmin] = useState({ name: '', phone: '', note: '' });
   const [editSettings, setEditSettings] = useState({ 
-    maintenanceIntervalDays: 90, 
-    contactName: '', 
-    contactPhone: '', 
-    contactNote: '' 
+    contactName: 'ผู้ดูแลระบบประปา', 
+    contactPhone: '080-123-4567', 
+    contactNote: 'ติดต่อเมื่อมีเหตุฉุกเฉิน' 
   });
 
   const loadData = async () => {
@@ -229,7 +228,6 @@ export default function AdminPage() {
 
           <Section title="ตั้งค่าระบบส่วนกลาง (System Settings)">
             <div className={styles.alertCard}>
-              <p>รอบบำรุงรักษา (แจ้งเตือนล้างถัง): <strong>{data.settings?.maintenanceIntervalDays || 90} วัน</strong></p>
               <p>ชื่อผู้ดูแล: <strong>{data.contact?.name || '-'}</strong></p>
               <p>เบอร์ติดต่อ: {data.contact?.phone || '-'}</p>
             </div>
@@ -238,9 +236,6 @@ export default function AdminPage() {
             </button>
             {panels.editSettings && (
               <form onSubmit={handleUpdateSettings} className={styles.formColumn} style={{ marginTop: '1rem' }}>
-                <Field label="รอบแจ้งเตือนล้างถัง (วัน)">
-                  <input type="number" value={editSettings.maintenanceIntervalDays} onChange={(e) => setEditSettings(p => ({ ...p, maintenanceIntervalDays: e.target.value }))} required />
-                </Field>
                 <Field label="ชื่อผู้ดูแล">
                   <input value={editSettings.contactName} onChange={(e) => setEditSettings(p => ({ ...p, contactName: e.target.value }))} />
                 </Field>

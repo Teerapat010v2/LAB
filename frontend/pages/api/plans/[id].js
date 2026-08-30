@@ -15,6 +15,18 @@ export default async function handler(req, res) {
           reason: updated.description,
           note: `ดำเนินการโดย: ${updated.assignedTo}`
         });
+
+        if (updated.routineInterval && updated.routineInterval > 0) {
+          const nextDate = new Date();
+          nextDate.setDate(nextDate.getDate() + updated.routineInterval);
+          await Plan.create({
+            scheduleDate: nextDate.toISOString().split('T')[0],
+            description: updated.description,
+            assignedTo: updated.assignedTo,
+            status: 'ตามแผน',
+            routineInterval: updated.routineInterval
+          });
+        }
       }
       res.status(200).json(updated);
     } catch (error) {
