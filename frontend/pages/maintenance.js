@@ -404,9 +404,9 @@ export default function MaintenancePage() {
                   <div key={p._id || i} className={styles.alertCard}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <p>วันที่: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
-                      <div style={{ display: 'flex', gap: '0.25rem' }}>
-                        <button className={styles.smallButton} style={{ background: '#f59e0b', margin: 0 }} onClick={() => handleEditPlanClick(p)}>แก้ไข</button>
-                        <button className={styles.smallButton} style={{ background: 'var(--danger)', margin: 0 }} onClick={() => handleDeletePlan(p._id)}>ลบ</button>
+                      <div style={{ display: 'flex', gap: '0.4rem' }}>
+                        <button className={styles.smallButton} style={{ background: '#fff', color: 'var(--primary)', border: '1px solid var(--primary)', margin: 0 }} onClick={() => handleEditPlanClick(p)}>แก้ไข</button>
+                        <button className={styles.smallButton} style={{ background: '#fff', color: '#dc2626', border: '1px solid #fca5a5', margin: 0 }} onClick={() => handleDeletePlan(p._id)}>ลบ</button>
                       </div>
                     </div>
                     <p>งาน: {p.description}</p>

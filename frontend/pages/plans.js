@@ -154,7 +154,7 @@ export default function PlansPage() {
                             เสร็จสิ้น
                           </button>
                         )}
-                        <button className={styles.smallButton} style={{ margin: 0, background: 'var(--danger)' }} onClick={() => handleDeletePlan(p._id)}>
+                        <button className={styles.smallButton} style={{ margin: 0, background: '#fff', color: '#dc2626', border: '1px solid #fca5a5' }} onClick={() => handleDeletePlan(p._id)}>
                           ลบ
                         </button>
                         {p.status === 'เสร็จสิ้น' && (
