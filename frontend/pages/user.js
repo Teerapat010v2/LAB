@@ -16,6 +16,7 @@ export default function UserPage() {
   const [complaintMsg, setComplaintMsg] = useState('');
   const [complaintSaving, setComplaintSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [daysUntilNextCleaning, setDaysUntilNextCleaning] = useState(null);
 
   const loadData = async () => {
     setLoading(true);
@@ -27,6 +28,7 @@ export default function UserPage() {
       setAdmins(data.admins || []);
       setMaintenance(data.maintenance || []);
       setPlans(data.plans || []);
+      setDaysUntilNextCleaning(data.daysUntilNextCleaning ?? null);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
@@ -76,7 +78,14 @@ export default function UserPage() {
               </div>
               <p>ความขุ่น: <strong style={{ color: wColor }}>{water?.turbidity ?? '-'} NTU</strong></p>
               <p>{water?.message ?? 'ไม่สามารถโหลดข้อมูลได้'}</p>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
+              {daysUntilNextCleaning !== null && (
+                <div style={{ marginTop: '0.8rem', padding: '0.5rem', background: '#f8fafc', borderRadius: '4px', fontSize: '0.9rem' }}>
+                  ⏳ {daysUntilNextCleaning >= 0 
+                      ? <span style={{ color: 'var(--primary)' }}>เหลืออีก <strong>{daysUntilNextCleaning}</strong> วันจะถึงกำหนดล้างถัง</span>
+                      : <span style={{ color: 'var(--danger)' }}>เลยกำหนดล้างถังมาแล้ว <strong>{Math.abs(daysUntilNextCleaning)}</strong> วัน</span>}
+                </div>
+              )}
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.8rem' }}>
                 อัปเดต: {water?.timestamp ? new Date(water.timestamp).toLocaleString('th-TH') : '-'}
               </p>
             </div>

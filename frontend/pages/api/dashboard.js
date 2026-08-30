@@ -64,6 +64,7 @@ export default async function handler(req, res) {
     // 1. Alert for Time (เวลา)
     const latestMaintenance = maintenance[0];
     let daysSinceCleaning = 0;
+    let daysUntilNextCleaning = null;
     if (latestMaintenance) {
       const diff = Math.abs(currentDate.getTime() - new Date(latestMaintenance.date).getTime());
       daysSinceCleaning = Math.ceil(diff / (1000 * 60 * 60 * 24));
@@ -71,7 +72,7 @@ export default async function handler(req, res) {
       let active = false;
       
       const threshold = settings.maintenanceIntervalDays;
-      let daysUntilNextCleaning = threshold - daysSinceCleaning;
+      daysUntilNextCleaning = threshold - daysSinceCleaning;
       const warningThreshold = Math.max(1, threshold - 15);
       
       // Auto create plan if not exists
@@ -143,6 +144,7 @@ export default async function handler(req, res) {
     res.status(200).json({
       water,
       alerts,
+      daysUntilNextCleaning,
       bugs,
       maintenance,
       plans,
