@@ -42,7 +42,12 @@ export default function AdminPage() {
   const toggle = (p) => setPanels(s => ({ ...s, [p]: !s[p] }));
 
   const [newAdmin, setNewAdmin] = useState({ name: '', phone: '', note: '' });
-  const [editContact, setEditContact] = useState({ name: '', phone: '', note: '' });
+  const [editSettings, setEditSettings] = useState({ 
+    maintenanceIntervalDays: 90, 
+    contactName: '', 
+    contactPhone: '', 
+    contactNote: '' 
+  });
 
   const loadData = async () => {
     setLoading(true);
@@ -51,7 +56,9 @@ export default function AdminPage() {
       if (res.ok) {
         const json = await res.json();
         setData(json);
-        setEditContact(json.contact || { name: '', phone: '', note: '' });
+        if (json.settings) {
+          setEditSettings(json.settings);
+        }
       }
     } catch(e) { console.error(e); }
     finally { setLoading(false); }
@@ -77,17 +84,26 @@ export default function AdminPage() {
     setSaving(false);
   };
 
-  const handleUpdateContact = async (e) => {
+  const handleUpdateSettings = async (e) => {
     e.preventDefault();
     setSaving(true);
-    // simulated save since no specific route is implemented for contact
-    setTimeout(() => {
-      setMsg('บันทึกข้อมูลติดต่อสำเร็จ');
-      setTimeout(() => setMsg(''), 3000);
+    try {
+      const res = await fetch(`${apiBase}/api/settings`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editSettings)
+      });
+      if (res.ok) {
+        setMsg('บันทึกการตั้งค่าระบบเรียบร้อยแล้ว');
+        setTimeout(() => setMsg(''), 3000);
+        setPanels(p => ({ ...p, editSettings: false }));
+        loadData();
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
       setSaving(false);
-      setPanels(p => ({ ...p, editContact: false }));
-      loadData();
-    }, 500);
+    }
   };
 
   const handleClearCompleted = async (type) => {
@@ -228,20 +244,30 @@ export default function AdminPage() {
 
 
 
-          <Section title="ตั้งค่าข้อมูลติดต่อส่วนกลาง">
+          <Section title="ตั้งค่าระบบส่วนกลาง (System Settings)">
             <div className={styles.alertCard}>
-              <p>ชื่อที่แสดง: <strong>{data.contact.name || '-'}</strong></p>
-              <p>เบอร์ติดต่อ: {data.contact.phone || '-'}</p>
+              <p>รอบบำรุงรักษา (แจ้งเตือนล้างถัง): <strong>{data.settings?.maintenanceIntervalDays || 90} วัน</strong></p>
+              <p>ชื่อผู้ดูแล: <strong>{data.contact?.name || '-'}</strong></p>
+              <p>เบอร์ติดต่อ: {data.contact?.phone || '-'}</p>
             </div>
-            <button className={styles.smallButton} onClick={() => toggle('editContact')}>
-              {panels.editContact ? 'ซ่อน' : 'แก้ไข'}
+            <button className={styles.smallButton} onClick={() => toggle('editSettings')}>
+              {panels.editSettings ? 'ซ่อน' : 'แก้ไขการตั้งค่า'}
             </button>
-            {panels.editContact && (
-              <form onSubmit={handleUpdateContact} className={styles.formColumn} style={{ marginTop: '1rem' }}>
-                <Field label="ชื่อผู้ดูแล"><input value={editContact.name} onChange={(e) => setEditContact(p => ({ ...p, name: e.target.value }))} /></Field>
-                <Field label="เบอร์โทร"><input value={editContact.phone} onChange={(e) => setEditContact(p => ({ ...p, phone: e.target.value }))} /></Field>
-                <Field label="หมายเหตุ"><textarea value={editContact.note} onChange={(e) => setEditContact(p => ({ ...p, note: e.target.value }))} rows={2} /></Field>
-                <button type="submit" className={styles.submitButton} disabled={saving}>บันทึกข้อมูลติดต่อ</button>
+            {panels.editSettings && (
+              <form onSubmit={handleUpdateSettings} className={styles.formColumn} style={{ marginTop: '1rem' }}>
+                <Field label="รอบแจ้งเตือนล้างถัง (วัน)">
+                  <input type="number" value={editSettings.maintenanceIntervalDays} onChange={(e) => setEditSettings(p => ({ ...p, maintenanceIntervalDays: e.target.value }))} required />
+                </Field>
+                <Field label="ชื่อผู้ดูแล">
+                  <input value={editSettings.contactName} onChange={(e) => setEditSettings(p => ({ ...p, contactName: e.target.value }))} />
+                </Field>
+                <Field label="เบอร์โทร">
+                  <input value={editSettings.contactPhone} onChange={(e) => setEditSettings(p => ({ ...p, contactPhone: e.target.value }))} />
+                </Field>
+                <Field label="หมายเหตุ">
+                  <textarea value={editSettings.contactNote} onChange={(e) => setEditSettings(p => ({ ...p, contactNote: e.target.value }))} rows={2} />
+                </Field>
+                <button type="submit" className={styles.submitButton} disabled={saving}>บันทึกการตั้งค่า</button>
               </form>
             )}
           </Section>

@@ -6,25 +6,31 @@ import Plan from '../../models/PlanModel';
 import Admin from '../../models/AdminModel';
 import History from '../../models/HistoryModel';
 import Complaint from '../../models/ComplaintModel';
+import Settings from '../../models/SettingsModel';
 
 export default async function handler(req, res) {
   await dbConnect();
 
   try {
-    const [water, bugs, maintenance, plans, admins, history, complaints] = await Promise.all([
+    let [water, bugs, maintenance, plans, admins, history, complaints, settings] = await Promise.all([
       Water.findOne().sort({ timestamp: -1 }).lean(),
       Bug.find().sort({ submittedAt: -1 }).lean(),
       Maintenance.find().sort({ date: -1 }).lean(),
       Plan.find().sort({ scheduleDate: 1 }).lean(),
       Admin.find().lean(),
       History.find().sort({ date: -1 }).lean(),
-      Complaint.find().sort({ submittedAt: -1 }).lean()
+      Complaint.find().sort({ submittedAt: -1 }).lean(),
+      Settings.findOne().lean()
     ]);
     
+    if (!settings) {
+      settings = { maintenanceIntervalDays: 90, contactName: 'ผู้ดูแลระบบประปา', contactPhone: '080-123-4567', contactNote: 'ติดต่อเมื่อมีเหตุฉุกเฉิน' };
+    }
+
     const contact = {
-      name: 'ผู้ดูแลระบบประปา',
-      phone: '080-123-4567',
-      note: 'ติดต่อเมื่อมีเหตุฉุกเฉิน',
+      name: settings.contactName,
+      phone: settings.contactPhone,
+      note: settings.contactNote,
     };
 
     const alerts = [];
@@ -40,10 +46,13 @@ export default async function handler(req, res) {
       let message = `ล้างถังครั้งล่าสุดเมื่อ ${new Date(latestMaintenance.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })} (${daysSinceCleaning} วันที่ผ่านมา)`;
       let active = false;
       
-      if (daysSinceCleaning >= 90) {
+      const threshold = settings.maintenanceIntervalDays;
+      const warningThreshold = Math.max(1, threshold - 15);
+      
+      if (daysSinceCleaning >= threshold) {
         active = true;
         message = `เลยกำหนดเวลาล้างถังแล้ว (${daysSinceCleaning} วันที่ผ่านมา) ควรดำเนินการทันที`;
-      } else if (daysSinceCleaning >= 75) {
+      } else if (daysSinceCleaning >= warningThreshold) {
         active = true;
         message = `ใกล้ถึงเวลาล้างถังตามรอบ (${daysSinceCleaning} วันที่ผ่านมา)`;
       }
@@ -94,7 +103,8 @@ export default async function handler(req, res) {
       maintenance,
       plans,
       admins,
-      contact: contact || {},
+      contact,
+      settings,
       history,
       complaints
     });
