@@ -62,8 +62,7 @@ export default async function handler(req, res) {
     const currentDate = new Date();
     
     // 1. Alert for Upcoming Plans (กำหนดการถัดไป)
-    let daysUntilNextCleaning = null;
-    let nextPlanName = null;
+    let upcomingTasks = [];
     let message = 'ยังไม่มีแผนงานที่กำหนดเวลาไว้';
     let active = false;
 
@@ -71,20 +70,30 @@ export default async function handler(req, res) {
     if (upcomingPlans.length > 0) {
       // Sort to get the earliest upcoming date
       upcomingPlans.sort((a, b) => new Date(a.scheduleDate).getTime() - new Date(b.scheduleDate).getTime());
-      const nextPlan = upcomingPlans[0];
-      nextPlanName = nextPlan.description;
-      const diff = new Date(nextPlan.scheduleDate).getTime() - currentDate.getTime();
-      daysUntilNextCleaning = Math.ceil(diff / (1000 * 60 * 60 * 24));
       
-      if (daysUntilNextCleaning < 0) {
-        message = `เลยกำหนดงาน: ${nextPlan.description} มาแล้ว ${Math.abs(daysUntilNextCleaning)} วัน`;
+      const seenDescriptions = new Set();
+      for (const p of upcomingPlans) {
+        if (!seenDescriptions.has(p.description)) {
+          seenDescriptions.add(p.description);
+          const diff = new Date(p.scheduleDate).getTime() - currentDate.getTime();
+          upcomingTasks.push({
+            name: p.description,
+            days: Math.ceil(diff / (1000 * 60 * 60 * 24))
+          });
+        }
+      }
+
+      // Create alert for the most urgent task
+      const nextPlan = upcomingTasks[0];
+      if (nextPlan.days < 0) {
+        message = `เลยกำหนดงาน: ${nextPlan.name} มาแล้ว ${Math.abs(nextPlan.days)} วัน`;
         active = true;
-      } else if (daysUntilNextCleaning === 0) {
-        message = `ถึงกำหนดงาน: ${nextPlan.description} (วันนี้)`;
+      } else if (nextPlan.days === 0) {
+        message = `ถึงกำหนดงาน: ${nextPlan.name} (วันนี้)`;
         active = true;
       } else {
-        message = `งานถัดไป: ${nextPlan.description} (อีก ${daysUntilNextCleaning} วัน)`;
-        active = daysUntilNextCleaning <= 7; // Warning if within 7 days
+        message = `งานถัดไป: ${nextPlan.name} (อีก ${nextPlan.days} วัน)`;
+        active = nextPlan.days <= 7; // Warning if within 7 days
       }
     }
 
@@ -126,8 +135,7 @@ export default async function handler(req, res) {
     res.status(200).json({
       water,
       alerts,
-      daysUntilNextCleaning,
-      nextPlanName,
+      upcomingTasks,
       bugs,
       maintenance,
       plans,

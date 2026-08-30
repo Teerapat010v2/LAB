@@ -16,8 +16,7 @@ export default function UserPage() {
   const [complaintMsg, setComplaintMsg] = useState('');
   const [complaintSaving, setComplaintSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [daysUntilNextCleaning, setDaysUntilNextCleaning] = useState(null);
-  const [nextPlanName, setNextPlanName] = useState(null);
+  const [upcomingTasks, setUpcomingTasks] = useState([]);
 
   const loadData = async () => {
     setLoading(true);
@@ -29,8 +28,7 @@ export default function UserPage() {
       setAdmins(data.admins || []);
       setMaintenance(data.maintenance || []);
       setPlans(data.plans || []);
-      setDaysUntilNextCleaning(data.daysUntilNextCleaning ?? null);
-      setNextPlanName(data.nextPlanName ?? 'กำหนดการแผนงานถัดไป');
+      setUpcomingTasks(data.upcomingTasks || []);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
@@ -80,11 +78,15 @@ export default function UserPage() {
               </div>
               <p>ความขุ่น: <strong style={{ color: wColor }}>{water?.turbidity ?? '-'} NTU</strong></p>
               <p>{water?.message ?? 'ไม่สามารถโหลดข้อมูลได้'}</p>
-              {daysUntilNextCleaning !== null && (
-                <div style={{ marginTop: '0.8rem', padding: '0.5rem', background: '#f8fafc', borderRadius: '4px', fontSize: '0.9rem' }}>
-                  ⏳ {daysUntilNextCleaning >= 0 
-                      ? <span style={{ color: 'var(--primary)' }}>เหลืออีก <strong>{daysUntilNextCleaning}</strong> วันจะถึงกำหนด: <strong>{nextPlanName}</strong></span>
-                      : <span style={{ color: 'var(--danger)' }}>เลยกำหนด <strong>{nextPlanName}</strong> มาแล้ว <strong>{Math.abs(daysUntilNextCleaning)}</strong> วัน</span>}
+              {upcomingTasks.length > 0 && (
+                <div style={{ marginTop: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {upcomingTasks.map((task, idx) => (
+                    <div key={idx} style={{ padding: '0.5rem', background: '#f8fafc', borderRadius: '4px', fontSize: '0.9rem' }}>
+                      ⏳ {task.days >= 0 
+                          ? <span style={{ color: 'var(--primary)' }}>เหลืออีก <strong>{task.days}</strong> วันจะถึงกำหนด: <strong>{task.name}</strong></span>
+                          : <span style={{ color: 'var(--danger)' }}>เลยกำหนด <strong>{task.name}</strong> มาแล้ว <strong>{Math.abs(task.days)}</strong> วัน</span>}
+                    </div>
+                  ))}
                 </div>
               )}
               <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.8rem' }}>
