@@ -63,6 +63,7 @@ export default async function handler(req, res) {
     
     // 1. Alert for Upcoming Plans (กำหนดการถัดไป)
     let daysUntilNextCleaning = null;
+    let nextPlanName = null;
     let message = 'ยังไม่มีแผนงานที่กำหนดเวลาไว้';
     let active = false;
 
@@ -71,6 +72,7 @@ export default async function handler(req, res) {
       // Sort to get the earliest upcoming date
       upcomingPlans.sort((a, b) => new Date(a.scheduleDate).getTime() - new Date(b.scheduleDate).getTime());
       const nextPlan = upcomingPlans[0];
+      nextPlanName = nextPlan.description;
       const diff = new Date(nextPlan.scheduleDate).getTime() - currentDate.getTime();
       daysUntilNextCleaning = Math.ceil(diff / (1000 * 60 * 60 * 24));
       
@@ -125,6 +127,7 @@ export default async function handler(req, res) {
       water,
       alerts,
       daysUntilNextCleaning,
+      nextPlanName,
       bugs,
       maintenance,
       plans,
