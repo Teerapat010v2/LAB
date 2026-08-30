@@ -7,7 +7,7 @@ const SwaggerUI = dynamic(() => import('swagger-ui-react'), { ssr: false });
 const spec = {
   openapi: '3.0.0',
   info: {
-    title: 'ระบบจัดการน้ำประปาหมู่บ้าน',
+    title: 'ระบบดูแลน้ำประปาหมู่บ้าน',
     version: '1.0.0',
     description: 'API สำหรับติดตามความขุ่นของน้ำ การแจ้งเตือน การบำรุงรักษา และประวัติการล้างถัง',
   },
@@ -97,7 +97,7 @@ export default function SwaggerPage() {
       <Head>
         <title>เอกสาร API</title>
       </Head>
-      <h1>คู่มือ API ระบบน้ำประปาหมู่บ้าน</h1>
+      <h1>คู่มือ API ระบบดูแลน้ำประปาหมู่บ้าน</h1>
       <p>ดูเอกสาร API และทดสอบ endpoint ของ backend ได้จากหน้านี้</p>
       <div className={styles.swaggerContainer}>
         <SwaggerUI spec={spec} />

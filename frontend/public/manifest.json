@@ -1,7 +1,7 @@
 {
   "name": "Village Water Management",
   "short_name": "WaterApp",
-  "description": "ระบบจัดการน้ำประปาหมู่บ้าน",
+  "description": "ระบบดูแลน้ำประปาหมู่บ้าน",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

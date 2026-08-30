@@ -7,8 +7,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>ระบบจัดการน้ำประปาหมู่บ้าน</title>
-        <meta name="description" content="ระบบจัดการน้ำประปาหมู่บ้าน" />
+        <title>ระบบดูแลน้ำประปาหมู่บ้าน</title>
+        <meta name="description" content="ระบบดูแลน้ำประปาหมู่บ้าน" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
@@ -17,7 +17,7 @@ export default function Home() {
         <div className={navStyles.navInner}>
           <span className={navStyles.brand}>
             <img src="/Logo.png" alt="โลโก้" style={{ width: '40px', height: '40px', objectFit: 'contain', borderRadius: '8px' }} />
-            <span>ระบบน้ำประปาหมู่บ้าน</span>
+            <span>ระบบดูแลน้ำประปาหมู่บ้าน</span>
           </span>
         </div>
       </nav>
@@ -27,7 +27,7 @@ export default function Home() {
         <div style={{ textAlign: 'center', marginBottom: 'clamp(1.5rem, 5vw, 3rem)' }}>
           <img src="/Logo.png" alt="โลโก้หลัก" style={{ width: '80px', height: '80px', objectFit: 'contain', margin: '0 auto 1rem', borderRadius: '12px' }} />
           <h1 style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.5rem' }}>
-            ระบบจัดการน้ำประปาหมู่บ้าน
+            ระบบดูแลน้ำประปาหมู่บ้าน
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', maxWidth: '420px', margin: '0 auto' }}>
             กรุณาเลือกประเภทผู้ใช้งานเพื่อเข้าสู่ระบบ
@@ -83,7 +83,7 @@ export default function Home() {
       </main>
 
       <footer className={navStyles.footer}>
-        <p>ระบบจัดการน้ำประปาหมู่บ้าน โดยนักศึกษามหาวิทยาลัยราชภัฏบุรีรัมย์ สาขาเทคโนโลยีสารสนเทศ</p>
+        <p>ระบบดูแลน้ำประปาหมู่บ้าน โดยนักศึกษามหาวิทยาลัยราชภัฏบุรีรัมย์ สาขาเทคโนโลยีสารสนเทศ</p>
       </footer>
     </>
   );

@@ -38,7 +38,7 @@ export default function Login() {
         <div className={navStyles.navInner}>
           <Link href="/" className={navStyles.brand}>
             <img src="/Logo.png" alt="โลโก้" style={{ width: '40px', height: '40px', objectFit: 'contain', borderRadius: '8px' }} />
-            <span>ระบบน้ำประปาหมู่บ้าน</span>
+            <span>ระบบดูแลน้ำประปาหมู่บ้าน</span>
           </Link>
           <Link href="/" className={navStyles.navBtn}>กลับหน้าหลัก</Link>
         </div>

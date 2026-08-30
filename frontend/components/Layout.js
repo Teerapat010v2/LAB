@@ -80,7 +80,7 @@ export default function Layout({ children, title, subtitle }) {
 
       {/* Footer */}
       <footer className={styles.footer}>
-        <p>ระบบจัดการน้ำประปาหมู่บ้าน โดยนักศึกษามหาวิทยาลัยราชภัฏบุรีรัมย์ สาขาเทคโนโลยีสารสนเทศ</p>
+        <p>ระบบดูแลน้ำประปาหมู่บ้าน โดยนักศึกษามหาวิทยาลัยราชภัฏบุรีรัมย์ สาขาเทคโนโลยีสารสนเทศ</p>
       </footer>
 
       {/* Floating Bug Report Button */}
