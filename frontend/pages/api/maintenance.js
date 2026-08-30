@@ -15,10 +15,14 @@ export default async function handler(req, res) {
   } else if (req.method === 'POST') {
     try {
       const dateStr = req.body.date || new Date().toISOString().split('T')[0];
+      const noteContent = req.body.worker 
+        ? `ดำเนินการโดย: ${req.body.worker}${req.body.note ? `\nรายละเอียด: ${req.body.note}` : ''}`
+        : req.body.note || '';
+
       const newRecord = await Maintenance.create({
         date: dateStr,
         reason: req.body.reason || 'ล้างถังทั่วไป',
-        note: req.body.note || '',
+        note: noteContent,
       });
 
       await History.create({

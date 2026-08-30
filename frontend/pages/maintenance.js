@@ -15,7 +15,7 @@ export default function MaintenancePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
-  const [newMaintenance, setNewMaintenance] = useState({ date: '', reason: '', note: '' });
+  const [newMaintenance, setNewMaintenance] = useState({ date: '', reason: '', note: '', worker: '' });
   const [newPlan, setNewPlan] = useState({ scheduleDate: '', description: '', assignedTo: '', routineInterval: '' });
   const [showMaintenanceForm, setShowMaintenanceForm] = useState(false);
   const [showPlanForm, setShowPlanForm] = useState(false);
@@ -23,6 +23,7 @@ export default function MaintenancePage() {
   const [showReportForm, setShowReportForm] = useState(false);
   const [report, setReport] = useState({ name: 'ผู้ดูแลระบบ', phone: '-', topic: 'รายงานปัญหาระบบ', message: '' });
   const [reportMsg, setReportMsg] = useState('');
+  const [admins, setAdmins] = useState([]);
   const loadData = async () => {
     setLoading(true);
     try {
@@ -34,6 +35,7 @@ export default function MaintenancePage() {
       setWater(data.water || null);
       setAlerts(data.alerts || []);
       setHistory(data.history || []);
+      setAdmins(data.admins || []);
     } catch (err) {
       console.error('Failed to load data', err);
     } finally {
@@ -63,7 +65,7 @@ export default function MaintenancePage() {
       body: JSON.stringify(newMaintenance),
     });
     if (res.ok) {
-      setNewMaintenance({ date: '', reason: '', note: '' });
+      setNewMaintenance({ date: '', reason: '', note: '', worker: '' });
       setMessage(' เพิ่มบันทึกการทำงานเรียบร้อยแล้ว');
       setShowMaintenanceForm(false);
       await loadData();
@@ -260,8 +262,18 @@ export default function MaintenancePage() {
             {showMaintenanceForm && (
               <form onSubmit={handleAddMaintenance} className={styles.formColumn} style={{ marginBottom: '1rem' }}>
                 <div className={styles.formField}>
-                  <label>วันที่ล้างถัง</label>
+                  <label>วันที่ทำงาน</label>
                   <input type="date" lang="th-TH" value={newMaintenance.date} onChange={handleMaintenanceChange('date')} required />
+                </div>
+                <div className={styles.formField}>
+                  <label>ผู้ดำเนินการ</label>
+                  <select value={newMaintenance.worker} onChange={handleMaintenanceChange('worker')} required>
+                    <option value="">-- เลือกผู้ดำเนินการ --</option>
+                    {admins.map(a => (
+                      <option key={a._id} value={a.name}>{a.name}</option>
+                    ))}
+                    <option value="อื่นๆ">อื่นๆ</option>
+                  </select>
                 </div>
                 <div className={styles.formField}>
                   <label>เหตุผล</label>
