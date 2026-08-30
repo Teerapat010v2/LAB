@@ -37,7 +37,7 @@ export default async function handler(req, res) {
       const daysSinceCleaning = Math.ceil(diff / (1000 * 60 * 60 * 24));
       alerts.push({
         type: 'เวลา',
-        message: `ล้างถังครั้งล่าสุดเมื่อ ${new Date(latestMaintenance.date).toISOString().split('T')[0]} (${daysSinceCleaning} วันที่ผ่านมา)`,
+        message: `ล้างถังครั้งล่าสุดเมื่อ ${new Date(latestMaintenance.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })} (${daysSinceCleaning} วันที่ผ่านมา)`,
         active: daysSinceCleaning >= 90,
       });
     } else {
