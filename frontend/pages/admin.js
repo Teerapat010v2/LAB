@@ -109,7 +109,7 @@ export default function AdminPage() {
   const handleClearCompleted = async (type) => {
     let typeLabel = '';
     if (type === 'bugs') typeLabel = 'รายงานบั๊กที่แก้ไขแล้ว';
-    if (type === 'plans') typeLabel = 'แผนงานที่ล้างแล้ว';
+    if (type === 'plans') typeLabel = 'แผนงานที่เสร็จสิ้นแล้ว';
     
     if (!confirm(`คุณแน่ใจหรือไม่ที่จะลบประวัติ "${typeLabel}" ทั้งหมดที่เสร็จสิ้นแล้ว?`)) return;
     

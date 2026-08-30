@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   if (req.method === 'PUT' || req.method === 'PATCH') {
     try {
       const updated = await Plan.findByIdAndUpdate(id, { status: req.body.status }, { new: true });
-      if (req.body.status === 'ล้างแล้ว') {
+      if (req.body.status === 'เสร็จสิ้น') {
         const Maintenance = require('../../../models/MaintenanceModel');
         await Maintenance.create({
           date: new Date().toISOString().split('T')[0],

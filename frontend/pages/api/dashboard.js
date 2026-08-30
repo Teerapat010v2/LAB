@@ -39,12 +39,12 @@ export default async function handler(req, res) {
       return new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime();
     });
 
-    const statusWeightPlans = { 'กำลังล้าง': 1, 'ตามแผน': 1, 'ล้างแล้ว': 2 };
+    const statusWeightPlans = { 'กำลังดำเนินการ': 1, 'ตามแผน': 1, 'เสร็จสิ้น': 2 };
     plans.sort((a, b) => {
       const wA = statusWeightPlans[a.status] || 99;
       const wB = statusWeightPlans[b.status] || 99;
       if (wA !== wB) return wA - wB;
-      if (a.status === 'ล้างแล้ว') return new Date(b.scheduleDate).getTime() - new Date(a.scheduleDate).getTime();
+      if (a.status === 'เสร็จสิ้น') return new Date(b.scheduleDate).getTime() - new Date(a.scheduleDate).getTime();
       return new Date(a.scheduleDate).getTime() - new Date(b.scheduleDate).getTime();
     });
     
@@ -76,7 +76,7 @@ export default async function handler(req, res) {
       const warningThreshold = Math.max(1, threshold - 15);
       
       // Auto create plan if not exists
-      const existingAutoPlan = plans.find(p => p.isAuto && p.status !== 'ล้างแล้ว');
+      const existingAutoPlan = plans.find(p => p.isAuto && p.status !== 'เสร็จสิ้น');
       if (!existingAutoPlan) {
         const nextDate = new Date(new Date(latestMaintenance.date).getTime() + (threshold * 24 * 60 * 60 * 1000));
         const newPlan = await Plan.create({
@@ -93,7 +93,7 @@ export default async function handler(req, res) {
           const wA = statusWeightPlans[a.status] || 99;
           const wB = statusWeightPlans[b.status] || 99;
           if (wA !== wB) return wA - wB;
-          if (a.status === 'ล้างแล้ว') return new Date(b.scheduleDate).getTime() - new Date(a.scheduleDate).getTime();
+          if (a.status === 'เสร็จสิ้น') return new Date(b.scheduleDate).getTime() - new Date(a.scheduleDate).getTime();
           return new Date(a.scheduleDate).getTime() - new Date(b.scheduleDate).getTime();
         });
       }
@@ -125,7 +125,7 @@ export default async function handler(req, res) {
     const inProgressTasks = [
       ...bugs.filter(b => b.status === 'กำลังดำเนินการ').map(b => b.topic),
       ...complaints.filter(c => c.status === 'กำลังดำเนินการ' || c.status === 'รับงาน').map(c => c.topic),
-      ...plans.filter(p => p.status === 'กำลังล้าง').map(p => p.description)
+      ...plans.filter(p => p.status === 'กำลังดำเนินการ').map(p => p.description)
     ];
 
     if (inProgressTasks.length > 0) {

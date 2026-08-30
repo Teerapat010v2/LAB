@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       const result = await Complaint.deleteMany({ status: 'เสร็จงาน' });
       deletedCount = result.deletedCount;
     } else if (type === 'plans') {
-      const result = await Plan.deleteMany({ status: 'ล้างแล้ว' });
+      const result = await Plan.deleteMany({ status: 'เสร็จสิ้น' });
       deletedCount = result.deletedCount;
     } else {
       return res.status(400).json({ error: 'Invalid type' });

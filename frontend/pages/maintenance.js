@@ -369,13 +369,13 @@ export default function MaintenancePage() {
                     <p>งาน: {p.description}</p>
                     <p>ผู้รับผิดชอบ: {p.assignedTo}</p>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-                      <p style={{ margin: 0 }}>สถานะ: <span style={{ color: p.status === 'ล้างแล้ว' ? 'var(--success)' : 'var(--primary)', fontWeight: 'bold' }}>{p.status}</span></p>
+                      <p style={{ margin: 0 }}>สถานะ: <span style={{ color: p.status === 'เสร็จสิ้น' ? 'var(--success)' : 'var(--primary)', fontWeight: 'bold' }}>{p.status}</span></p>
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
                         {p.status === 'ตามแผน' && (
-                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdatePlanStatus(p._id, 'กำลังล้าง')}>กำลังล้าง</button>
+                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdatePlanStatus(p._id, 'กำลังดำเนินการ')}>กำลังดำเนินการ</button>
                         )}
-                        {p.status === 'กำลังล้าง' && (
-                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdatePlanStatus(p._id, 'ล้างแล้ว')}>เสร็จสิ้น</button>
+                        {p.status === 'กำลังดำเนินการ' && (
+                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdatePlanStatus(p._id, 'เสร็จสิ้น')}>เสร็จสิ้น</button>
                         )}
                       </div>
                     </div>

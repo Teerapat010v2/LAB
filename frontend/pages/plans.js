@@ -17,16 +17,16 @@ export default function PlansPage() {
       let json = await response.json();
       
       const statusWeight = {
-        'กำลังล้าง': 1,
-        'ตามแผน': 2,
-        'ล้างแล้ว': 3
+        'กำลังดำเนินการ': 1,
+        'ตามแผน': 1,
+        'เสร็จสิ้น': 2
       };
       
       json.sort((a, b) => {
         const wA = statusWeight[a.status] || 99;
         const wB = statusWeight[b.status] || 99;
         if (wA !== wB) return wA - wB;
-        if (a.status === 'ล้างแล้ว') {
+        if (a.status === 'เสร็จสิ้น') {
           return new Date(b.scheduleDate).getTime() - new Date(a.scheduleDate).getTime(); // Newest completed first
         }
         return new Date(a.scheduleDate).getTime() - new Date(b.scheduleDate).getTime(); // Earliest upcoming first
@@ -63,7 +63,7 @@ export default function PlansPage() {
   }, []);
 
   const handleClearCompleted = async () => {
-    if (!confirm('คุณแน่ใจหรือไม่ที่จะลบแผนบำรุงรักษาที่ "ล้างแล้ว" ทั้งหมด?')) return;
+    if (!confirm('คุณแน่ใจหรือไม่ที่จะลบแผนบำรุงรักษาที่ "เสร็จสิ้น" ทั้งหมด?')) return;
     try {
       const res = await fetch(`${apiBase}/api/admin/clear-completed?type=plans`, { method: 'DELETE' });
       if (res.ok) {
@@ -119,8 +119,8 @@ export default function PlansPage() {
                   <td>{p.assignedTo}</td>
                   <td>
                     <span className={styles.statusBadge} style={{ 
-                      background: p.status === 'ล้างแล้ว' ? 'var(--success-light)' : 'var(--primary-light)', 
-                      color: p.status === 'ล้างแล้ว' ? 'var(--success)' : 'var(--primary)' 
+                      background: p.status === 'เสร็จสิ้น' ? 'var(--success-light)' : 'var(--primary-light)', 
+                      color: p.status === 'เสร็จสิ้น' ? 'var(--success)' : 'var(--primary)' 
                     }}>
                       {p.status}
                     </span>
@@ -129,16 +129,16 @@ export default function PlansPage() {
                     <td>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                         {p.status === 'ตามแผน' && (
-                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdateStatus(p._id, 'กำลังล้าง')}>
-                            กำลังล้าง
+                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdateStatus(p._id, 'กำลังดำเนินการ')}>
+                            กำลังดำเนินการ
                           </button>
                         )}
-                        {p.status === 'กำลังล้าง' && (
-                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdateStatus(p._id, 'ล้างแล้ว')}>
-                            ล้างเสร็จสิ้น
+                        {p.status === 'กำลังดำเนินการ' && (
+                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdateStatus(p._id, 'เสร็จสิ้น')}>
+                            เสร็จสิ้น
                           </button>
                         )}
-                        {p.status === 'ล้างแล้ว' && (
+                        {p.status === 'เสร็จสิ้น' && (
                           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>-</span>
                         )}
                       </div>

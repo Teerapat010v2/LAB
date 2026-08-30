@@ -152,7 +152,7 @@ export default function UserPage() {
                   <div key={i} className={styles.alertCard}>
                     <p>วันที่กำหนด: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
                     <p>งาน: {p.description}</p>
-                    <p>สถานะ: <span style={{ color: p.status === 'ล้างแล้ว' ? 'var(--success)' : 'var(--primary)', fontWeight: 'bold' }}>{p.status}</span></p>
+                    <p>สถานะ: <span style={{ color: p.status === 'เสร็จสิ้น' ? 'var(--success)' : 'var(--primary)', fontWeight: 'bold' }}>{p.status}</span></p>
                   </div>
                 ))}
               </div>
