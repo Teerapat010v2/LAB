@@ -5,7 +5,7 @@ const ComplaintSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   topic: { type: String, required: true },
   message: { type: String, required: true },
-  status: { type: String, default: 'Open' },
+  status: { type: String, default: 'รอดำเนินการ' },
   submittedAt: { type: Date, default: Date.now },
 });
 

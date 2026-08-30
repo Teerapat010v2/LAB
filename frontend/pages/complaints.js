@@ -103,7 +103,7 @@ export default function ComplaintsPage() {
                   {isStaff && (
                     <td>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                        {c.status === 'รอดำเนินการ' && (
+                        {(c.status === 'รอดำเนินการ' || c.status === 'Open') && (
                           <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdateStatus(c._id, 'รับงาน')}>
                             รับงาน
                           </button>
