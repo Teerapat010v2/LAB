@@ -41,15 +41,22 @@ export default function Home() {
         {/* Role Cards */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', maxWidth: '720px', margin: '0 auto' }}>
 
-          {/* Villager */}
+          {/* Villager (Highlighted) */}
           <Link href="/user" style={{ textDecoration: 'none' }}>
-            <div className={styles.card} style={{ textAlign: 'center', padding: '2rem 1.5rem', cursor: 'pointer', border: '1px solid var(--card-border)', transition: 'border-color 0.2s, box-shadow 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(3,105,161,0.12)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.boxShadow = 'var(--card-shadow)'; }}
+            <div className={styles.card} style={{ 
+              textAlign: 'center', padding: '2.5rem 1.5rem', cursor: 'pointer', 
+              background: 'var(--primary)', color: 'white', border: 'none',
+              transform: 'scale(1.05)', zIndex: 10,
+              boxShadow: '0 10px 25px rgba(3,105,161,0.3)', transition: 'transform 0.2s, box-shadow 0.2s' 
+            }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(3,105,161,0.4)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 10px 25px rgba(3,105,161,0.3)'; }}
             >
-              <img src="/icon_villager.png" alt="ชาวบ้าน" style={{ width: 'clamp(64px, 18vw, 96px)', height: 'clamp(64px, 18vw, 96px)', objectFit: 'contain', margin: '0 auto 1rem' }} />
-              <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 0.3rem' }}>ชาวบ้าน</h2>
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', margin: 0 }}>ตรวจสอบคุณภาพน้ำและแจ้งปัญหา</p>
+              <div style={{ background: 'white', padding: '10px', borderRadius: '50%', width: '100px', height: '100px', margin: '0 auto 1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <img src="/icon_villager.png" alt="ชาวบ้าน" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+              </div>
+              <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 800, margin: '0 0 0.5rem', color: 'white' }}>ชาวบ้าน</h2>
+              <p style={{ fontSize: 'var(--text-sm)', opacity: 0.9, margin: 0 }}>ตรวจสอบคุณภาพน้ำและแจ้งปัญหา</p>
             </div>
           </Link>
 
