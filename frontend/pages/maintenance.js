@@ -21,10 +21,7 @@ export default function MaintenancePage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [newMaintenance, setNewMaintenance] = useState({ date: '', reason: '', note: '', worker: '' });
-  const [newPlan, setNewPlan] = useState({ scheduleDate: '', description: '', assignedTo: '', routineInterval: '' });
-  const [editingPlanId, setEditingPlanId] = useState(null);
   const [showMaintenanceForm, setShowMaintenanceForm] = useState(false);
-  const [showPlanForm, setShowPlanForm] = useState(false);
   const [newTurbidity, setNewTurbidity] = useState('');
   const [showReportForm, setShowReportForm] = useState(false);
   const [report, setReport] = useState({ name: 'ผู้ดูแลระบบ', phone: '-', topic: 'รายงานปัญหาระบบ', message: '' });
@@ -59,79 +56,6 @@ export default function MaintenancePage() {
   }, []);
 
   const handleMaintenanceChange = (field) => (e) => setNewMaintenance((p) => ({ ...p, [field]: e.target.value }));
-  const handlePlanChange = (field) => (e) => setNewPlan((p) => ({ ...p, [field]: e.target.value }));
-
-  const handleAddMaintenance = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    setMessage('');
-    const res = await fetch(`${apiBase}/api/maintenance`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newMaintenance),
-    });
-    if (res.ok) {
-      setNewMaintenance({ date: '', reason: '', note: '', worker: '' });
-      setMessage(' เพิ่มบันทึกการทำงานเรียบร้อยแล้ว');
-      setShowMaintenanceForm(false);
-      await loadData();
-    } else {
-      setMessage(' ไม่สามารถบันทึกได้');
-    }
-    setSaving(false);
-  };
-
-  const handleAddPlan = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    setMessage('');
-    
-    const url = editingPlanId ? `${apiBase}/api/plans/${editingPlanId}` : `${apiBase}/api/plans`;
-    const method = editingPlanId ? 'PUT' : 'POST';
-
-    const res = await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newPlan),
-    });
-    if (res.ok) {
-      setNewPlan({ scheduleDate: '', description: '', assignedTo: '', routineInterval: '' });
-      setEditingPlanId(null);
-      setMessage(editingPlanId ? ' แก้ไขแผนงานเรียบร้อยแล้ว' : ' เพิ่มแผนงานเรียบร้อยแล้ว');
-      setShowPlanForm(false);
-      await loadData();
-    } else {
-      setMessage(' ไม่สามารถบันทึกแผนงานได้');
-    }
-    setSaving(false);
-  };
-
-  const handleEditPlanClick = (plan) => {
-    setNewPlan({ 
-      scheduleDate: plan.scheduleDate || '', 
-      description: plan.description || '', 
-      assignedTo: plan.assignedTo || '', 
-      routineInterval: plan.routineInterval || '' 
-    });
-    setEditingPlanId(plan._id);
-    setShowPlanForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleDeletePlan = async (id) => {
-    if (!confirm('คุณแน่ใจหรือไม่ที่จะลบแผนงานนี้?')) return;
-    try {
-      const res = await fetch(`${apiBase}/api/plans/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        await loadData();
-      } else {
-        alert('เกิดข้อผิดพลาดในการลบแผนงาน');
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const handleUpdateWater = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -359,54 +283,12 @@ export default function MaintenancePage() {
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
               <h2>แผนการบำรุงรักษา</h2>
-              <button className={styles.secondaryButton} onClick={() => setShowPlanForm((p) => !p)}>
-                {showPlanForm ? 'ซ่อนฟอร์ม' : '+ เพิ่ม/แก้ไขแผน'}
-              </button>
+              <Link href="/plans" className={styles.secondaryButton}>
+                + เพิ่ม/แก้ไขแผน
+              </Link>
             </div>
             
-            {showPlanForm && (
-              <form onSubmit={handleAddPlan} className={styles.formColumn} style={{ marginBottom: '1rem' }}>
-                <div className={styles.formField}>
-                  <label>วันที่เริ่มกำหนด</label>
-                  <DatePicker 
-                    selected={newPlan.scheduleDate ? new Date(newPlan.scheduleDate) : null}
-                    onChange={(date) => setNewPlan(p => ({ ...p, scheduleDate: date ? date.toISOString().split('T')[0] : '' }))}
-                    locale="th"
-                    dateFormat="dd/MM/yyyy"
-                    placeholderText="วว/ดด/ปปปป"
-                    className={styles.datePickerInput}
-                    required
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label>รายละเอียดงาน</label>
-                  <input value={newPlan.description} onChange={handlePlanChange('description')} placeholder="เช่น ล้างถัง, เติมคลอรีน" required />
-                </div>
-                <div className={styles.formField}>
-                  <label>ผู้รับผิดชอบ</label>
-                  <input value={newPlan.assignedTo} onChange={handlePlanChange('assignedTo')} placeholder="เช่น นายสมชาย" required />
-                </div>
-                <div className={styles.formField}>
-                  <label>ทำซ้ำทุกๆ (วัน)</label>
-                  <input type="number" value={newPlan.routineInterval} onChange={handlePlanChange('routineInterval')} placeholder="เว้นว่างไว้หากไม่ต้องการทำซ้ำอัตโนมัติ" />
-                  <small style={{ color: 'var(--text-muted)' }}>* เช่น 90 วัน, 30 วัน ระบบจะสร้างงานรอบใหม่เมื่อกดเสร็จสิ้น</small>
-                </div>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button type="submit" className={styles.submitButton} disabled={saving} style={{ flex: 1 }}>
-                    {saving ? 'กำลังบันทึก...' : 'บันทึกแผน'}
-                  </button>
-                  {editingPlanId && (
-                    <button type="button" className={styles.dangerButton} style={{ flex: 1, justifyContent: 'center' }} onClick={() => {
-                      handleDeletePlan(editingPlanId);
-                      setEditingPlanId(null);
-                      setShowPlanForm(false);
-                    }}>
-                      ลบแผนงานนี้
-                    </button>
-                  )}
-                </div>
-              </form>
-            )}
+            
             <div className={styles.gridTwo}>
               {plans.length === 0 ? (
                 <p>ยังไม่มีแผนการบำรุงรักษา</p>
