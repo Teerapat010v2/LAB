@@ -64,7 +64,7 @@ export default function MaintenancePage() {
     });
     if (res.ok) {
       setNewMaintenance({ date: '', reason: '', note: '' });
-      setMessage(' เพิ่มบันทึกการล้างถังเรียบร้อยแล้ว');
+      setMessage(' เพิ่มบันทึกการทำงานเรียบร้อยแล้ว');
       setShowMaintenanceForm(false);
       await loadData();
     } else {
@@ -166,7 +166,7 @@ export default function MaintenancePage() {
   const statusColor = water?.status === 'Critical' ? '#dc2626' : water?.status === 'Alert' ? '#d97706' : '#16a34a';
 
   return (
-    <Layout title="ผู้ดูแลระบบประปา" subtitle="ตรวจสอบคุณภาพน้ำ บันทึกการล้างถัง วางแผนงาน และจัดการเรื่องร้องเรียน">
+    <Layout title="ผู้ดูแลระบบประปา" subtitle="ตรวจสอบคุณภาพน้ำ บันทึกการทำงาน วางแผนงาน และจัดการเรื่องร้องเรียน">
       <div className={styles.buttonRow}>
         <button className={styles.actionButton} onClick={loadData}>รีเฟรชข้อมูล</button>
         <Link href="/" className={styles.secondaryButton}>กลับหน้าหลัก</Link>
@@ -247,10 +247,10 @@ export default function MaintenancePage() {
             </div>
           </div>
 
-          {/* 3. บันทึกการล้างถัง */}
+          {/* 3. บันทึกการทำงาน */}
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
-              <h2>บันทึกการล้างถัง</h2>
+              <h2>บันทึกการทำงาน</h2>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <button className={styles.secondaryButton} onClick={() => setShowMaintenanceForm((p) => !p)}>
                   {showMaintenanceForm ? 'ซ่อนฟอร์ม' : '+ เพิ่มบันทึก'}
@@ -278,7 +278,7 @@ export default function MaintenancePage() {
             )}
             <div className={styles.gridTwo}>
               {records.length === 0 ? (
-                <p>ยังไม่มีบันทึกการล้างถัง</p>
+                <p>ยังไม่มีบันทึกการทำงาน</p>
               ) : (
                 records.slice(0, 4).map((r, i) => (
                   <div key={i} className={styles.alertCard}>

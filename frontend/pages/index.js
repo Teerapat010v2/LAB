@@ -64,7 +64,7 @@ export default function Home() {
             >
               <img src="/icon_Operations.png" alt="ผู้ดูแล" style={{ width: 'clamp(64px, 18vw, 96px)', height: 'clamp(64px, 18vw, 96px)', objectFit: 'contain', margin: '0 auto 1rem' }} />
               <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 0.3rem' }}>ผู้ดูแลระบบประปา</h2>
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', margin: 0 }}>บันทึกการล้างถัง วางแผน และจัดการระบบ</p>
+              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', margin: 0 }}>บันทึกการทำงาน วางแผน และจัดการระบบ</p>
             </div>
           </Link>
 

@@ -200,7 +200,7 @@ export default function AdminPage() {
             </div>
           </Section>
 
-          <Section title="บันทึกการล้างถัง" linkTo="/maintenance-logs" totalItems={data.maintenance.length}>
+          <Section title="บันทึกการทำงาน" linkTo="/maintenance-logs" totalItems={data.maintenance.length}>
             <div className={styles.gridTwo}>
               {data.maintenance.length === 0 ? <p>ไม่มีบันทึก</p> : data.maintenance.slice(0,4).map((m,i) => (
                 <div key={i} className={styles.alertCard}>
