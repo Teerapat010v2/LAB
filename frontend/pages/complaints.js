@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Layout from '../components/Layout';
 import styles from '../styles/Home.module.css';
 
-const apiBase = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5000';
+const apiBase = process.env.NEXT_PUBLIC_API_BASE || '';
 
 export default function ComplaintsPage() {
   const [complaints, setComplaints] = useState([]);

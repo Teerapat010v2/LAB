@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styles from '../styles/Layout.module.css';
 
-const apiBase = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5000';
+const apiBase = process.env.NEXT_PUBLIC_API_BASE || '';
 
 const navLinks = [
   { href: '/user', label: 'บริการประชาชน', roles: ['public'] },

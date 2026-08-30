@@ -1,0 +1,1 @@
+module.exports={table:'alert_logs'};

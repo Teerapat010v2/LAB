@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Home.module.css';
 
-const apiBase = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5000';
+const apiBase = process.env.NEXT_PUBLIC_API_BASE || '';
 
 export default function ContactPage() {
   const [contact, setContact] = useState({ name: '', phone: '', note: '' });
