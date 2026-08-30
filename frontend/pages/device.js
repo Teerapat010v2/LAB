@@ -119,7 +119,7 @@ export default function DevicePage() {
           <div className={styles.alertCard}>
             <p><strong>พบการส่งข้อมูลล่าสุด</strong></p>
             <p>{deviceStatus?.lastSeen ? deviceStatus.lastSeen.toLocaleString('th-TH') : 'ไม่พบข้อมูล'}</p>
-            {deviceStatus?.diffMin !== null && (
+            {deviceStatus && deviceStatus.diffMin !== null && (
               <p>{deviceStatus.diffMin < 10 ? `${deviceStatus.diffMin} นาทีที่ผ่านมา` : `${deviceStatus.diffMin} นาทีที่ผ่านมา (อาจออฟไลน์)`}</p>
             )}
           </div>
