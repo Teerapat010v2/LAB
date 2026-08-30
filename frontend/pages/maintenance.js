@@ -391,9 +391,20 @@ export default function MaintenancePage() {
                   <input type="number" value={newPlan.routineInterval} onChange={handlePlanChange('routineInterval')} placeholder="เว้นว่างไว้หากไม่ต้องการทำซ้ำอัตโนมัติ" />
                   <small style={{ color: 'var(--text-muted)' }}>* เช่น 90 วัน, 30 วัน ระบบจะสร้างงานรอบใหม่เมื่อกดเสร็จสิ้น</small>
                 </div>
-                <button type="submit" className={styles.submitButton} disabled={saving}>
-                  {saving ? 'กำลังบันทึก...' : 'บันทึกแผน'}
-                </button>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button type="submit" className={styles.submitButton} disabled={saving} style={{ flex: 1 }}>
+                    {saving ? 'กำลังบันทึก...' : 'บันทึกแผน'}
+                  </button>
+                  {editingPlanId && (
+                    <button type="button" className={styles.dangerButton} style={{ flex: 1, justifyContent: 'center' }} onClick={() => {
+                      handleDeletePlan(editingPlanId);
+                      setEditingPlanId(null);
+                      setShowPlanForm(false);
+                    }}>
+                      ลบแผนงานนี้
+                    </button>
+                  )}
+                </div>
               </form>
             )}
             <div className={styles.gridTwo}>
@@ -406,7 +417,6 @@ export default function MaintenancePage() {
                       <p>วันที่: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
                       <div style={{ display: 'flex', gap: '0.4rem' }}>
                         <button className={styles.smallButton} style={{ background: '#fff', color: 'var(--primary)', border: '1px solid var(--primary)', margin: 0 }} onClick={() => handleEditPlanClick(p)}>แก้ไข</button>
-                        <button className={styles.smallButton} style={{ background: '#fff', color: '#dc2626', border: '1px solid #fca5a5', margin: 0 }} onClick={() => handleDeletePlan(p._id)}>ลบ</button>
                       </div>
                     </div>
                     <p>งาน: {p.description}</p>
