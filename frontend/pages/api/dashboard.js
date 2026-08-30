@@ -73,6 +73,21 @@ export default async function handler(req, res) {
       
       const threshold = settings.maintenanceIntervalDays;
       const warningThreshold = Math.max(1, threshold - 15);
+      if (daysSinceCleaning >= warningThreshold) {
+        // Auto create plan if not exists
+        const existingAutoPlan = plans.find(p => p.isAuto && p.status !== 'ล้างแล้ว');
+        if (!existingAutoPlan) {
+          const nextDate = new Date(new Date(latestMaintenance.date).getTime() + (threshold * 24 * 60 * 60 * 1000));
+          const newPlan = await Plan.create({
+            scheduleDate: nextDate.toISOString().split('T')[0],
+            description: 'ล้างถังตามรอบ (กำหนดอัตโนมัติ)',
+            assignedTo: 'ทีมงานบำรุงรักษา',
+            status: 'ตามแผน',
+            isAuto: true
+          });
+          plans.push(newPlan.toObject());
+        }
+      }
       
       if (daysSinceCleaning >= threshold) {
         active = true;
