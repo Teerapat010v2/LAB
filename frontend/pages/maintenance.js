@@ -360,7 +360,7 @@ export default function MaintenancePage() {
             <div className={styles.sectionTitle}>
               <h2>แผนการบำรุงรักษา</h2>
               <button className={styles.secondaryButton} onClick={() => setShowPlanForm((p) => !p)}>
-                {showPlanForm ? 'ซ่อนฟอร์ม' : '+ วางแผนล่วงหน้า'}
+                {showPlanForm ? 'ซ่อนฟอร์ม' : '+ เพิ่ม/แก้ไขแผน'}
               </button>
             </div>
             
@@ -415,9 +415,6 @@ export default function MaintenancePage() {
                   <div key={p._id || i} className={styles.alertCard}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <p>วันที่: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
-                      <div style={{ display: 'flex', gap: '0.4rem' }}>
-                        <button className={styles.smallButton} style={{ background: '#fff', color: 'var(--primary)', border: '1px solid var(--primary)', margin: 0 }} onClick={() => handleEditPlanClick(p)}>แก้ไข</button>
-                      </div>
                     </div>
                     <p>งาน: {p.description}</p>
                     <p>ผู้รับผิดชอบ: {p.assignedTo}</p>
