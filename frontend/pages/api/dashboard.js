@@ -96,13 +96,13 @@ export default async function handler(req, res) {
       }
       
       alerts.push({
-        type: 'เวลา',
+        type: 'รอบการล้างถัง',
         message: message,
         active: active,
       });
     } else {
       alerts.push({
-        type: 'เวลา',
+        type: 'รอบการล้างถัง',
         message: 'ยังไม่พบประวัติการล้างถัง',
         active: true,
       });
