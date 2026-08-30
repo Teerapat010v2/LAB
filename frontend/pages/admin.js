@@ -46,21 +46,12 @@ export default function AdminPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const res = await Promise.all([
-        fetch(`${apiBase}/api/water`).then(r => r.json()).catch(()=>null),
-        fetch(`${apiBase}/api/alert`).then(r => r.json()).catch(()=>({alerts:[]})),
-        fetch(`${apiBase}/api/admins`).then(r => r.json()).catch(()=>[]),
-        fetch(`${apiBase}/api/maintenance`).then(r => r.json()).catch(()=>[]),
-        fetch(`${apiBase}/api/plans`).then(r => r.json()).catch(()=>[]),
-        fetch(`${apiBase}/api/bugs`).then(r => r.json()).catch(()=>[]),
-        fetch(`${apiBase}/api/contact`).then(r => r.json()).catch(()=>({})),
-        fetch(`${apiBase}/api/history`).then(r => r.json()).catch(()=>[])
-      ]);
-      setData({
-        water: res[0], alerts: res[1].alerts||[], admins: res[2], maintenance: res[3],
-        plans: res[4], bugs: res[5], contact: res[6], history: res[7]
-      });
-      setEditContact(res[6]);
+      const res = await fetch(`${apiBase}/api/dashboard`);
+      if (res.ok) {
+        const json = await res.json();
+        setData(json);
+        setEditContact(json.contact || { name: '', phone: '', note: '' });
+      }
     } catch(e) { console.error(e); }
     finally { setLoading(false); }
   };

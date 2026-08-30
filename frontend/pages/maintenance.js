@@ -27,20 +27,14 @@ export default function MaintenancePage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [maintenanceJson, plansJson, complaintsJson, waterJson, alertJson, historyJson] = await Promise.all([
-        fetch(`${apiBase}/api/maintenance`).then((r) => r.json()),
-        fetch(`${apiBase}/api/plans`).then((r) => r.json()),
-        fetch(`${apiBase}/api/complaints`).then((r) => r.json()),
-        fetch(`${apiBase}/api/water`).then((r) => r.json()),
-        fetch(`${apiBase}/api/alert`).then((r) => r.json()),
-        fetch(`${apiBase}/api/history`).then((r) => r.json()),
-      ]);
-      setRecords(maintenanceJson);
-      setPlans(plansJson);
-      setComplaints(complaintsJson);
-      setWater(waterJson);
-      setAlerts(alertJson.alerts || []);
-      setHistory(historyJson);
+      const r = await fetch(`${apiBase}/api/dashboard`);
+      const data = await r.json();
+      setRecords(data.maintenance || []);
+      setPlans(data.plans || []);
+      setComplaints(data.complaints || []);
+      setWater(data.water || null);
+      setAlerts(data.alerts || []);
+      setHistory(data.history || []);
     } catch (err) {
       console.error('Failed to load data', err);
     } finally {
