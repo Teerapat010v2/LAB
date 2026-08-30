@@ -206,15 +206,29 @@ export default function MaintenancePage() {
               <h2>การแจ้งเตือน</h2>
             </div>
             <div className={styles.gridTwo}>
-              {alerts.map((alert, i) => (
-                <div key={i} className={styles.alertCard} style={{ borderLeft: `4px solid ${alert.active ? '#e74c3c' : '#27ae60'}` }}>
-                  <p><strong>{alert.type}</strong></p>
-                  <p>{alert.message}</p>
-                  <p style={{ color: alert.active ? '#e74c3c' : '#27ae60', fontWeight: 'bold' }}>
-                    {alert.active ? '️ ต้องตรวจสอบ' : ' ปกติ'}
-                  </p>
-                </div>
-              ))}
+              {alerts.map((alert, i) => {
+                const linkTo = alert.type === 'ร้องเรียน' ? '/complaints' : null;
+                const cardContent = (
+                  <div className={styles.alertCard} style={{ borderLeft: `4px solid ${alert.active ? '#e74c3c' : '#27ae60'}`, cursor: linkTo ? 'pointer' : 'default' }}>
+                    <p><strong>{alert.type}</strong></p>
+                    <p>{alert.message}</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <p style={{ color: alert.active ? '#e74c3c' : '#27ae60', fontWeight: 'bold', margin: 0 }}>
+                        {alert.active ? '️ ต้องตรวจสอบ' : ' ปกติ'}
+                      </p>
+                      {linkTo && <span style={{ fontSize: '0.8rem', color: 'var(--primary)', textDecoration: 'underline' }}>กดเพื่อไปตรวจสอบ &rarr;</span>}
+                    </div>
+                  </div>
+                );
+                
+                return linkTo ? (
+                  <Link href={linkTo} key={i} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {cardContent}
+                  </Link>
+                ) : (
+                  <div key={i}>{cardContent}</div>
+                );
+              })}
             </div>
           </div>
 
