@@ -10,10 +10,17 @@ export default async function handler(req, res) {
       const updated = await Plan.findByIdAndUpdate(id, { status: req.body.status }, { new: true });
       if (req.body.status === 'เสร็จสิ้น') {
         const Maintenance = require('../../../models/MaintenanceModel');
+        const History = require('../../../models/HistoryModel');
+        
         await Maintenance.create({
           date: new Date().toISOString().split('T')[0],
           reason: updated.description,
           note: `ดำเนินการโดย: ${updated.assignedTo}`
+        });
+
+        await History.create({
+          date: new Date().toISOString().split('T')[0],
+          note: `บันทึกประวัติการบำรุงรักษา: ${updated.description} (ดำเนินการโดย: ${updated.assignedTo})`,
         });
 
         if (updated.routineInterval && updated.routineInterval > 0) {
