@@ -4,7 +4,6 @@ import Bug from '../../models/BugModel';
 import Maintenance from '../../models/MaintenanceModel';
 import Plan from '../../models/PlanModel';
 import Admin from '../../models/AdminModel';
-import Contact from '../../models/ContactModel';
 import History from '../../models/HistoryModel';
 import Complaint from '../../models/ComplaintModel';
 
@@ -12,16 +11,21 @@ export default async function handler(req, res) {
   await dbConnect();
 
   try {
-    const [water, bugs, maintenance, plans, admins, contact, history, complaints] = await Promise.all([
+    const [water, bugs, maintenance, plans, admins, history, complaints] = await Promise.all([
       Water.findOne().sort({ timestamp: -1 }).lean(),
       Bug.find().sort({ submittedAt: -1 }).lean(),
       Maintenance.find().sort({ date: -1 }).lean(),
       Plan.find().sort({ scheduleDate: 1 }).lean(),
       Admin.find().lean(),
-      Contact.findOne().lean(),
       History.find().sort({ date: -1 }).lean(),
       Complaint.find().sort({ submittedAt: -1 }).lean()
     ]);
+    
+    const contact = {
+      name: 'ผู้ดูแลระบบประปา',
+      phone: '080-123-4567',
+      note: 'ติดต่อเมื่อมีเหตุฉุกเฉิน',
+    };
 
     const alerts = [];
     const currentDate = new Date();
