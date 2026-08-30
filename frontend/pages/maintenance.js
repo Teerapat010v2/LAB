@@ -261,7 +261,7 @@ export default function MaintenancePage() {
               <form onSubmit={handleAddMaintenance} className={styles.formColumn} style={{ marginBottom: '1rem' }}>
                 <div className={styles.formField}>
                   <label>วันที่ล้างถัง</label>
-                  <input type="date" value={newMaintenance.date} onChange={handleMaintenanceChange('date')} required />
+                  <input type="date" lang="th-TH" value={newMaintenance.date} onChange={handleMaintenanceChange('date')} required />
                 </div>
                 <div className={styles.formField}>
                   <label>เหตุผล</label>
@@ -311,7 +311,7 @@ export default function MaintenancePage() {
               <form onSubmit={handleAddPlan} className={styles.formColumn} style={{ marginBottom: '1rem' }}>
                 <div className={styles.formField}>
                   <label>วันที่เริ่มกำหนด</label>
-                  <input type="date" value={newPlan.scheduleDate} onChange={handlePlanChange('scheduleDate')} required />
+                  <input type="date" lang="th-TH" value={newPlan.scheduleDate} onChange={handlePlanChange('scheduleDate')} required />
                 </div>
                 <div className={styles.formField}>
                   <label>รายละเอียดงาน</label>
