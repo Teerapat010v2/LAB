@@ -12,8 +12,9 @@ export default async function handler(req, res) {
   await dbConnect();
 
   try {
-    let [water, bugs, maintenance, plans, admins, history, complaints, settings] = await Promise.all([
+    let [water, waterHistory, bugs, maintenance, plans, admins, history, complaints, settings] = await Promise.all([
       Water.findOne().sort({ timestamp: -1 }).lean(),
+      Water.find().sort({ timestamp: -1 }).limit(10).lean(),
       Bug.find().lean(),
       Maintenance.find().sort({ date: -1 }).lean(),
       Plan.find().lean(),
@@ -134,6 +135,7 @@ export default async function handler(req, res) {
 
     res.status(200).json({
       water,
+      waterHistory: waterHistory.reverse(), // Reverse to show chronological order in charts
       alerts,
       upcomingTasks,
       bugs,

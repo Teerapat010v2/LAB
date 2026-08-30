@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Layout from '../components/Layout';
 import styles from '../styles/Home.module.css';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 
 const apiBase = process.env.NEXT_PUBLIC_API_BASE || '';
 
@@ -138,6 +139,29 @@ export default function AdminPage() {
     }
   };
 
+  const chartDataWater = (data.waterHistory || []).map(w => ({
+    time: new Date(w.timestamp).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+    turbidity: w.turbidity
+  }));
+
+  const issueStats = [
+    { 
+      name: 'รอดำเนินการ', 
+      'บั๊กระบบ': data.bugs.filter(b => b.status === 'รอดำเนินการ').length,
+      'ร้องเรียน': (data.complaints || []).filter(c => c.status === 'รอดำเนินการ').length
+    },
+    { 
+      name: 'กำลังดำเนินการ', 
+      'บั๊กระบบ': data.bugs.filter(b => b.status === 'กำลังดำเนินการ').length,
+      'ร้องเรียน': (data.complaints || []).filter(c => c.status === 'กำลังดำเนินการ' || c.status === 'รับงาน').length
+    },
+    { 
+      name: 'เสร็จงาน', 
+      'บั๊กระบบ': data.bugs.filter(b => b.status === 'เสร็จงาน').length,
+      'ร้องเรียน': (data.complaints || []).filter(c => c.status === 'เสร็จงาน').length
+    }
+  ];
+
   return (
     <Layout title="แผงควบคุมระบบ (Admin Dashboard)" subtitle="ดูภาพรวมทั้งหมด และจัดการผู้ใช้">
       <div className={styles.buttonRow}>
@@ -172,6 +196,40 @@ export default function AdminPage() {
               <div className={styles.statTile}>
                 <div className={styles.val}>{data.alerts ? data.alerts.filter(a => a.active && a.type !== 'งานที่กำลังดำเนินการ').length : 0}</div>
                 <div className={styles.lbl}>แจ้งเตือนระบบ</div>
+              </div>
+            </div>
+
+            <div className={styles.gridTwo} style={{ marginTop: '1rem' }}>
+              <div className={styles.card} style={{ padding: '1rem', border: '1px solid var(--card-border)', boxShadow: 'none' }}>
+                <h3 style={{ marginTop: 0, marginBottom: '1rem', fontSize: '1rem' }}>แนวโน้มความขุ่นของน้ำ (10 ครั้งล่าสุด)</h3>
+                <div style={{ width: '100%', height: 200 }}>
+                  <ResponsiveContainer>
+                    <LineChart data={chartDataWater}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="time" tick={{ fontSize: 10 }} />
+                      <YAxis tick={{ fontSize: 10 }} />
+                      <Tooltip />
+                      <Line type="monotone" dataKey="turbidity" stroke="#3b82f6" strokeWidth={2} name="ความขุ่น (NTU)" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              
+              <div className={styles.card} style={{ padding: '1rem', border: '1px solid var(--card-border)', boxShadow: 'none' }}>
+                <h3 style={{ marginTop: 0, marginBottom: '1rem', fontSize: '1rem' }}>สถิติเรื่องร้องเรียน & บั๊กระบบ</h3>
+                <div style={{ width: '100%', height: 200 }}>
+                  <ResponsiveContainer>
+                    <BarChart data={issueStats}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+                      <YAxis tick={{ fontSize: 10 }} />
+                      <Tooltip />
+                      <Legend wrapperStyle={{ fontSize: '12px' }} />
+                      <Bar dataKey="ร้องเรียน" fill="#f59e0b" />
+                      <Bar dataKey="บั๊กระบบ" fill="#ef4444" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
           </Section>
