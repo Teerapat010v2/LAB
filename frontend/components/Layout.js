@@ -36,7 +36,7 @@ export default function Layout({ children, title, subtitle }) {
         body: JSON.stringify(bugData),
       });
       if (res.ok) {
-        setBugMsg(' ส่งรายงานบั๊กให้แอดมินแล้ว');
+        setBugMsg(' ส่งรายงานระบบให้แอดมินแล้ว');
         setBugData({ ...bugData, message: '' });
         setTimeout(() => { setShowBug(false); setBugMsg(''); }, 2000);
       } else {
@@ -103,7 +103,7 @@ export default function Layout({ children, title, subtitle }) {
           <line x1="12" y1="9" x2="12" y2="13"></line>
           <line x1="12" y1="17" x2="12.01" y2="17"></line>
         </svg>
-        รายงานบั๊ก
+        รายงานระบบ
       </button>
 
       {/* Bug Report Modal */}
@@ -119,7 +119,7 @@ export default function Layout({ children, title, subtitle }) {
             width: '100%', maxWidth: '400px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)'
           }}>
             <h3 style={{ margin: '0 0 1rem', color: '#dc2626', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              รายงานปัญหาระบบ (บั๊ก)
+              รายงานปัญหาระบบ
             </h3>
             
             {bugMsg ? (
@@ -140,7 +140,7 @@ export default function Layout({ children, title, subtitle }) {
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button type="submit" disabled={bugSaving} style={{ flex: 1, background: '#dc2626', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '6px', fontWeight: 600, cursor: 'pointer' }}>
-                    {bugSaving ? 'กำลังส่ง...' : 'ส่งรายงานบั๊ก'}
+                    {bugSaving ? 'กำลังส่ง...' : 'ส่งรายงานระบบ'}
                   </button>
                   <button type="button" onClick={() => setShowBug(false)} style={{ background: '#f1f5f9', color: '#475569', border: 'none', padding: '0.75rem 1rem', borderRadius: '6px', fontWeight: 600, cursor: 'pointer' }}>
                     ยกเลิก
