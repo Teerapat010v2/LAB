@@ -48,8 +48,27 @@ export default function ComplaintsPage() {
     }
   };
 
+  const handleClearCompleted = async () => {
+    if (!confirm('คุณแน่ใจหรือไม่ที่จะลบเรื่องร้องเรียนที่ "เสร็จงาน" ทั้งหมด?')) return;
+    try {
+      const res = await fetch(`${apiBase}/api/admin/clear-completed?type=complaints`, { method: 'DELETE' });
+      if (res.ok) {
+        const json = await res.json();
+        setMessage(`เคลียร์ประวัติเรื่องร้องเรียนสำเร็จ (${json.deletedCount} รายการ)`);
+        setTimeout(() => setMessage(''), 5000);
+        await loadData();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const getStatusColor = (status) => 'var(--primary)';
   const getStatusBg = (status) => 'var(--primary-light)';
+
+  // We only show the clear button if user is an admin.
+  // Note: Since this is purely client-side, we can just check localStorage.
+  const isAdmin = typeof window !== 'undefined' && localStorage.getItem('auth_admin');
 
   return (
     <Layout title="เรื่องร้องเรียนทั้งหมด" subtitle="ติดตามและจัดการเรื่องร้องเรียนจากชาวบ้าน">
@@ -59,6 +78,11 @@ export default function ComplaintsPage() {
           <Link href="/maintenance" className={styles.secondaryButton}>กลับแผงควบคุม</Link>
         ) : (
           <Link href="/user" className={styles.secondaryButton}>กลับหน้าหลัก</Link>
+        )}
+        {isAdmin && (
+          <button className={styles.dangerButton} style={{ marginLeft: 'auto' }} onClick={handleClearCompleted}>
+            ลบประวัติที่เสร็จสิ้นแล้ว
+          </button>
         )}
       </div>
 

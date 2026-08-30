@@ -177,15 +177,7 @@ export default function AdminPage() {
             </div>
           </Section>
 
-          <Section 
-            title="รายงานบั๊กของระบบ" 
-            totalItems={data.bugs.length}
-            action={
-              <button className={styles.dangerButton} style={{ margin: 0, padding: '0.4rem 0.8rem', fontSize: '0.8rem' }} onClick={() => handleClearCompleted('bugs')}>
-                ล้างประวัติ (เสร็จงาน)
-              </button>
-            }
-          >
+          <Section title="รายงานบั๊กของระบบ" linkTo="/bugs" totalItems={data.bugs.length}>
             <div className={styles.gridTwo}>
               {data.bugs.length === 0 ? <p>ไม่มีรายงานบั๊ก</p> : data.bugs.slice(0,4).map(c => (
                 <div key={c._id} className={styles.alertCard}>
@@ -220,16 +212,7 @@ export default function AdminPage() {
             </div>
           </Section>
 
-          <Section 
-            title="แผนการบำรุงรักษา" 
-            linkTo="/plans" 
-            totalItems={data.plans.length}
-            action={
-              <button className={styles.dangerButton} style={{ margin: 0, padding: '0.4rem 0.8rem', fontSize: '0.8rem' }} onClick={() => handleClearCompleted('plans')}>
-                ล้างประวัติ (เสร็จงาน)
-              </button>
-            }
-          >
+          <Section title="แผนการบำรุงรักษา" linkTo="/plans" totalItems={data.plans.length}>
             <div className={styles.gridTwo}>
               {data.plans.length === 0 ? <p>ไม่มีแผนงาน</p> : data.plans.slice(0,4).map((p,i) => (
                 <div key={i} className={styles.alertCard}>

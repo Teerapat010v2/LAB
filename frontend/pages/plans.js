@@ -45,6 +45,21 @@ export default function PlansPage() {
     loadData();
   }, []);
 
+  const handleClearCompleted = async () => {
+    if (!confirm('คุณแน่ใจหรือไม่ที่จะลบแผนบำรุงรักษาที่ "ล้างแล้ว" ทั้งหมด?')) return;
+    try {
+      const res = await fetch(`${apiBase}/api/admin/clear-completed?type=plans`, { method: 'DELETE' });
+      if (res.ok) {
+        await loadData();
+        alert('เคลียร์ประวัติแผนบำรุงรักษาสำเร็จ');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const isAdmin = typeof window !== 'undefined' && localStorage.getItem('auth_admin');
+
   return (
     <Layout title="แผนการบำรุงรักษาทั้งหมด" subtitle="รายการแผนงานซ่อมบำรุงและล้างถังที่กำหนดไว้">
       <div className={styles.buttonRow}>
@@ -53,6 +68,11 @@ export default function PlansPage() {
           <Link href="/maintenance" className={styles.secondaryButton}>กลับแผงควบคุม</Link>
         ) : (
           <Link href="/user" className={styles.secondaryButton}>กลับหน้าหลัก</Link>
+        )}
+        {isAdmin && (
+          <button className={styles.dangerButton} style={{ marginLeft: 'auto' }} onClick={handleClearCompleted}>
+            ลบประวัติที่เสร็จสิ้นแล้ว
+          </button>
         )}
       </div>
 
