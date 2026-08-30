@@ -16,9 +16,7 @@ export default function Home() {
       <nav className={navStyles.navbar}>
         <div className={navStyles.navInner}>
           <span className={navStyles.brand}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2C6 2 2 8 2 14a10 10 0 0020 0c0-6-4-12-10-12z"/>
-            </svg>
+            <img src="/Logo.png" alt="โลโก้" style={{ width: '40px', height: '40px', objectFit: 'contain', borderRadius: '8px' }} />
             <span>ระบบน้ำประปาหมู่บ้าน</span>
           </span>
         </div>
@@ -82,7 +80,7 @@ export default function Home() {
       </main>
 
       <footer className={navStyles.footer}>
-        <p>ระบบจัดการน้ำประปาหมู่บ้าน &copy; {new Date().getFullYear()}</p>
+        <p>ระบบจัดการน้ำประปาหมู่บ้าน โดยนักศึกษามหาวิทยาลัยราชภัฏบุรีรัมย์ สาขาเทคโนโลยีสารสนเทศ</p>
       </footer>
     </>
   );
