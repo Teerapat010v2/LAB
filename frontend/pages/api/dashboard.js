@@ -68,11 +68,12 @@ export default async function handler(req, res) {
       const diff = Math.abs(currentDate.getTime() - new Date(latestMaintenance.date).getTime());
       daysSinceCleaning = Math.ceil(diff / (1000 * 60 * 60 * 24));
       
-      let message = `ล้างถังครั้งล่าสุดเมื่อ ${new Date(latestMaintenance.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })} (${daysSinceCleaning} วันที่ผ่านมา)`;
       let active = false;
       
       const threshold = settings.maintenanceIntervalDays;
+      let daysUntilNextCleaning = threshold - daysSinceCleaning;
       const warningThreshold = Math.max(1, threshold - 15);
+      
       // Auto create plan if not exists
       const existingAutoPlan = plans.find(p => p.isAuto && p.status !== 'ล้างแล้ว');
       if (!existingAutoPlan) {
@@ -86,13 +87,15 @@ export default async function handler(req, res) {
         });
         plans.push(newPlan.toObject());
       }
+
+      let message = `ล้างถังครั้งล่าสุดเมื่อ ${new Date(latestMaintenance.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })} (${daysSinceCleaning} วันที่ผ่านมา) — เหลืออีก ${daysUntilNextCleaning} วัน`;
       
       if (daysSinceCleaning >= threshold) {
         active = true;
-        message = `เลยกำหนดเวลาล้างถังแล้ว (${daysSinceCleaning} วันที่ผ่านมา) ควรดำเนินการทันที`;
+        message = `เลยกำหนดเวลาล้างถังแล้ว ${Math.abs(daysUntilNextCleaning)} วัน ควรดำเนินการทันที`;
       } else if (daysSinceCleaning >= warningThreshold) {
         active = true;
-        message = `ใกล้ถึงเวลาล้างถังตามรอบ (${daysSinceCleaning} วันที่ผ่านมา)`;
+        message = `ใกล้ถึงเวลาล้างถังตามรอบ (เหลืออีก ${daysUntilNextCleaning} วัน)`;
       }
       
       alerts.push({
