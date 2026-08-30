@@ -120,7 +120,7 @@ export default function AdminPage() {
                 <div className={styles.lbl}>บั๊กที่รอแก้</div>
               </div>
               <div className={styles.statTile}>
-                <div className={styles.val}>{data.alerts.length}</div>
+                <div className={styles.val}>{data.alerts ? data.alerts.filter(a => a.active).length : 0}</div>
                 <div className={styles.lbl}>แจ้งเตือนระบบ</div>
               </div>
             </div>
