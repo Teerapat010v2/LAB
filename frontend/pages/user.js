@@ -10,6 +10,7 @@ export default function UserPage() {
   const [alerts, setAlerts] = useState([]);
   const [admins, setAdmins] = useState([]);
   const [maintenance, setMaintenance] = useState([]);
+  const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [complaint, setComplaint] = useState({ name: '', phone: '', topic: '', message: '' });
   const [complaintMsg, setComplaintMsg] = useState('');
@@ -25,6 +26,7 @@ export default function UserPage() {
       setAlerts((data.alerts || []).filter(a => a.type !== 'ร้องเรียน'));
       setAdmins(data.admins || []);
       setMaintenance(data.maintenance || []);
+      setPlans(data.plans || []);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
@@ -118,6 +120,26 @@ export default function UserPage() {
                   </div>
                 )}
               </>
+            )}
+          </div>
+
+          {/* Plans summary */}
+          <div className={styles.card}>
+            <div className={styles.sectionTitle}>
+              <h2>แผนการบำรุงรักษาและล้างถัง (เร็วๆ นี้)</h2>
+            </div>
+            {plans.length === 0 ? (
+              <p>ยังไม่มีแผนการบำรุงรักษา</p>
+            ) : (
+              <div className={styles.gridTwo}>
+                {plans.slice(0, 4).map((p, i) => (
+                  <div key={i} className={styles.alertCard}>
+                    <p>วันที่กำหนด: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
+                    <p>งาน: {p.description}</p>
+                    <p>สถานะ: <span style={{ color: p.status === 'ล้างแล้ว' ? 'var(--success)' : 'var(--primary)', fontWeight: 'bold' }}>{p.status}</span></p>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
 

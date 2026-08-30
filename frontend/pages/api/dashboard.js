@@ -32,13 +32,26 @@ export default async function handler(req, res) {
     
     // 1. Alert for Time (เวลา)
     const latestMaintenance = maintenance[0];
+    let daysSinceCleaning = 0;
     if (latestMaintenance) {
       const diff = Math.abs(currentDate.getTime() - new Date(latestMaintenance.date).getTime());
-      const daysSinceCleaning = Math.ceil(diff / (1000 * 60 * 60 * 24));
+      daysSinceCleaning = Math.ceil(diff / (1000 * 60 * 60 * 24));
+      
+      let message = `ล้างถังครั้งล่าสุดเมื่อ ${new Date(latestMaintenance.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })} (${daysSinceCleaning} วันที่ผ่านมา)`;
+      let active = false;
+      
+      if (daysSinceCleaning >= 90) {
+        active = true;
+        message = `เลยกำหนดเวลาล้างถังแล้ว (${daysSinceCleaning} วันที่ผ่านมา) ควรดำเนินการทันที`;
+      } else if (daysSinceCleaning >= 75) {
+        active = true;
+        message = `ใกล้ถึงเวลาล้างถังตามรอบ (${daysSinceCleaning} วันที่ผ่านมา)`;
+      }
+      
       alerts.push({
         type: 'เวลา',
-        message: `ล้างถังครั้งล่าสุดเมื่อ ${new Date(latestMaintenance.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })} (${daysSinceCleaning} วันที่ผ่านมา)`,
-        active: daysSinceCleaning >= 90,
+        message: message,
+        active: active,
       });
     } else {
       alerts.push({
@@ -51,13 +64,15 @@ export default async function handler(req, res) {
     // 2. Alert for Turbidity (ความขุ่น)
     if (water) {
       const waterStatus = water.turbidity >= 10 ? 'Critical' : water.turbidity >= 5 ? 'Alert' : 'Normal';
+      let message = 'ค่าความขุ่นอยู่ในเกณฑ์ปกติ';
+      if (waterStatus === 'Critical') {
+        message = 'น้ำขุ่นมาก ควรดำเนินการล้างถังโดยด่วน';
+      } else if (waterStatus === 'Alert') {
+        message = 'ค่าความขุ่นสูงกว่าปกติ โปรดตรวจสอบ';
+      }
       alerts.push({
         type: 'ความขุ่น',
-        message: waterStatus === 'Critical'
-          ? 'ค่าความขุ่นสูงเกินเกณฑ์ ต้องรีบดำเนินการ'
-          : waterStatus === 'Alert'
-          ? 'ค่าความขุ่นสูงกว่าปกติ โปรดตรวจสอบ'
-          : 'ค่าความขุ่นอยู่ในเกณฑ์ปกติ',
+        message: message,
         active: waterStatus !== 'Normal',
       });
     } else {

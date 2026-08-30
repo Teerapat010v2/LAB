@@ -113,14 +113,36 @@ export default function MaintenancePage() {
   };
 
   const handleUpdateComplaintStatus = async (id, status) => {
-    const res = await fetch(`${apiBase}/api/complaints/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
-    });
-    if (res.ok) {
-      setMessage(' อัปเดตสถานะเรื่องร้องเรียนแล้ว');
-      await loadData();
+    try {
+      const res = await fetch(`${apiBase}/api/complaints/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      if (res.ok) {
+        setMessage('อัปเดตสถานะเรื่องร้องเรียนแล้ว');
+        setTimeout(() => setMessage(''), 3000);
+        await loadData();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUpdatePlanStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${apiBase}/api/plans/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      if (res.ok) {
+        setMessage('อัปเดตสถานะแผนงานแล้ว');
+        setTimeout(() => setMessage(''), 3000);
+        await loadData();
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -309,11 +331,21 @@ export default function MaintenancePage() {
                 <p>ยังไม่มีแผนการบำรุงรักษา</p>
               ) : (
                 plans.slice(0, 4).map((p, i) => (
-                  <div key={i} className={styles.alertCard}>
+                  <div key={p._id || i} className={styles.alertCard}>
                     <p>วันที่: <strong>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</strong></p>
                     <p>งาน: {p.description}</p>
                     <p>ผู้รับผิดชอบ: {p.assignedTo}</p>
-                    <p>สถานะ: <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{p.status}</span></p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+                      <p style={{ margin: 0 }}>สถานะ: <span style={{ color: p.status === 'ล้างแล้ว' ? 'var(--success)' : 'var(--primary)', fontWeight: 'bold' }}>{p.status}</span></p>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        {p.status === 'ตามแผน' && (
+                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdatePlanStatus(p._id, 'กำลังล้าง')}>กำลังล้าง</button>
+                        )}
+                        {p.status === 'กำลังล้าง' && (
+                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdatePlanStatus(p._id, 'ล้างแล้ว')}>เสร็จสิ้น</button>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 ))
               )}

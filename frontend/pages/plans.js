@@ -23,6 +23,21 @@ export default function PlansPage() {
     }
   };
 
+  const handleUpdateStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${apiBase}/api/plans/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      if (res.ok) {
+        await loadData();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     const authAdmin = localStorage.getItem('auth_admin');
     const authMaintenance = localStorage.getItem('auth_maintenance');
@@ -56,22 +71,42 @@ export default function PlansPage() {
                 <th>รายละเอียดงาน</th>
                 <th>ผู้รับผิดชอบ</th>
                 <th style={{ width: '120px' }}>สถานะ</th>
+                {isStaff && <th style={{ width: '150px' }}>อัปเดตสถานะ</th>}
               </tr>
             </thead>
             <tbody>
               {plans.map((p, idx) => (
-                <tr key={idx}>
+                <tr key={p._id || idx}>
                   <td>{p.scheduleDate ? new Date(p.scheduleDate).toLocaleDateString('th-TH') : '-'}</td>
                   <td><strong>{p.description}</strong></td>
                   <td>{p.assignedTo}</td>
                   <td>
                     <span className={styles.statusBadge} style={{ 
-                      background: 'var(--primary-light)', 
-                      color: 'var(--primary)' 
+                      background: p.status === 'ล้างแล้ว' ? 'var(--success-light)' : 'var(--primary-light)', 
+                      color: p.status === 'ล้างแล้ว' ? 'var(--success)' : 'var(--primary)' 
                     }}>
                       {p.status}
                     </span>
                   </td>
+                  {isStaff && (
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                        {p.status === 'ตามแผน' && (
+                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdateStatus(p._id, 'กำลังล้าง')}>
+                            กำลังล้าง
+                          </button>
+                        )}
+                        {p.status === 'กำลังล้าง' && (
+                          <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdateStatus(p._id, 'ล้างแล้ว')}>
+                            ล้างเสร็จสิ้น
+                          </button>
+                        )}
+                        {p.status === 'ล้างแล้ว' && (
+                          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>-</span>
+                        )}
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
