@@ -31,7 +31,7 @@ const Field = ({ label, children }) => (
 export default function AdminPage() {
   const [data, setData] = useState({
     water: null, alerts: [], admins: [], maintenance: [],
-    plans: [], complaints: [], contact: {}, history: []
+    plans: [], bugs: [], contact: {}, history: []
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -52,13 +52,13 @@ export default function AdminPage() {
         fetch(`${apiBase}/api/admins`).then(r => r.json()).catch(()=>[]),
         fetch(`${apiBase}/api/maintenance`).then(r => r.json()).catch(()=>[]),
         fetch(`${apiBase}/api/plans`).then(r => r.json()).catch(()=>[]),
-        fetch(`${apiBase}/api/complaints`).then(r => r.json()).catch(()=>[]),
+        fetch(`${apiBase}/api/bugs`).then(r => r.json()).catch(()=>[]),
         fetch(`${apiBase}/api/contact`).then(r => r.json()).catch(()=>({})),
         fetch(`${apiBase}/api/history`).then(r => r.json()).catch(()=>[])
       ]);
       setData({
         water: res[0], alerts: res[1].alerts||[], admins: res[2], maintenance: res[3],
-        plans: res[4], complaints: res[5], contact: res[6], history: res[7]
+        plans: res[4], bugs: res[5], contact: res[6], history: res[7]
       });
       setEditContact(res[6]);
     } catch(e) { console.error(e); }
@@ -111,9 +111,9 @@ export default function AdminPage() {
               </div>
               <div className={styles.statTile}>
                 <div className={styles.val}>
-                  {data.complaints.filter(c=>c.status!=='เสร็จงาน').length}
+                  {data.bugs.filter(c=>c.status!=='เสร็จงาน').length}
                 </div>
-                <div className={styles.lbl}>ร้องเรียนค้าง</div>
+                <div className={styles.lbl}>บั๊กที่รอแก้</div>
               </div>
               <div className={styles.statTile}>
                 <div className={styles.val}>{data.alerts.length}</div>
@@ -122,9 +122,9 @@ export default function AdminPage() {
             </div>
           </Section>
 
-          <Section title="เรื่องร้องเรียนจากชาวบ้าน (ล่าสุด)" linkTo="/complaints" totalItems={data.complaints.length}>
+          <Section title="รายงานบั๊กของระบบ (ล่าสุด)" totalItems={data.bugs.length}>
             <div className={styles.gridTwo}>
-              {data.complaints.length === 0 ? <p>ไม่มีเรื่องร้องเรียน</p> : data.complaints.slice(0,4).map(c => (
+              {data.bugs.length === 0 ? <p>ไม่มีรายงานบั๊ก</p> : data.bugs.slice(0,4).map(c => (
                 <div key={c._id} className={styles.alertCard}>
                   <p><strong>{c.topic}</strong></p>
                   <p>{c.message}</p>

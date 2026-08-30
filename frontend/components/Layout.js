@@ -30,7 +30,7 @@ export default function Layout({ children, title, subtitle }) {
     e.preventDefault();
     setBugSaving(true);
     try {
-      const res = await fetch(`${apiBase}/api/complaints`, {
+      const res = await fetch(`${apiBase}/api/bugs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bugData),
