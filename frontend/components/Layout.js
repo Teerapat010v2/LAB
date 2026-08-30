@@ -36,14 +36,14 @@ export default function Layout({ children, title, subtitle }) {
         body: JSON.stringify(bugData),
       });
       if (res.ok) {
-        setBugMsg('✅ ส่งรายงานบั๊กให้แอดมินแล้ว');
+        setBugMsg(' ส่งรายงานบั๊กให้แอดมินแล้ว');
         setBugData({ ...bugData, message: '' });
         setTimeout(() => { setShowBug(false); setBugMsg(''); }, 2000);
       } else {
-        setBugMsg('❌ ส่งไม่สำเร็จ');
+        setBugMsg(' ส่งไม่สำเร็จ');
       }
     } catch {
-      setBugMsg('❌ เชื่อมต่อระบบไม่ได้');
+      setBugMsg(' เชื่อมต่อระบบไม่ได้');
     }
     setBugSaving(false);
   };

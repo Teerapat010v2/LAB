@@ -71,11 +71,11 @@ export default function MaintenancePage() {
     });
     if (res.ok) {
       setNewMaintenance({ date: '', reason: '', note: '' });
-      setMessage('✅ เพิ่มบันทึกการล้างถังเรียบร้อยแล้ว');
+      setMessage(' เพิ่มบันทึกการล้างถังเรียบร้อยแล้ว');
       setShowMaintenanceForm(false);
       await loadData();
     } else {
-      setMessage('❌ ไม่สามารถบันทึกได้');
+      setMessage(' ไม่สามารถบันทึกได้');
     }
     setSaving(false);
   };
@@ -91,11 +91,11 @@ export default function MaintenancePage() {
     });
     if (res.ok) {
       setNewPlan({ scheduleDate: '', description: '', assignedTo: '' });
-      setMessage('✅ เพิ่มแผนงานเรียบร้อยแล้ว');
+      setMessage(' เพิ่มแผนงานเรียบร้อยแล้ว');
       setShowPlanForm(false);
       await loadData();
     } else {
-      setMessage('❌ ไม่สามารถเพิ่มแผนงานได้');
+      setMessage(' ไม่สามารถเพิ่มแผนงานได้');
     }
     setSaving(false);
   };
@@ -109,11 +109,11 @@ export default function MaintenancePage() {
       body: JSON.stringify({ turbidity: Number(newTurbidity) }),
     });
     if (res.ok) {
-      setMessage('✅ อัปเดตค่าความขุ่นเรียบร้อยแล้ว');
+      setMessage(' อัปเดตค่าความขุ่นเรียบร้อยแล้ว');
       setNewTurbidity('');
       await loadData();
     } else {
-      setMessage('❌ ไม่สามารถอัปเดตค่าน้ำได้');
+      setMessage(' ไม่สามารถอัปเดตค่าน้ำได้');
     }
     setSaving(false);
   };
@@ -125,7 +125,7 @@ export default function MaintenancePage() {
       body: JSON.stringify({ status }),
     });
     if (res.ok) {
-      setMessage('✅ อัปเดตสถานะเรื่องร้องเรียนแล้ว');
+      setMessage(' อัปเดตสถานะเรื่องร้องเรียนแล้ว');
       await loadData();
     }
   };
@@ -167,7 +167,7 @@ export default function MaintenancePage() {
           <div className={styles.gridTwo}>
             <div className={styles.card}>
               <div className={styles.sectionTitle}>
-                <h2>💧 สถานะคุณภาพน้ำ</h2>
+                <h2> สถานะคุณภาพน้ำ</h2>
                 <span style={{ background: statusColor, color: 'white', padding: '4px 10px', borderRadius: '12px', fontSize: '0.85rem' }}>
                   {water?.level ?? '-'}
                 </span>
@@ -179,7 +179,7 @@ export default function MaintenancePage() {
 
             <div className={styles.card}>
               <div className={styles.sectionTitle}>
-                <h2>📊 อัปเดตค่าความขุ่นน้ำ</h2>
+                <h2> อัปเดตค่าความขุ่นน้ำ</h2>
               </div>
               <form onSubmit={handleUpdateWater} className={styles.formColumn}>
                 <div className={styles.formField}>
@@ -203,7 +203,7 @@ export default function MaintenancePage() {
           {/* 2. การแจ้งเตือน */}
           <div className={styles.card}>
             <div className={styles.sectionTitle}>
-              <h2>🔔 การแจ้งเตือน</h2>
+              <h2>การแจ้งเตือน</h2>
             </div>
             <div className={styles.gridTwo}>
               {alerts.map((alert, i) => (
@@ -211,7 +211,7 @@ export default function MaintenancePage() {
                   <p><strong>{alert.type}</strong></p>
                   <p>{alert.message}</p>
                   <p style={{ color: alert.active ? '#e74c3c' : '#27ae60', fontWeight: 'bold' }}>
-                    {alert.active ? '⚠️ ต้องตรวจสอบ' : '✅ ปกติ'}
+                    {alert.active ? '️ ต้องตรวจสอบ' : ' ปกติ'}
                   </p>
                 </div>
               ))}
