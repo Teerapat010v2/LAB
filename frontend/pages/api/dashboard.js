@@ -39,7 +39,7 @@ export default async function handler(req, res) {
       return new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime();
     });
 
-    const statusWeightPlans = { 'กำลังล้าง': 1, 'ตามแผน': 2, 'ล้างแล้ว': 3 };
+    const statusWeightPlans = { 'กำลังล้าง': 1, 'ตามแผน': 1, 'ล้างแล้ว': 2 };
     plans.sort((a, b) => {
       const wA = statusWeightPlans[a.status] || 99;
       const wB = statusWeightPlans[b.status] || 99;
@@ -87,6 +87,15 @@ export default async function handler(req, res) {
           isAuto: true
         });
         plans.push(newPlan.toObject());
+        
+        // Re-sort plans since we just added one
+        plans.sort((a, b) => {
+          const wA = statusWeightPlans[a.status] || 99;
+          const wB = statusWeightPlans[b.status] || 99;
+          if (wA !== wB) return wA - wB;
+          if (a.status === 'ล้างแล้ว') return new Date(b.scheduleDate).getTime() - new Date(a.scheduleDate).getTime();
+          return new Date(a.scheduleDate).getTime() - new Date(b.scheduleDate).getTime();
+        });
       }
 
       let message = `ล้างถังครั้งล่าสุดเมื่อ ${new Date(latestMaintenance.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })} (${daysSinceCleaning} วันที่ผ่านมา) — เหลืออีก ${daysUntilNextCleaning} วัน`;
