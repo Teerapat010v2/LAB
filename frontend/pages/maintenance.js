@@ -23,6 +23,7 @@ export default function MaintenancePage() {
   const [showReportForm, setShowReportForm] = useState(false);
   const [report, setReport] = useState({ name: 'ผู้ดูแลระบบ', phone: '-', topic: 'รายงานปัญหาระบบ', message: '' });
   const [reportMsg, setReportMsg] = useState('');
+  const [editInterval, setEditInterval] = useState(90);
 
   const loadData = async () => {
     setLoading(true);
@@ -35,11 +36,30 @@ export default function MaintenancePage() {
       setWater(data.water || null);
       setAlerts(data.alerts || []);
       setHistory(data.history || []);
+      if (data.settings) setEditInterval(data.settings.maintenanceIntervalDays || 90);
     } catch (err) {
       console.error('Failed to load data', err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleUpdateInterval = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      await fetch(`${apiBase}/api/settings`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ maintenanceIntervalDays: editInterval }),
+      });
+      setMessage('บันทึกรอบล้างถังแล้ว');
+      setTimeout(() => setMessage(''), 3000);
+      await loadData();
+    } catch (err) {
+      console.error(err);
+    }
+    setSaving(false);
   };
 
   useEffect(() => {
@@ -304,9 +324,22 @@ export default function MaintenancePage() {
             <div className={styles.sectionTitle}>
               <h2>แผนการบำรุงรักษา</h2>
               <button className={styles.secondaryButton} onClick={() => setShowPlanForm((p) => !p)}>
-                {showPlanForm ? 'ซ่อนฟอร์ม' : '+ วางแผนใหม่'}
+                {showPlanForm ? 'ซ่อนฟอร์ม' : '+ วางแผนล่วงหน้า'}
               </button>
             </div>
+            
+            <form onSubmit={handleUpdateInterval} className={styles.formRow} style={{ marginBottom: '1rem', background: '#f8fafc', padding: '1rem', borderRadius: '8px' }}>
+              <div className={styles.formField} style={{ flex: 1, margin: 0 }}>
+                <label style={{ fontSize: '0.9rem', color: '#555' }}>ตั้งเวลารอบล้างถังอัตโนมัติ (จำนวนวัน)</label>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input type="number" value={editInterval} onChange={(e) => setEditInterval(e.target.value)} required style={{ flex: 1 }} />
+                  <button type="submit" className={styles.primaryButton} disabled={saving} style={{ margin: 0, padding: '0.5rem 1rem' }}>
+                    {saving ? 'กำลังบันทึก...' : 'บันทึก'}
+                  </button>
+                </div>
+                <small style={{ color: 'var(--text-muted)' }}>* ระบบจะสร้างแผนล้างถังให้อัตโนมัติเมื่อใกล้ถึงกำหนด</small>
+              </div>
+            </form>
             {showPlanForm && (
               <form onSubmit={handleAddPlan} className={styles.formColumn} style={{ marginBottom: '1rem' }}>
                 <div className={styles.formField}>
