@@ -163,7 +163,7 @@ export default function AdminPage() {
   ];
 
   return (
-    <Layout title="แผงควบคุมระบบ (Admin Dashboard)" subtitle="ดูภาพรวมทั้งหมด และจัดการผู้ใช้">
+    <Layout title="แผงควบคุมระบบ" subtitle="ดูภาพรวมทั้งหมด และจัดการผู้ใช้">
       <div className={styles.buttonRow}>
         <button className={styles.actionButton} onClick={loadData}>รีเฟรชข้อมูล</button>
         <Link href="/maintenance" className={styles.secondaryButton}>ไปหน้าผู้ดูแลประปา</Link>
@@ -175,7 +175,7 @@ export default function AdminPage() {
 
       {loading ? <p>กำลังโหลดข้อมูล...</p> : (
         <>
-          <Section title="ภาพรวมระบบ (System Overview)" noBorder>
+          <Section title="ภาพรวมระบบ" noBorder>
             <div className={styles.statGrid}>
               <div className={styles.statTile}>
                 <div className={styles.val}>
@@ -335,7 +335,7 @@ export default function AdminPage() {
 
 
           <div className={styles.gridTwo} style={{ alignItems: 'flex-start' }}>
-            <Section title="ประวัติการทำงาน (History)" linkTo="/history" totalItems={data.history.length}>
+            <Section title="ประวัติการทำงาน" linkTo="/history" totalItems={data.history.length}>
               <div className={styles.tableWrapper}>
                 {data.history.length === 0 ? <p style={{ padding: '1rem' }}>ไม่มีประวัติ</p> : (
                   <table className={styles.table}>
@@ -352,7 +352,7 @@ export default function AdminPage() {
               </div>
             </Section>
 
-            <Section title="ตั้งค่าระบบส่วนกลาง (System Settings)">
+            <Section title="ตั้งค่าระบบส่วนกลาง">
               <div className={styles.alertCard} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <p>ผู้ดูแล: <strong>{data.contact?.name || '-'}</strong></p>
