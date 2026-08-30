@@ -8,6 +8,7 @@ const apiBase = process.env.NEXT_PUBLIC_API_BASE || '';
 export default function HistoryPage() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all');
 
   const loadHistory = async () => {
     setLoading(true);
@@ -44,6 +45,21 @@ export default function HistoryPage() {
     }
   };
 
+  const categorizedHistory = {
+    all: history,
+    plan: history.filter(h => (h.note || h.reason || '').includes('บันทึกประวัติการบำรุงรักษา')),
+    complaint: history.filter(h => (h.note || h.reason || '').includes('แก้ไขเรื่องร้องเรียนเรียบร้อย')),
+    bug: history.filter(h => (h.note || h.reason || '').includes('แก้ไขปัญหาระบบเรียบร้อย')),
+  };
+  
+  categorizedHistory.other = history.filter(h => 
+    !(h.note || h.reason || '').includes('บันทึกประวัติการบำรุงรักษา') &&
+    !(h.note || h.reason || '').includes('แก้ไขเรื่องร้องเรียนเรียบร้อย') &&
+    !(h.note || h.reason || '').includes('แก้ไขปัญหาระบบเรียบร้อย')
+  );
+
+  const displayedHistory = categorizedHistory[filter] || history;
+
   return (
     <Layout title="ประวัติการทำงานทั้งหมด" subtitle="ดูรายการบำรุงรักษาและประวัติการดำเนินงานย้อนหลัง">
       <div className={styles.buttonRow}>
@@ -58,6 +74,24 @@ export default function HistoryPage() {
             ลบประวัติทั้งหมด
           </button>
         )}
+      </div>
+      
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+        <button className={filter === 'all' ? styles.actionButton : styles.secondaryButton} onClick={() => setFilter('all')}>
+          ทั้งหมด ({categorizedHistory.all.length})
+        </button>
+        <button className={filter === 'plan' ? styles.actionButton : styles.secondaryButton} onClick={() => setFilter('plan')}>
+          จากแผนงาน ({categorizedHistory.plan.length})
+        </button>
+        <button className={filter === 'complaint' ? styles.actionButton : styles.secondaryButton} onClick={() => setFilter('complaint')}>
+          จากร้องเรียน ({categorizedHistory.complaint.length})
+        </button>
+        <button className={filter === 'bug' ? styles.actionButton : styles.secondaryButton} onClick={() => setFilter('bug')}>
+          จากผู้ดูแล/แจ้งปัญหา ({categorizedHistory.bug.length})
+        </button>
+        <button className={filter === 'other' ? styles.actionButton : styles.secondaryButton} onClick={() => setFilter('other')}>
+          ทั่วไป ({categorizedHistory.other.length})
+        </button>
       </div>
 
       {loading ? (
@@ -76,12 +110,18 @@ export default function HistoryPage() {
               </tr>
             </thead>
             <tbody>
-              {history.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.date ? new Date(item.date).toLocaleDateString('th-TH') : '-'}</td>
-                  <td>{item.note || item.reason || '-'}</td>
+              {displayedHistory.length === 0 ? (
+                <tr>
+                  <td colSpan="2" style={{ textAlign: 'center' }}>ไม่มีประวัติในหมวดหมู่นี้</td>
                 </tr>
-              ))}
+              ) : (
+                displayedHistory.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.date ? new Date(item.date).toLocaleDateString('th-TH') : '-'}</td>
+                    <td>{item.note || item.reason || '-'}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

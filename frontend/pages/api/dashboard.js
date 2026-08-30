@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       Maintenance.find().sort({ date: -1 }).lean(),
       Plan.find().lean(),
       Admin.find().lean(),
-      History.find().sort({ date: -1 }).lean(),
+      History.find().sort({ date: -1, _id: -1 }).lean(),
       Complaint.find().lean(),
       Settings.findOne().lean()
     ]);
