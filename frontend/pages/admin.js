@@ -88,8 +88,24 @@ export default function AdminPage() {
     }
   };
 
+  const handleClearCompleted = async () => {
+    if (!confirm('คุณแน่ใจหรือไม่ที่จะลบประวัติงานที่ทำเสร็จแล้วทั้งหมด (เรื่องร้องเรียน, แผนบำรุงรักษา, บั๊ก) ?')) return;
+    
+    try {
+      const res = await fetch(`${apiBase}/api/admin/clear-completed`, { method: 'DELETE' });
+      if (res.ok) {
+        const json = await res.json();
+        setMsg(`เคลียร์ประวัติแล้ว (บั๊ก ${json.deletedCounts.bugs}, ร้องเรียน ${json.deletedCounts.complaints}, แผน ${json.deletedCounts.plans})`);
+        setTimeout(() => setMsg(''), 5000);
+        await loadData();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
-    <Layout title="แผงควบคุม Admin" subtitle="ระบบควบคุมหลังบ้าน จัดการตั้งค่า และดูแลข้อมูลทั้งหมด">
+    <Layout title="แผงควบคุมระบบ (Admin Dashboard)" subtitle="ดูภาพรวมทั้งหมด และจัดการผู้ใช้">
       <div className={styles.buttonRow}>
         <button className={styles.actionButton} onClick={loadData}>รีเฟรชข้อมูล</button>
         <Link href="/maintenance" className={styles.secondaryButton}>ไปหน้าผู้ดูแลประปา</Link>
@@ -102,6 +118,11 @@ export default function AdminPage() {
       {loading ? <p>กำลังโหลดข้อมูล...</p> : (
         <>
           <Section title="ภาพรวมระบบ (System Overview)" noBorder>
+            <div style={{ marginBottom: '1rem', textAlign: 'right' }}>
+              <button className={styles.dangerButton} onClick={handleClearCompleted} style={{ margin: 0 }}>
+                ลบประวัติที่เสร็จสิ้นแล้ว
+              </button>
+            </div>
             <div className={styles.statGrid}>
               <div className={styles.statTile}>
                 <div className={styles.val}>
