@@ -1,12 +1,12 @@
 import dbConnect from '../../utils/dbConnect';
 import Water from '../../models/WaterModel';
 
-const TURBIDITY_THRESHOLD = 5.0;
-
-function getStatus(turbidity) {
-  if (turbidity >= TURBIDITY_THRESHOLD * 2) return 'Critical';
-  if (turbidity >= TURBIDITY_THRESHOLD) return 'Alert';
-  return 'Normal';
+// เกณฑ์มาตรฐาน NTU สากล
+function getStatus(ntu) {
+  if (ntu <= 25) return { status: 'Normal', level: 'น้ำใส', message: 'คุณภาพน้ำปกติ ใสสะอาด ดื่มได้' };
+  if (ntu <= 100) return { status: 'Alert', level: 'ขุ่นปานกลาง', message: 'น้ำมีตะกอนหรือสารแขวนลอยปนเปื้อน' };
+  if (ntu <= 200) return { status: 'Warning', level: 'ขุ่นมาก', message: 'น้ำไม่สะอาด มีตะกอนหนาแน่น ห้ามดื่ม' };
+  return { status: 'Critical', level: 'น้ำเสีย', message: 'ความขุ่นสูงเกินเกณฑ์ แจ้งผู้ดูแลทันที' };
 }
 
 export default async function handler(req, res) {
@@ -19,16 +19,12 @@ export default async function handler(req, res) {
         waterReading = await Water.create({ turbidity: 2.5 });
       }
 
-      const status = getStatus(waterReading.turbidity);
-      let message = 'คุณภาพน้ำปกติ';
-      if (status === 'Alert') message = 'ค่าความขุ่นเพิ่มขึ้น โปรดติดตามใกล้ชิด';
-      else if (status === 'Critical') message = 'ความขุ่นสูงเกินเกณฑ์ แจ้งผู้ดูแลทันที';
+      const { status, level, message } = getStatus(waterReading.turbidity);
 
       res.status(200).json({
         turbidity: waterReading.turbidity,
         status,
-        level: status === 'Normal' ? 'ปกติ' : status === 'Alert' ? 'เตือน' : 'วิกฤติ',
-        threshold: TURBIDITY_THRESHOLD,
+        level,
         message,
         timestamp: waterReading.timestamp,
       });

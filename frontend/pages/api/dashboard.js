@@ -23,12 +23,21 @@ export default async function handler(req, res) {
       Complaint.find().lean(),
       Settings.findOne().lean()
     ]);
-    const TURBIDITY_THRESHOLD = 5.0;
     if (water) {
-      const status = water.turbidity >= TURBIDITY_THRESHOLD * 2 ? 'Critical' : water.turbidity >= TURBIDITY_THRESHOLD ? 'Alert' : 'Normal';
+      const ntu = water.turbidity;
+      let status, level, message;
+      if (ntu <= 25) {
+        status = 'Normal'; level = 'น้ำใส'; message = 'คุณภาพน้ำปกติ ใสสะอาด ดื่มได้';
+      } else if (ntu <= 100) {
+        status = 'Alert'; level = 'ขุ่นปานกลาง'; message = 'น้ำมีตะกอนหรือสารแขวนลอยปนเปื้อน';
+      } else if (ntu <= 200) {
+        status = 'Warning'; level = 'ขุ่นมาก'; message = 'น้ำไม่สะอาด มีตะกอนหนาแน่น ห้ามดื่ม';
+      } else {
+        status = 'Critical'; level = 'น้ำเสีย'; message = 'ความขุ่นสูงเกินเกณฑ์ แจ้งผู้ดูแลทันที';
+      }
       water.status = status;
-      water.level = status === 'Normal' ? 'ปกติ' : status === 'Alert' ? 'เตือน' : 'วิกฤติ';
-      water.message = status === 'Critical' ? 'ความขุ่นสูงเกินเกณฑ์ แจ้งผู้ดูแลทันที' : status === 'Alert' ? 'ค่าความขุ่นเพิ่มขึ้น โปรดติดตามใกล้ชิด' : 'คุณภาพน้ำปกติ';
+      water.level = level;
+      water.message = message;
     }
     const statusWeightBugs = { 'กำลังดำเนินการ': 1, 'รับงาน': 1, 'รอดำเนินการ': 2, 'เสร็จงาน': 3 };
     bugs.sort((a, b) => {

@@ -60,7 +60,7 @@ export default function UserPage() {
     setComplaintSaving(false);
   };
 
-  const wColor = water?.status === 'Critical' ? '#dc2626' : water?.status === 'Alert' ? '#d97706' : '#16a34a';
+  const wColor = water?.status === 'Critical' ? '#dc2626' : water?.status === 'Warning' ? '#ea580c' : water?.status === 'Alert' ? '#d97706' : '#16a34a';
 
   return (
     <Layout title="บริการประชาชน" subtitle="ตรวจสอบคุณภาพน้ำ แจ้งเรื่องร้องเรียน และติดตามประวัติการบำรุงรักษา">
