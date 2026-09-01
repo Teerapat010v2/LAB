@@ -35,7 +35,7 @@ export default function UserPage() {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(() => loadData(true), 10000); // โหลดข้อมูลเบื้องหลังทุกๆ 10 วินาที (แบบไม่กระพริบหน้าจอ)
+    const interval = setInterval(() => loadData(true), 2000); // โหลดข้อมูลทุกๆ 2 วินาที (เรียลไทม์)
     return () => clearInterval(interval);
   }, []);
 
