@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styles from '../styles/Layout.module.css';
@@ -19,6 +19,32 @@ export default function Layout({ children, title, subtitle }) {
   const [bugData, setBugData] = useState({ name: 'ผู้ใช้งานระบบ', phone: '-', topic: 'รายงานบั๊กของระบบ', message: '' });
   const [bugSaving, setBugSaving] = useState(false);
   const [bugMsg, setBugMsg] = useState('');
+  const [deviceOnline, setDeviceOnline] = useState(false);
+
+  useEffect(() => {
+    const checkDeviceStatus = async () => {
+      try {
+        const res = await fetch(`${apiBase}/api/water`);
+        if (res.ok) {
+          const data = await res.json();
+          const lastUpdate = new Date(data.timestamp).getTime();
+          const now = Date.now();
+          // ถ้ามีการอัปเดตข้อมูลภายใน 60 วินาทีที่ผ่านมา ถือว่าบอร์ดออนไลน์
+          if (now - lastUpdate <= 60000) {
+            setDeviceOnline(true);
+          } else {
+            setDeviceOnline(false);
+          }
+        }
+      } catch (error) {
+        setDeviceOnline(false);
+      }
+    };
+    
+    checkDeviceStatus();
+    const interval = setInterval(checkDeviceStatus, 10000); // เช็คทุกๆ 10 วินาที
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('auth_admin');
@@ -60,7 +86,25 @@ export default function Layout({ children, title, subtitle }) {
               <span style={{ display: 'block' }}>น้ำประปาหมู่บ้าน</span>
             </span>
           </Link>
-          <div className={styles.navActions}>
+          <div className={styles.navActions} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {/* สถานะอุปกรณ์ */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '6px', 
+              padding: '4px 10px', borderRadius: '20px',
+              backgroundColor: deviceOnline ? '#ecfdf5' : '#fef2f2',
+              border: `1px solid ${deviceOnline ? '#a7f3d0' : '#fecaca'}`,
+              marginRight: '8px'
+            }}>
+              <div style={{
+                width: '8px', height: '8px', borderRadius: '50%',
+                backgroundColor: deviceOnline ? '#10b981' : '#ef4444',
+                boxShadow: deviceOnline ? '0 0 6px #10b981' : '0 0 6px #ef4444'
+              }} />
+              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: deviceOnline ? '#059669' : '#dc2626' }}>
+                {deviceOnline ? 'เครื่องทำงานปกติ' : 'เครื่องออฟไลน์'}
+              </span>
+            </div>
+
             <Link href="/" className={styles.navBtn}>หน้าหลัก</Link>
             <button onClick={handleLogout} className={styles.navBtnOutline}>ออกจากระบบ</button>
           </div>

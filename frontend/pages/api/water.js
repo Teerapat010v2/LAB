@@ -35,6 +35,20 @@ export default async function handler(req, res) {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
+  } else if (req.method === 'POST') {
+    try {
+      const { turbidity } = req.body;
+      
+      if (turbidity === undefined) {
+        return res.status(400).json({ error: 'Turbidity value is required' });
+      }
+
+      const waterReading = await Water.create({ turbidity: Number(turbidity) });
+      
+      res.status(201).json({ success: true, data: waterReading });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }
