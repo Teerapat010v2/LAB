@@ -18,8 +18,8 @@ export default function UserPage() {
   const [showForm, setShowForm] = useState(false);
   const [upcomingTasks, setUpcomingTasks] = useState([]);
 
-  const loadData = async () => {
-    setLoading(true);
+  const loadData = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const r = await fetch(`${apiBase}/api/dashboard`);
       const data = await r.json();
@@ -30,10 +30,14 @@ export default function UserPage() {
       setPlans(data.plans || []);
       setUpcomingTasks(data.upcomingTasks || []);
     } catch (e) { console.error(e); }
-    finally { setLoading(false); }
+    finally { if (!silent) setLoading(false); }
   };
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => {
+    loadData();
+    const interval = setInterval(() => loadData(true), 10000); // โหลดข้อมูลเบื้องหลังทุกๆ 10 วินาที (แบบไม่กระพริบหน้าจอ)
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,7 +65,7 @@ export default function UserPage() {
   return (
     <Layout title="บริการประชาชน" subtitle="ตรวจสอบคุณภาพน้ำ แจ้งเรื่องร้องเรียน และติดตามประวัติการบำรุงรักษา">
       <div className={styles.buttonRow}>
-        <button className={styles.actionButton} onClick={loadData}>รีเฟรชข้อมูล</button>
+        <button className={styles.actionButton} onClick={() => loadData(false)}>รีเฟรชข้อมูล</button>
         <Link href="/history" className={styles.secondaryButton}>ประวัติการบำรุงรักษา</Link>
       </div>
 
