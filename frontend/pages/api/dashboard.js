@@ -23,7 +23,13 @@ export default async function handler(req, res) {
       Complaint.find().lean(),
       Settings.findOne().lean()
     ]);
-
+    const TURBIDITY_THRESHOLD = 5.0;
+    if (water) {
+      const status = water.turbidity >= TURBIDITY_THRESHOLD * 2 ? 'Critical' : water.turbidity >= TURBIDITY_THRESHOLD ? 'Alert' : 'Normal';
+      water.status = status;
+      water.level = status === 'Normal' ? 'ปกติ' : status === 'Alert' ? 'เตือน' : 'วิกฤติ';
+      water.message = status === 'Critical' ? 'ความขุ่นสูงเกินเกณฑ์ แจ้งผู้ดูแลทันที' : status === 'Alert' ? 'ค่าความขุ่นเพิ่มขึ้น โปรดติดตามใกล้ชิด' : 'คุณภาพน้ำปกติ';
+    }
     const statusWeightBugs = { 'กำลังดำเนินการ': 1, 'รับงาน': 1, 'รอดำเนินการ': 2, 'เสร็จงาน': 3 };
     bugs.sort((a, b) => {
       const wA = statusWeightBugs[a.status] || 99;
