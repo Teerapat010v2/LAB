@@ -141,10 +141,10 @@ export default function ComplaintsPage() {
                   </td>
                   {isStaff && (
                     <td>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                        {(c.status === 'รอดำเนินการ' || c.status === 'Open') && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', alignItems: 'center' }}>
+                        {c.status === 'รอดำเนินการ' && (
                           <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdateStatus(c._id, 'รับงาน')}>
-                            รับงาน
+                            รับเรื่อง
                           </button>
                         )}
                         {c.status === 'รับงาน' && (
@@ -154,9 +154,12 @@ export default function ComplaintsPage() {
                         )}
                         {c.status === 'กำลังดำเนินการ' && (
                           <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdateStatus(c._id, 'เสร็จงาน')}>
-                            เสร็จงาน
+                            เสร็จสิ้น
                           </button>
                         )}
+                        <button className={styles.smallButton} style={{ margin: 0, background: '#fff', color: '#dc2626', border: '1px solid #fca5a5' }} onClick={() => handleDeleteComplaint(c._id)}>
+                          ลบ
+                        </button>
                         {c.status === 'เสร็จงาน' && (
                           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>-</span>
                         )}

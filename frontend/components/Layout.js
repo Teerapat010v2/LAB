@@ -100,7 +100,7 @@ export default function Layout({ children, title, subtitle }) {
                 backgroundColor: deviceOnline ? '#10b981' : '#ef4444',
                 boxShadow: deviceOnline ? '0 0 6px #10b981' : '0 0 6px #ef4444'
               }} />
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: deviceOnline ? '#059669' : '#dc2626' }}>
+              <span className={styles.deviceText} style={{ fontSize: '0.8rem', fontWeight: 600, color: deviceOnline ? '#059669' : '#dc2626' }}>
                 {deviceOnline ? 'เครื่องทำงานปกติ' : 'เครื่องออฟไลน์'}
               </span>
             </div>

@@ -119,3 +119,5 @@
   .navBtnOutline { padding: 0.3rem 0.5rem; font-size: 0.7rem; }
   .navBtn { padding: 0.3rem 0.5rem; font-size: 0.7rem; }
 }
+
+@media (max-width: 480px) { .deviceText { display: none; } }

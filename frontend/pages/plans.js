@@ -249,7 +249,7 @@ export default function PlansPage() {
                   </td>
                   {isStaff && (
                     <td>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', alignItems: 'center' }}>
                         {p.status === 'ตามแผน' && (
                           <button className={styles.smallButton} style={{ margin: 0 }} onClick={() => handleUpdateStatus(p._id, 'กำลังดำเนินการ')}>
                             กำลังดำเนินการ
@@ -260,14 +260,12 @@ export default function PlansPage() {
                             เสร็จสิ้น
                           </button>
                         )}
-                        <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.4rem' }}>
-                          <button className={styles.smallButton} style={{ flex: 1, margin: 0, background: '#fff', color: 'var(--primary)', border: '1px solid var(--primary)' }} onClick={() => handleEditClick(p)}>
-                            แก้ไข
-                          </button>
-                          <button className={styles.smallButton} style={{ flex: 1, margin: 0, background: '#fff', color: '#dc2626', border: '1px solid #fca5a5' }} onClick={() => handleDeletePlan(p._id)}>
-                            ลบ
-                          </button>
-                        </div>
+                        <button className={styles.smallButton} style={{ margin: 0, background: '#fff', color: 'var(--primary)', border: '1px solid var(--primary)' }} onClick={() => handleEditClick(p)}>
+                          แก้ไข
+                        </button>
+                        <button className={styles.smallButton} style={{ margin: 0, background: '#fff', color: '#dc2626', border: '1px solid #fca5a5' }} onClick={() => handleDeletePlan(p._id)}>
+                          ลบ
+                        </button>
                         {p.status === 'เสร็จสิ้น' && (
                           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>-</span>
                         )}
