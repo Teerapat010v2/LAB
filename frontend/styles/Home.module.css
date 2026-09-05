@@ -311,5 +311,44 @@
 }
 .table tr:last-child td { border-bottom: none; }
 .table tr:hover { background: rgba(3,105,161,0.05); }
+
+/* Responsive Table (Card View on Mobile) */
+@media (max-width: 768px) {
+  .tableWrapper {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
+  }
+  .table {
+    min-width: 100%;
+    border: none;
+  }
+  .table thead {
+    display: none;
+  }
+  .table tr {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .table tr:hover { background: var(--card-bg); }
+  .table td {
+    display: block;
+    padding: 0.4rem 0.5rem;
+    border: none;
+    width: 100%;
+  }
+  .table td:last-child {
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--card-border);
+  }
+}
 .react-datepicker-wrapper { display: block !important; width: 100% !important; }
 .react-datepicker__input-container { display: block !important; width: 100% !important; }
