@@ -36,6 +36,7 @@ export default function AdminPage() {
     plans: [], bugs: [], contact: {}, history: []
   });
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -69,6 +70,7 @@ export default function AdminPage() {
       window.location.href = '/login?role=admin';
       return;
     }
+    setIsAuthenticated(true);
     loadData();
   }, []);
 
@@ -161,6 +163,8 @@ export default function AdminPage() {
       'ร้องเรียน': (data.complaints || []).filter(c => c.status === 'เสร็จงาน').length
     }
   ];
+
+  if (!isAuthenticated) return <div style={{ padding: '2rem', textAlign: 'center' }}>กำลังตรวจสอบสิทธิ์การเข้าถึง...</div>;
 
   return (
     <Layout title="แผงควบคุมระบบ" subtitle="ดูภาพรวมทั้งหมด และจัดการผู้ใช้">

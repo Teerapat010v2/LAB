@@ -18,6 +18,7 @@ export default function MaintenancePage() {
   const [alerts, setAlerts] = useState([]);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [newMaintenance, setNewMaintenance] = useState({ date: '', reason: '', note: '', worker: '' });
@@ -52,10 +53,32 @@ export default function MaintenancePage() {
       window.location.href = '/login?role=maintenance';
       return;
     }
+    setIsAuthenticated(true);
     loadData();
   }, []);
 
   const handleMaintenanceChange = (field) => (e) => setNewMaintenance((p) => ({ ...p, [field]: e.target.value }));
+
+  const handleAddMaintenance = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    setMessage('');
+    const res = await fetch(`${apiBase}/api/maintenance`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newMaintenance),
+    });
+    if (res.ok) {
+      setNewMaintenance({ date: '', reason: '', note: '', worker: '' });
+      setMessage(' เพิ่มบันทึกการทำงานเรียบร้อยแล้ว');
+      setShowMaintenanceForm(false);
+      await loadData();
+    } else {
+      setMessage(' ไม่สามารถบันทึกได้');
+    }
+    setSaving(false);
+  };
+
   const handleUpdateWater = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -127,6 +150,8 @@ export default function MaintenancePage() {
   };
 
   const statusColor = water?.status === 'Critical' ? '#dc2626' : water?.status === 'Alert' ? '#d97706' : '#16a34a';
+
+  if (!isAuthenticated) return <div style={{ padding: '2rem', textAlign: 'center' }}>กำลังตรวจสอบสิทธิ์การเข้าถึง...</div>;
 
   return (
     <Layout title="ผู้ดูแลระบบประปา" subtitle="ตรวจสอบคุณภาพน้ำ บันทึกการทำงาน วางแผนงาน และจัดการเรื่องร้องเรียน">
