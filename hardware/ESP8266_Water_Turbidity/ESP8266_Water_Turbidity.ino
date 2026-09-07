@@ -88,8 +88,22 @@ void loop() {
     }
     if (turbidity < 0) turbidity = 0; 
     
-    Serial.print("Turbidity: ");
-    Serial.println(turbidity);
+    Serial.println("\n--- กำลังวัดคุณภาพน้ำ ---");
+    Serial.print("ค่าอนาล็อก (Sensor Value): ");
+    Serial.println(sensorValue);
+    Serial.print("แรงดันไฟฟ้า (Voltage): ");
+    Serial.print(voltage);
+    Serial.println(" V");
+    Serial.print("ค่าความขุ่น (Turbidity): ");
+    Serial.print(turbidity);
+    Serial.println(" NTU");
+
+    if (turbidity > TURBIDITY_THRESHOLD) {
+      Serial.println("สถานะ: แจ้งเตือน! น้ำมีความขุ่นเกินเกณฑ์");
+    } else {
+      Serial.println("สถานะ: น้ำใส ปกติดี");
+    }
+    Serial.println("-------------------------");
 
     // ==========================================
     // ส่งข้อมูลไปที่ Next.js API
