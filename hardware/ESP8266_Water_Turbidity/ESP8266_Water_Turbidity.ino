@@ -76,9 +76,9 @@ void loop() {
   if(currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
     
-    // อ่านค่าความขุ่น
+    // อ่านค่าความขุ่น (ใช้ไฟ 5V)
     int sensorValue = analogRead(sensorPin);
-    float voltage = sensorValue * (3.3 / 1024.0);
+    float voltage = sensorValue * (5.0 / 1024.0);
     float turbidity = 0.0;
     
     if (voltage < 2.5) {
