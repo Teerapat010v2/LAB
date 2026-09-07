@@ -27,13 +27,13 @@ export default async function handler(req, res) {
       const ntu = water.turbidity;
       let status, level, message;
       if (ntu <= 25) {
-        status = 'Normal'; level = 'น้ำใส'; message = 'คุณภาพน้ำปกติ ใสสะอาด ดื่มได้';
+        status = 'Normal'; level = 'น้ำใส'; message = 'คุณภาพน้ำประปาปกติ ใสสะอาด เหมาะสำหรับใช้งานทั่วไป';
       } else if (ntu <= 100) {
-        status = 'Alert'; level = 'ขุ่นปานกลาง'; message = 'น้ำมีตะกอนหรือสารแขวนลอยปนเปื้อน';
+        status = 'Alert'; level = 'ขุ่นปานกลาง'; message = 'น้ำเริ่มมีตะกอนปนเปื้อน ควรตรวจสอบระบบกรอง';
       } else if (ntu <= 200) {
-        status = 'Warning'; level = 'ขุ่นมาก'; message = 'น้ำไม่สะอาด มีตะกอนหนาแน่น ห้ามดื่ม';
+        status = 'Warning'; level = 'ขุ่นมาก'; message = 'น้ำประปาขุ่นมาก ไม่เหมาะสำหรับใช้งาน';
       } else {
-        status = 'Critical'; level = 'น้ำเสีย'; message = 'ความขุ่นสูงเกินเกณฑ์ แจ้งผู้ดูแลทันที';
+        status = 'Critical'; level = 'น้ำเสีย'; message = 'ความขุ่นสูงเกินเกณฑ์ประปา งดใช้น้ำและแจ้งช่างประปา';
       }
       water.status = status;
       water.level = level;

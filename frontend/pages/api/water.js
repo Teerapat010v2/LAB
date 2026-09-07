@@ -1,12 +1,12 @@
 import dbConnect from '../../utils/dbConnect';
 import Water from '../../models/WaterModel';
 
-// เกณฑ์มาตรฐาน NTU สากล
+// เกณฑ์มาตรฐาน NTU
 function getStatus(ntu) {
-  if (ntu <= 25) return { status: 'Normal', level: 'น้ำใส', message: 'คุณภาพน้ำปกติ ใสสะอาด ดื่มได้' };
-  if (ntu <= 100) return { status: 'Alert', level: 'ขุ่นปานกลาง', message: 'น้ำมีตะกอนหรือสารแขวนลอยปนเปื้อน' };
-  if (ntu <= 200) return { status: 'Warning', level: 'ขุ่นมาก', message: 'น้ำไม่สะอาด มีตะกอนหนาแน่น ห้ามดื่ม' };
-  return { status: 'Critical', level: 'น้ำเสีย', message: 'ความขุ่นสูงเกินเกณฑ์ แจ้งผู้ดูแลทันที' };
+  if (ntu <= 25) return { status: 'Normal', level: 'น้ำใส', message: 'คุณภาพน้ำประปาปกติ ใสสะอาด เหมาะสำหรับใช้งานทั่วไป' };
+  if (ntu <= 100) return { status: 'Alert', level: 'ขุ่นปานกลาง', message: 'น้ำเริ่มมีตะกอนปนเปื้อน ควรตรวจสอบระบบกรอง' };
+  if (ntu <= 200) return { status: 'Warning', level: 'ขุ่นมาก', message: 'น้ำประปาขุ่นมาก ไม่เหมาะสำหรับใช้งาน' };
+  return { status: 'Critical', level: 'น้ำเสีย', message: 'ความขุ่นสูงเกินเกณฑ์ประปา งดใช้น้ำและแจ้งช่างประปา' };
 }
 
 export default async function handler(req, res) {
