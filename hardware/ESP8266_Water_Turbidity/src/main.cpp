@@ -23,10 +23,9 @@ unsigned long previousMillis = 0;
 const long interval = 10000; // ส่งข้อมูลทุกๆ 10 วินาที
 
 // ==========================================
-// การตั้งค่า Wi-Fi (เปลี่ยนเป็นชื่อและรหัสผ่านมือถือของคุณ)
+// การตั้งค่า Wi-Fi
 // ==========================================
-const char* ssid = "ชื่อไวไฟมือถือของคุณ"; 
-const char* password = "รหัสผ่านไวไฟของคุณ";
+// จะใช้ WiFiManager ในการจัดการผ่านหน้าเว็บของบอร์ด
 
 void setup() {
   Serial.begin(115200);
@@ -38,16 +37,19 @@ void setup() {
   digitalWrite(ledRedPin, HIGH);
   digitalWrite(ledGreenPin, LOW);
 
-  Serial.println();
-  Serial.print("Connecting to Wi-Fi: ");
-  Serial.println(ssid);
+  // สร้างตัวจัดการ Wi-Fi
+  WiFiManager wifiManager;
   
-  WiFi.begin(ssid, password);
+  // (เอาบรรทัด resetSettings ออก เพื่อให้บอร์ดจำรหัสผ่านเดิมไว้ จะได้ไม่ต้องตั้งค่าใหม่ทุกรอบ)
+  // wifiManager.resetSettings();
+
+  Serial.println("\nConnecting to WiFi or Starting Access Point...");
   
-  // รอจนกว่าจะเชื่อมต่อสำเร็จ
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+  // ถ้าต่อ Wi-Fi เดิมไม่ได้ มันจะปล่อย Wi-Fi ตัวเองออกมาชื่อ "Water_Sensor_Setup" ไม่มีรหัสผ่าน
+  if (!wifiManager.autoConnect("Water_Sensor_Setup")) {
+    Serial.println("Failed to connect and hit timeout");
+    delay(3000);
+    ESP.restart(); // ถ้านานเกินไปให้รีสตาร์ทตัวเอง
   }
 
   // ถ้าโค้ดวิ่งมาถึงบรรทัดนี้ แปลว่า "ต่อ Wi-Fi สำเร็จแล้ว!" 🎉
