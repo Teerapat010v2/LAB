@@ -26,7 +26,14 @@ export default async function handler(req, res) {
     if (water) {
       const ntu = water.turbidity;
       let status, level, message;
-      if (ntu <= 25) {
+
+      const lastUpdate = new Date(water.timestamp).getTime();
+      const now = new Date().getTime();
+      const isOffline = (now - lastUpdate) > 60000; // ถ้านานกว่า 1 นาที ถือว่าออฟไลน์
+
+      if (isOffline) {
+        status = 'Offline'; level = 'ขาดการติดต่อ'; message = 'เซ็นเซอร์ออฟไลน์หรือไม่เชื่อมต่อเน็ต ไม่สามารถวัดค่าได้';
+      } else if (ntu <= 25) {
         status = 'Normal'; level = 'น้ำใส'; message = 'คุณภาพน้ำประปาปกติ ใสสะอาด เหมาะสำหรับใช้งานทั่วไป';
       } else if (ntu <= 100) {
         status = 'Alert'; level = 'ขุ่นปานกลาง'; message = 'น้ำเริ่มมีตะกอนปนเปื้อน ควรตรวจสอบระบบกรอง';

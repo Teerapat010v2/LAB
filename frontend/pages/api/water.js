@@ -2,7 +2,13 @@ import dbConnect from '../../utils/dbConnect';
 import Water from '../../models/WaterModel';
 
 // เกณฑ์มาตรฐาน NTU
-function getStatus(ntu) {
+function getStatus(ntu, timestamp) {
+  const lastUpdate = new Date(timestamp).getTime();
+  const now = new Date().getTime();
+  const isOffline = (now - lastUpdate) > 60000; // ถ้านานกว่า 1 นาที ถือว่าออฟไลน์
+  
+  if (isOffline) return { status: 'Offline', level: 'ขาดการติดต่อ', message: 'เซ็นเซอร์ออฟไลน์หรือไม่เชื่อมต่อเน็ต ไม่สามารถวัดค่าได้' };
+  
   if (ntu <= 25) return { status: 'Normal', level: 'น้ำใส', message: 'คุณภาพน้ำประปาปกติ ใสสะอาด เหมาะสำหรับใช้งานทั่วไป' };
   if (ntu <= 100) return { status: 'Alert', level: 'ขุ่นปานกลาง', message: 'น้ำเริ่มมีตะกอนปนเปื้อน ควรตรวจสอบระบบกรอง' };
   if (ntu <= 200) return { status: 'Warning', level: 'ขุ่นมาก', message: 'น้ำประปาขุ่นมาก ไม่เหมาะสำหรับใช้งาน' };
@@ -19,7 +25,7 @@ export default async function handler(req, res) {
         waterReading = await Water.create({ turbidity: 2.5 });
       }
 
-      const { status, level, message } = getStatus(waterReading.turbidity);
+      const { status, level, message } = getStatus(waterReading.turbidity, waterReading.timestamp);
 
       res.status(200).json({
         turbidity: waterReading.turbidity,

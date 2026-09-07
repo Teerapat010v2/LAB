@@ -149,7 +149,7 @@ export default function MaintenancePage() {
     setSaving(false);
   };
 
-  const statusColor = water?.status === 'Critical' ? '#dc2626' : water?.status === 'Alert' ? '#d97706' : '#16a34a';
+  const statusColor = water?.status === 'Offline' ? '#6b7280' : water?.status === 'Critical' ? '#dc2626' : water?.status === 'Warning' ? '#ea580c' : water?.status === 'Alert' ? '#d97706' : '#16a34a';
 
   if (!isAuthenticated) return <div style={{ padding: '2rem', textAlign: 'center' }}>กำลังตรวจสอบสิทธิ์การเข้าถึง...</div>;
 

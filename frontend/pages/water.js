@@ -4,21 +4,25 @@ import styles from '../styles/Home.module.css';
 
 const apiBase = process.env.NEXT_PUBLIC_API_BASE || '';
 
-const getTurbidityInfo = (value) => {
+const getTurbidityInfo = (value, status) => {
+  if (status === 'Offline') {
+    return { label: 'ขาดการติดต่อ', className: styles.statusLow, fillWidth: '0%', color: '#6b7280' };
+  }
+
   if (value == null || isNaN(value)) {
-    return { label: 'ไม่ทราบ', className: styles.statusLow, fillWidth: '0%' };
+    return { label: 'ไม่ทราบ', className: styles.statusLow, fillWidth: '0%', color: '#6b7280' };
   }
 
   if (value < 5) {
-    return { label: 'ใสสะอาด', className: styles.statusLow, fillWidth: '20%' };
+    return { label: 'ใสสะอาด', className: styles.statusLow, fillWidth: '20%', color: '#047857' };
   }
   if (value < 10) {
-    return { label: 'ค่อนข้างใส', className: styles.statusMedium, fillWidth: '45%' };
+    return { label: 'ค่อนข้างใส', className: styles.statusMedium, fillWidth: '45%', color: '#b45309' };
   }
   if (value < 20) {
-    return { label: 'ขุ่นเล็กน้อย', className: styles.statusHigh, fillWidth: '70%' };
+    return { label: 'ขุ่นเล็กน้อย', className: styles.statusHigh, fillWidth: '70%', color: '#ca8a04' };
   }
-  return { label: 'ขุ่นมาก', className: styles.statusCritical, fillWidth: '100%' };
+  return { label: 'ขุ่นมาก', className: styles.statusCritical, fillWidth: '100%', color: '#be123c' };
 };
 
 export default function WaterPage() {
@@ -48,7 +52,7 @@ export default function WaterPage() {
     loadData();
   }, []);
 
-  const turbidityInfo = getTurbidityInfo(water?.turbidity);
+  const turbidityInfo = getTurbidityInfo(water?.turbidity, water?.status);
 
   return (
     <div className={styles.pageContainer}>
@@ -74,21 +78,21 @@ export default function WaterPage() {
           <div className={styles.waterCard}>
             <div className={styles.sectionTitle}>
               <h2>สรุปสถานะน้ำ</h2>
-              <span className={`${styles.statusBadge} ${turbidityInfo.className}`}>{turbidityInfo.label}</span>
+              <span className={`${styles.statusBadge} ${turbidityInfo.className}`} style={water?.status === 'Offline' ? { backgroundColor: '#f3f4f6', color: '#4b5563' } : {}}>{turbidityInfo.label}</span>
             </div>
             <div className={styles.waterRow}>
               <div className={styles.metric}>
                 <span>ความขุ่น (NTU)</span>
-                <strong>{water?.turbidity ?? '-'}</strong>
+                <strong>{water?.status === 'Offline' ? 'ไม่ได้เชื่อมต่อ' : (water?.turbidity ?? '-')}</strong>
               </div>
               <div className={styles.metric}>
-                <span>เกณฑ์เตือน</span>
-                <strong>{water?.threshold ?? '-'}</strong>
+                <span>ข้อความระบบ</span>
+                <strong style={{ fontSize: '0.9rem' }}>{water?.message ?? '-'}</strong>
               </div>
             </div>
             <div className={styles.turbidityMeter}>
               <div className={styles.turbidityBar}>
-                <div className={styles.turbidityFill} style={{ width: turbidityInfo.fillWidth, background: water?.turbidity >= 20 ? '#be123c' : water?.turbidity >= 10 ? '#ca8a04' : water?.turbidity >= 5 ? '#b45309' : '#047857' }} />
+                <div className={styles.turbidityFill} style={{ width: turbidityInfo.fillWidth, background: turbidityInfo.color }} />
               </div>
               <div className={styles.metric}>
                 <span>สถานะ</span>
