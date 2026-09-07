@@ -22,6 +22,12 @@ const float TURBIDITY_THRESHOLD = 5.0;
 unsigned long previousMillis = 0;
 const long interval = 10000; // ส่งข้อมูลทุกๆ 10 วินาที
 
+// ==========================================
+// การตั้งค่า Wi-Fi (เปลี่ยนเป็นชื่อและรหัสผ่านมือถือของคุณ)
+// ==========================================
+const char* ssid = "ชื่อไวไฟมือถือของคุณ"; 
+const char* password = "รหัสผ่านไวไฟของคุณ";
+
 void setup() {
   Serial.begin(115200);
   
@@ -31,26 +37,20 @@ void setup() {
   // เริ่มต้นมา ไฟแดงติด (แสดงว่ายังไม่ได้ต่อเน็ต)
   digitalWrite(ledRedPin, HIGH);
   digitalWrite(ledGreenPin, LOW);
-  
-  // สร้างตัวจัดการ Wi-Fi
-  WiFiManager wifiManager;
-  
-  // ล้างรหัสผ่านเก่าทิ้งเรียบร้อยแล้ว (บอร์ดจะลืมรหัสเดิมทั้งหมด)
-  wifiManager.resetSettings();
 
-  Serial.println("\nConnecting to WiFi or Starting Access Point...");
+  Serial.println();
+  Serial.print("Connecting to Wi-Fi: ");
+  Serial.println(ssid);
   
-  // ฟังก์ชันนี้จะทำ 2 อย่าง:
-  // 1. พยายามต่อ Wi-Fi บ้านเดิมที่เคยจำไว้
-  // 2. ถ้าต่อไม่ได้ หรือเพิ่งเปิดครั้งแรก มันจะปล่อย Wi-Fi ตัวเองออกมาชื่อ "Water_Sensor_Setup" ไม่มีรหัสผ่าน
-  // มันจะค้างอยู่ตรงนี้จนกว่าเราจะเชื่อมต่อให้มันเสร็จ
-  if (!wifiManager.autoConnect("Water_Sensor_Setup")) {
-    Serial.println("Failed to connect and hit timeout");
-    delay(3000);
-    ESP.restart(); // ถ้านานเกินไปให้รีสตาร์ทตัวเอง
+  WiFi.begin(ssid, password);
+  
+  // รอจนกว่าจะเชื่อมต่อสำเร็จ
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
   }
 
-  // ถ้าโค้ดวิ่งมาถึงบรรทัดนี้ แปลว่า "ต่อ Wi-Fi บ้านสำเร็จแล้ว!" 🎉
+  // ถ้าโค้ดวิ่งมาถึงบรรทัดนี้ แปลว่า "ต่อ Wi-Fi สำเร็จแล้ว!" 🎉
   Serial.println("\nConnected to Home WiFi!");
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
