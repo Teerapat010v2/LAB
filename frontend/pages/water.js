@@ -32,9 +32,11 @@ export default function WaterPage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const loadData = async () => {
-    setRefreshing(true);
-    setLoading(true);
+  const loadData = async (silent = false) => {
+    if (!silent) {
+      setRefreshing(true);
+      setLoading(true);
+    }
     try {
       const dashboardJson = await fetch(`${apiBase}/api/dashboard`).then(res => res.json());
       setWater(dashboardJson.water);
@@ -43,13 +45,19 @@ export default function WaterPage() {
     } catch (error) {
       console.error('Failed to load water data', error);
     } finally {
-      setLoading(false);
-      setRefreshing(false);
+      if (!silent) {
+        setLoading(false);
+        setRefreshing(false);
+      }
     }
   };
 
   useEffect(() => {
     loadData();
+    const intervalId = setInterval(() => {
+      loadData(true);
+    }, 5000); // Poll every 5 seconds for real-time updates
+    return () => clearInterval(intervalId);
   }, []);
 
   const turbidityInfo = getTurbidityInfo(water?.turbidity, water?.status);

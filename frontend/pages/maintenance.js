@@ -28,8 +28,8 @@ export default function MaintenancePage() {
   const [report, setReport] = useState({ name: 'ผู้ดูแลระบบ', phone: '-', topic: 'รายงานปัญหาระบบ', message: '' });
   const [reportMsg, setReportMsg] = useState('');
   const [admins, setAdmins] = useState([]);
-  const loadData = async () => {
-    setLoading(true);
+  const loadData = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const r = await fetch(`${apiBase}/api/dashboard`);
       const data = await r.json();
@@ -43,7 +43,7 @@ export default function MaintenancePage() {
     } catch (err) {
       console.error('Failed to load data', err);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -55,6 +55,10 @@ export default function MaintenancePage() {
     }
     setIsAuthenticated(true);
     loadData();
+    const intervalId = setInterval(() => {
+      loadData(true);
+    }, 5000); // Poll every 5 seconds silently
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleMaintenanceChange = (field) => (e) => setNewMaintenance((p) => ({ ...p, [field]: e.target.value }));

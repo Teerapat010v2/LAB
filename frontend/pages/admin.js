@@ -50,19 +50,20 @@ export default function AdminPage() {
     contactNote: 'ติดต่อเมื่อมีเหตุฉุกเฉิน' 
   });
 
-  const loadData = async () => {
-    setLoading(true);
+  const loadData = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const res = await fetch(`${apiBase}/api/dashboard`);
       if (res.ok) {
         const json = await res.json();
         setData(json);
-        if (json.settings) {
+        // เฉพาะดึงครั้งแรกถึงจะเซ็ตค่าลงฟอร์ม จะได้ไม่กวนตอนพิมพ์อยู่
+        if (json.settings && !silent) {
           setEditSettings(json.settings);
         }
       }
     } catch(e) { console.error(e); }
-    finally { setLoading(false); }
+    finally { if (!silent) setLoading(false); }
   };
 
   useEffect(() => {
@@ -72,6 +73,10 @@ export default function AdminPage() {
     }
     setIsAuthenticated(true);
     loadData();
+    const intervalId = setInterval(() => {
+      loadData(true);
+    }, 5000); // ดึงข้อมูลใหม่เงียบๆ ทุก 5 วินาที
+    return () => clearInterval(intervalId);
   }, []);
 
   const notify = (m) => { setMsg(m); setTimeout(() => setMsg(''), 3000); };
