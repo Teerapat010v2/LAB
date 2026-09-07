@@ -75,7 +75,7 @@ export default function AdminPage() {
     loadData();
     const intervalId = setInterval(() => {
       loadData(true);
-    }, 5000); // ดึงข้อมูลใหม่เงียบๆ ทุก 5 วินาที
+    }, 2000); // ดึงข้อมูลใหม่เงียบๆ ทุก 2 วินาที
     return () => clearInterval(intervalId);
   }, []);
 

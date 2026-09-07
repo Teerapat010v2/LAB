@@ -56,7 +56,7 @@ export default function WaterPage() {
     loadData();
     const intervalId = setInterval(() => {
       loadData(true);
-    }, 5000); // Poll every 5 seconds for real-time updates
+    }, 2000); // Poll every 2 seconds for real-time updates
     return () => clearInterval(intervalId);
   }, []);
 

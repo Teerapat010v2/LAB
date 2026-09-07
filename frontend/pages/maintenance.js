@@ -57,7 +57,7 @@ export default function MaintenancePage() {
     loadData();
     const intervalId = setInterval(() => {
       loadData(true);
-    }, 5000); // Poll every 5 seconds silently
+    }, 2000); // Poll every 2 seconds silently
     return () => clearInterval(intervalId);
   }, []);
 
