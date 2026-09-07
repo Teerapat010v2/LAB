@@ -33,14 +33,14 @@ export default async function handler(req, res) {
 
       if (isOffline) {
         status = 'Offline'; level = 'ขาดการติดต่อ'; message = 'เซ็นเซอร์ออฟไลน์หรือไม่เชื่อมต่อเน็ต ไม่สามารถวัดค่าได้';
-      } else if (ntu <= 25) {
-        status = 'Normal'; level = 'น้ำใส'; message = 'คุณภาพน้ำประปาปกติ ใสสะอาด เหมาะสำหรับใช้งานทั่วไป';
-      } else if (ntu <= 100) {
-        status = 'Alert'; level = 'ขุ่นปานกลาง'; message = 'น้ำเริ่มมีตะกอนปนเปื้อน ควรตรวจสอบระบบกรอง';
-      } else if (ntu <= 200) {
-        status = 'Warning'; level = 'ขุ่นมาก'; message = 'น้ำประปาขุ่นมาก ไม่เหมาะสำหรับใช้งาน';
+      } else if (ntu <= 5) {
+        status = 'Normal'; level = 'น้ำใส'; message = 'คุณภาพน้ำประปาปกติ (ตามเกณฑ์ < 5 NTU)';
+      } else if (ntu <= 15) {
+        status = 'Alert'; level = 'เริ่มขุ่น'; message = 'น้ำเริ่มมีตะกอนปนเปื้อนเล็กน้อย ควรตรวจสอบ';
+      } else if (ntu <= 30) {
+        status = 'Warning'; level = 'ขุ่นมาก'; message = 'น้ำประปาขุ่นเกินมาตรฐาน ไม่ควรใช้งาน';
       } else {
-        status = 'Critical'; level = 'น้ำเสีย'; message = 'ความขุ่นสูงเกินเกณฑ์ประปา งดใช้น้ำและแจ้งช่างประปา';
+        status = 'Critical'; level = 'น้ำเสีย'; message = 'ความขุ่นสูงมาก งดใช้น้ำและแจ้งช่างประปา';
       }
       water.status = status;
       water.level = level;

@@ -1,7 +1,7 @@
 import dbConnect from '../../utils/dbConnect';
 import Water from '../../models/WaterModel';
 
-// เกณฑ์มาตรฐาน NTU
+// เกณฑ์มาตรฐาน NTU น้ำประปา
 function getStatus(ntu, timestamp) {
   const lastUpdate = new Date(timestamp).getTime();
   const now = new Date().getTime();
@@ -9,10 +9,10 @@ function getStatus(ntu, timestamp) {
   
   if (isOffline) return { status: 'Offline', level: 'ขาดการติดต่อ', message: 'เซ็นเซอร์ออฟไลน์หรือไม่เชื่อมต่อเน็ต ไม่สามารถวัดค่าได้' };
   
-  if (ntu <= 25) return { status: 'Normal', level: 'น้ำใส', message: 'คุณภาพน้ำประปาปกติ ใสสะอาด เหมาะสำหรับใช้งานทั่วไป' };
-  if (ntu <= 100) return { status: 'Alert', level: 'ขุ่นปานกลาง', message: 'น้ำเริ่มมีตะกอนปนเปื้อน ควรตรวจสอบระบบกรอง' };
-  if (ntu <= 200) return { status: 'Warning', level: 'ขุ่นมาก', message: 'น้ำประปาขุ่นมาก ไม่เหมาะสำหรับใช้งาน' };
-  return { status: 'Critical', level: 'น้ำเสีย', message: 'ความขุ่นสูงเกินเกณฑ์ประปา งดใช้น้ำและแจ้งช่างประปา' };
+  if (ntu <= 5) return { status: 'Normal', level: 'น้ำใส', message: 'คุณภาพน้ำประปาปกติ (ตามเกณฑ์ < 5 NTU)' };
+  if (ntu <= 15) return { status: 'Alert', level: 'เริ่มขุ่น', message: 'น้ำเริ่มมีตะกอนปนเปื้อนเล็กน้อย ควรตรวจสอบ' };
+  if (ntu <= 30) return { status: 'Warning', level: 'ขุ่นมาก', message: 'น้ำประปาขุ่นเกินมาตรฐาน ไม่ควรใช้งาน' };
+  return { status: 'Critical', level: 'น้ำเสีย', message: 'ความขุ่นสูงมาก งดใช้น้ำและแจ้งช่างประปา' };
 }
 
 export default async function handler(req, res) {

@@ -13,16 +13,16 @@ const getTurbidityInfo = (value, status) => {
     return { label: 'ไม่ทราบ', className: styles.statusLow, fillWidth: '0%', color: '#6b7280' };
   }
 
-  if (value < 5) {
+  if (value <= 5) {
     return { label: 'ใสสะอาด', className: styles.statusLow, fillWidth: '20%', color: '#047857' };
   }
-  if (value < 10) {
-    return { label: 'ค่อนข้างใส', className: styles.statusMedium, fillWidth: '45%', color: '#b45309' };
+  if (value <= 15) {
+    return { label: 'เริ่มขุ่น', className: styles.statusMedium, fillWidth: '50%', color: '#ca8a04' };
   }
-  if (value < 20) {
-    return { label: 'ขุ่นเล็กน้อย', className: styles.statusHigh, fillWidth: '70%', color: '#ca8a04' };
+  if (value <= 30) {
+    return { label: 'ขุ่นมาก', className: styles.statusHigh, fillWidth: '80%', color: '#ea580c' };
   }
-  return { label: 'ขุ่นมาก', className: styles.statusCritical, fillWidth: '100%', color: '#be123c' };
+  return { label: 'น้ำเสีย', className: styles.statusCritical, fillWidth: '100%', color: '#dc2626' };
 };
 
 export default function WaterPage() {
