@@ -24,8 +24,11 @@ const int ledRedPin = D2;      // ไฟแดง (สถานะ: ยังไ
 
 const float TURBIDITY_THRESHOLD = 5.0; 
 
-unsigned long previousMillis = 0;
-const long interval = 10000; // ส่งข้อมูลทุกๆ 10 วินาที
+unsigned long previousMillisLCD = 0;
+const long lcdInterval = 500; // อัปเดตหน้าจอ LCD ทุกๆ 0.5 วินาที (Real-time มาก)
+
+unsigned long previousMillisAPI = 0;
+const long apiInterval = 5000; // ส่งข้อมูลขึ้นเว็บคลาวด์ทุกๆ 5 วินาที
 
 // ==========================================
 // การตั้งค่า Wi-Fi
@@ -103,9 +106,9 @@ void loop() {
     digitalWrite(ledRedPin, HIGH);
   }
   
-  // ตรวจสอบว่าถึงเวลาที่ต้องส่งข้อมูลหรือยัง
-  if(currentMillis - previousMillis >= interval) {
-    previousMillis = currentMillis;
+  // ตรวจสอบว่าถึงเวลาอ่านค่าเซ็นเซอร์และอัปเดตจอ (ทุก 0.5 วินาที)
+  if(currentMillis - previousMillisLCD >= lcdInterval) {
+    previousMillisLCD = currentMillis;
     
     // อ่านค่าความขุ่น (ใช้ไฟ 5V)
     int sensorValue = analogRead(sensorPin);
@@ -118,35 +121,15 @@ void loop() {
       turbidity = -1120.4 * (voltage * voltage) + 5742.3 * voltage - 4353.8; 
     }
     if (turbidity < 0) turbidity = 0; 
-    
-    Serial.println("\n--- กำลังวัดคุณภาพน้ำ ---");
-    Serial.print("ค่าอนาล็อก (Sensor Value): ");
-    Serial.println(sensorValue);
-    Serial.print("แรงดันไฟฟ้า (Voltage): ");
-    Serial.print(voltage);
-    Serial.println(" V");
-    Serial.print("ค่าความขุ่น (Turbidity): ");
-    Serial.print(turbidity);
-    Serial.println(" NTU");
-
-    if (turbidity > TURBIDITY_THRESHOLD) {
-      Serial.println("สถานะ: แจ้งเตือน! น้ำมีความขุ่นเกินเกณฑ์");
-    } else {
-      Serial.println("สถานะ: น้ำใส ปกติดี");
-    }
-    Serial.println("-------------------------");
 
     // ==========================================
-    // อัปเดตหน้าจอ LCD 16x2
+    // อัปเดตหน้าจอ LCD 16x2 (โชว์ผลทันที)
     // ==========================================
     lcd.clear();
-    
-    // บรรทัดที่ 1: แสดงค่า NTU
     lcd.setCursor(0, 0);
     lcd.print("NTU: ");
     lcd.print(turbidity, 1);
     
-    // บรรทัดที่ 2: แสดงสถานะ
     lcd.setCursor(0, 1);
     if (turbidity <= 5.0) {
       lcd.print("Status: NORMAL"); // น้ำปกติ
@@ -157,30 +140,42 @@ void loop() {
     }
 
     // ==========================================
-    // ส่งข้อมูลไปที่ Next.js API
+    // ส่งข้อมูลไปที่ Next.js API (ทำแค่ทุกๆ 5 วินาที)
     // ==========================================
-    if(WiFi.status() == WL_CONNECTED){
-      WiFiClientSecure client;
-      client.setInsecure(); // ไม่เช็คใบรับรอง SSL เพื่อให้เชื่อมต่อ Vercel (https) ได้ง่ายขึ้น
-      HTTPClient http;
+    if (currentMillis - previousMillisAPI >= apiInterval) {
+      previousMillisAPI = currentMillis;
       
-      String httpRequestData = "{\"turbidity\":" + String(turbidity) + "}";
-      Serial.print("Sending Data: ");
-      Serial.println(httpRequestData);
-      
-      http.begin(client, serverName);
-      http.addHeader("Content-Type", "application/json");
-      
-      int httpResponseCode = http.POST(httpRequestData);
-      
-      if (httpResponseCode > 0) {
-        Serial.print("HTTP Response code: ");
-        Serial.println(httpResponseCode);
+      Serial.println("\n--- อัปเดตข้อมูลขึ้นคลาวด์ ---");
+      Serial.print("ค่าความขุ่น (Turbidity): ");
+      Serial.print(turbidity);
+      Serial.println(" NTU");
+
+      if(WiFi.status() == WL_CONNECTED){
+        WiFiClientSecure client;
+        client.setInsecure(); // ไม่เช็คใบรับรอง SSL
+        HTTPClient http;
+        
+        String httpRequestData = "{\"turbidity\":" + String(turbidity) + "}";
+        Serial.print("Sending Data: ");
+        Serial.println(httpRequestData);
+        
+        http.begin(client, serverName);
+        http.addHeader("Content-Type", "application/json");
+        
+        int httpResponseCode = http.POST(httpRequestData);
+        
+        if (httpResponseCode > 0) {
+          Serial.print("HTTP Response code: ");
+          Serial.println(httpResponseCode);
+        } else {
+          Serial.print("Error code: ");
+          Serial.println(httpResponseCode);
+        }
+        http.end();
       } else {
-        Serial.print("Error code: ");
-        Serial.println(httpResponseCode);
+        Serial.println("ข้ามการส่งข้อมูล (Offline Mode)");
       }
-      http.end();
+      Serial.println("-------------------------");
     }
   }
 }
