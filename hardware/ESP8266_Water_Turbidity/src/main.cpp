@@ -4,13 +4,10 @@
 #include <WiFiClientSecure.h> // เพิ่ม Library สำหรับรองรับลิงก์ HTTPS
 #include <WiFiManager.h>
 #include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <LiquidCrystal_I2C.h>
 
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-#define OLED_RESET -1
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+// กำหนด Address ของจอ LCD (ส่วนใหญ่จะเป็น 0x27 หรือ 0x3F)
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // ==========================================
 // การตั้งค่า API และ Server
@@ -41,17 +38,11 @@ void setup() {
   // ตั้งค่า I2C Pins: D3(SDA) และ D4(SCL)
   Wire.begin(D3, D4);
   
-  // เริ่มการทำงานของจอ OLED
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    Serial.println(F("SSD1306 allocation failed"));
-  } else {
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 10);
-    display.println("Booting...");
-    display.display();
-  }
+  // เริ่มการทำงานของจอ LCD
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("Booting...");
   
   pinMode(ledGreenPin, OUTPUT);
   pinMode(ledRedPin, OUTPUT);
@@ -80,12 +71,12 @@ void setup() {
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
   
-  display.clearDisplay();
-  display.setCursor(0, 10);
-  display.println("WiFi Connected!");
-  display.print("IP: ");
-  display.println(WiFi.localIP());
-  display.display();
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("WiFi Connected!");
+  lcd.setCursor(0, 1);
+  lcd.print("IP:");
+  lcd.print(WiFi.localIP());
   
   // เปลี่ยนไฟเป็นสีเขียว
   digitalWrite(ledGreenPin, HIGH);
@@ -139,30 +130,24 @@ void loop() {
     Serial.println("-------------------------");
 
     // ==========================================
-    // อัปเดตหน้าจอ OLED
+    // อัปเดตหน้าจอ LCD 16x2
     // ==========================================
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    display.println("Water Quality (NTU)");
+    lcd.clear();
     
-    // แสดงตัวเลข NTU ใหญ่ๆ
-    display.setTextSize(2);
-    display.setCursor(0, 16);
-    display.print(turbidity, 1);
+    // บรรทัดที่ 1: แสดงค่า NTU
+    lcd.setCursor(0, 0);
+    lcd.print("NTU: ");
+    lcd.print(turbidity, 1);
     
-    // แสดงสถานะภาษาอังกฤษ (จอไม่รองรับภาษาไทย)
-    display.setTextSize(2);
-    display.setCursor(0, 45);
+    // บรรทัดที่ 2: แสดงสถานะ
+    lcd.setCursor(0, 1);
     if (turbidity <= 5.0) {
-      display.println("NORMAL"); // น้ำปกติ
+      lcd.print("Status: NORMAL"); // น้ำปกติ
     } else if (turbidity <= 15.0) {
-      display.println("ALERT");  // เริ่มขุ่น
+      lcd.print("Status: ALERT");  // เริ่มขุ่น
     } else {
-      display.println("DIRTY");  // ขุ่นมาก/น้ำเสีย
+      lcd.print("Status: DIRTY");  // ขุ่นมาก/น้ำเสีย
     }
-    display.display();
 
     // ==========================================
     // ส่งข้อมูลไปที่ Next.js API
