@@ -54,33 +54,40 @@ void setup() {
   // สร้างตัวจัดการ Wi-Fi
   WiFiManager wifiManager;
   
-  // (เอาบรรทัด resetSettings ออก เพื่อให้บอร์ดจำรหัสผ่านเดิมไว้ จะได้ไม่ต้องตั้งค่าใหม่ทุกรอบ)
-  // wifiManager.resetSettings();
+  // ตั้งเวลาให้หน้าเว็บตั้งค่า Wi-Fi ทำงานแค่ 15 วินาที
+  // ถ้าไม่มีใครมาตั้งค่า หรือต่อเน็ตไม่ได้ ให้ทะลุไปทำงานแบบ "ออฟไลน์" ทันที
+  wifiManager.setConfigPortalTimeout(15); 
 
   Serial.println("\nConnecting to WiFi or Starting Access Point...");
   
   // ถ้าต่อ Wi-Fi เดิมไม่ได้ มันจะปล่อย Wi-Fi ตัวเองออกมาชื่อ "Water_Sensor_Setup" ไม่มีรหัสผ่าน
   if (!wifiManager.autoConnect("Water_Sensor_Setup")) {
-    Serial.println("Failed to connect and hit timeout");
-    delay(3000);
-    ESP.restart(); // ถ้านานเกินไปให้รีสตาร์ทตัวเอง
+    Serial.println("Failed to connect within 15 seconds. Running in OFFLINE mode.");
+    
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("WiFi Timeout!");
+    lcd.setCursor(0, 1);
+    lcd.print("Offline Mode");
+    delay(2000); // โชว์ข้อความ 2 วินาทีแล้วไปต่อ
+  } else {
+    // ถ้าต่อ Wi-Fi สำเร็จ
+    Serial.println("\nConnected to Home WiFi!");
+    Serial.print("IP Address: ");
+    Serial.println(WiFi.localIP());
+    
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("WiFi Connected!");
+    lcd.setCursor(0, 1);
+    lcd.print("IP:");
+    lcd.print(WiFi.localIP());
+    
+    // เปลี่ยนไฟเป็นสีเขียว
+    digitalWrite(ledGreenPin, HIGH);
+    digitalWrite(ledRedPin, LOW);
+    delay(2000);
   }
-
-  // ถ้าโค้ดวิ่งมาถึงบรรทัดนี้ แปลว่า "ต่อ Wi-Fi สำเร็จแล้ว!" 🎉
-  Serial.println("\nConnected to Home WiFi!");
-  Serial.print("IP Address: ");
-  Serial.println(WiFi.localIP());
-  
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("WiFi Connected!");
-  lcd.setCursor(0, 1);
-  lcd.print("IP:");
-  lcd.print(WiFi.localIP());
-  
-  // เปลี่ยนไฟเป็นสีเขียว
-  digitalWrite(ledGreenPin, HIGH);
-  digitalWrite(ledRedPin, LOW);
 }
 
 void loop() {
