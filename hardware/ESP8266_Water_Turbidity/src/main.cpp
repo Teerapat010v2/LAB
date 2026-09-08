@@ -3,6 +3,14 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecure.h> // เพิ่ม Library สำหรับรองรับลิงก์ HTTPS
 #include <WiFiManager.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 // ==========================================
 // การตั้งค่า API และ Server
@@ -30,6 +38,21 @@ const long interval = 10000; // ส่งข้อมูลทุกๆ 10 ว�
 void setup() {
   Serial.begin(115200);
   
+  // ตั้งค่า I2C Pins: D3(SDA) และ D4(SCL)
+  Wire.begin(D3, D4);
+  
+  // เริ่มการทำงานของจอ OLED
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("SSD1306 allocation failed"));
+  } else {
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 10);
+    display.println("Booting...");
+    display.display();
+  }
+  
   pinMode(ledGreenPin, OUTPUT);
   pinMode(ledRedPin, OUTPUT);
   
@@ -56,6 +79,13 @@ void setup() {
   Serial.println("\nConnected to Home WiFi!");
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
+  
+  display.clearDisplay();
+  display.setCursor(0, 10);
+  display.println("WiFi Connected!");
+  display.print("IP: ");
+  display.println(WiFi.localIP());
+  display.display();
   
   // เปลี่ยนไฟเป็นสีเขียว
   digitalWrite(ledGreenPin, HIGH);
@@ -107,6 +137,32 @@ void loop() {
       Serial.println("สถานะ: น้ำใส ปกติดี");
     }
     Serial.println("-------------------------");
+
+    // ==========================================
+    // อัปเดตหน้าจอ OLED
+    // ==========================================
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    display.println("Water Quality (NTU)");
+    
+    // แสดงตัวเลข NTU ใหญ่ๆ
+    display.setTextSize(2);
+    display.setCursor(0, 16);
+    display.print(turbidity, 1);
+    
+    // แสดงสถานะภาษาอังกฤษ (จอไม่รองรับภาษาไทย)
+    display.setTextSize(2);
+    display.setCursor(0, 45);
+    if (turbidity <= 5.0) {
+      display.println("NORMAL"); // น้ำปกติ
+    } else if (turbidity <= 15.0) {
+      display.println("ALERT");  // เริ่มขุ่น
+    } else {
+      display.println("DIRTY");  // ขุ่นมาก/น้ำเสีย
+    }
+    display.display();
 
     // ==========================================
     // ส่งข้อมูลไปที่ Next.js API
