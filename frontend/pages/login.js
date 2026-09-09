@@ -79,10 +79,8 @@ export default function Login() {
               กลับหน้าหลัก
             </Link>
 
-            <div style={{ marginTop: '1.5rem', padding: '0.85rem', background: 'var(--bg-main)', borderRadius: '8px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-              <p style={{ margin: '0 0 0.25rem', fontWeight: 600, color: 'var(--text-main)' }}>รหัสผ่านสำหรับการสาธิต</p>
-              <p style={{ margin: '0 0 0.15rem' }}>แอดมิน: <code style={{ background: '#e2e8f0', padding: '1px 5px', borderRadius: '4px' }}>admin123</code></p>
-              <p style={{ margin: 0 }}>ผู้ดูแล: <code style={{ background: '#e2e8f0', padding: '1px 5px', borderRadius: '4px' }}>staff123</code></p>
+            <div style={{ marginTop: '1.5rem', padding: '0.85rem', background: 'var(--bg-main)', borderRadius: '8px', fontSize: '0.82rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+              <p style={{ margin: '0' }}>หากมีปัญหาการเข้าสู่ระบบโปรดแจ้งแอดมิน</p>
             </div>
           </div>
         </div>
